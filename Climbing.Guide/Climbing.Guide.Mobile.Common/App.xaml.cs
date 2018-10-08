@@ -2,6 +2,7 @@
 using Xamarin.Forms.Xaml;
 using FreshMvvm;
 using Climbing.Guide.Mobile.Common.ViewModels;
+using Climbing.Guide.Core.API;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Mobile.Common {
@@ -20,21 +21,10 @@ namespace Climbing.Guide.Mobile.Common {
          //FreshIOC.Container.Register<IDatabaseService, DatabaseService>();
          //FreshIOC.Container.Register<IUserDialogs>(UserDialogs.Instance);
 
-         var masterDetailNav = new FreshMasterDetailNavigationContainer();
-         masterDetailNav.Init("Menu");
-         masterDetailNav.AddPage<HomeViewModel>(HomeViewModel.VmTitle);
-         // masterDetailNav.AddPage<RoutesMapPageModel>("Routes");
-         // masterDetailNav.AddPage<TimerTrainingListPageModel>("Timed trainings");
-         // masterDetailNav.AddPage<TimerSetupPageModel>("Timer");
-         masterDetailNav.AddPage<AboutViewModel>(AboutViewModel.VmTitle);
-         MainPage = masterDetailNav;
+         // TODO UPDATE api address 
+         RestApiClient.UpdateRestApiClientSettings(new RestApiClientSettings() { BaseUrl = "http://10.0.2.2:8000" });
 
-         // Used for navigation from a page with no masternavigation back to the master navigation template
-         //MessagingCenter.Subscribe<Pages.Routes.RoutesMapPage>(this, "GoBackToMainPage", (m) => {
-         //   Device.BeginInvokeOnMainThread(() => {
-         //      MainPage = masterDetailNav;
-         //   });
-         //});
+         NavigationManager.InitializeNavigation();
       }
 
       protected override void OnStart() {

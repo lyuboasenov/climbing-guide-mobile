@@ -3,11 +3,12 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Climbing.Guide.Mobile.Common.Views.User {
+namespace Climbing.Guide.Mobile.Common.Views {
    [XamlCompilation(XamlCompilationOptions.Compile)]
-   public partial class ProfileView : BaseContentPage {
-      public ProfileView() {
+   public partial class ExitView : BaseContentPage {
+      public ExitView() {
          InitializeComponent();
+         App.Current.Quit();
       }
    }
 }

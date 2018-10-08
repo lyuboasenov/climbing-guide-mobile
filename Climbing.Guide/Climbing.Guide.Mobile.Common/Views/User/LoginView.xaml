@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <views:BaseContentPage
    xmlns:views="clr-namespace:Climbing.Guide.Mobile.Common.Views"
+   xmlns:resources="clr-namespace:Climbing.Guide.Mobile.Common.Resources.Strings"
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-   x:Class="Climbing.Guide.Mobile.Common.Views.LoginView"
+   x:Class="Climbing.Guide.Mobile.Common.Views.User.LoginView"
    Title="{Binding Title}">
 
    <ContentPage.Resources>
@@ -17,58 +18,26 @@
 
    <Grid>
       <Grid.RowDefinitions>
-         <RowDefinition Height="Auto" />
          <RowDefinition Height="*" />
+         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
-      <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
-         <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
-            <ContentView Padding="0,40,0,40" VerticalOptions="FillAndExpand">
-               <Image Source="xamarin_logo.png" VerticalOptions="Center" HeightRequest="64" />
-            </ContentView>
-         </StackLayout>
-      </StackLayout>
+
+
       <ScrollView Grid.Row="1">
          <StackLayout Orientation="Vertical" Padding="16,40,16,40" Spacing="10">
-            <Label FontSize="22">
-               <Label.FormattedText>
-                  <FormattedString>
-                     <FormattedString.Spans>
-                        <Span Text="AppName" FontAttributes="Bold" FontSize="22" />
-                        <Span Text=" " />
-                        <Span Text="1.0" ForegroundColor="{StaticResource LightTextColor}" />
-                     </FormattedString.Spans>
-                  </FormattedString>
-               </Label.FormattedText>
-            </Label>
-            <Label>
-               <Label.FormattedText>
-                  <FormattedString>
-                     <FormattedString.Spans>
-                        <Span Text="This app is written in C# and native APIs using the" />
-                        <Span Text=" " />
-                        <Span Text="Xamarin Platform" FontAttributes="Bold" />
-                        <Span Text="." />
-                     </FormattedString.Spans>
-                  </FormattedString>
-               </Label.FormattedText>
-            </Label>
-            <Label>
-               <Label.FormattedText>
-                  <FormattedString>
-                     <FormattedString.Spans>
-                        <Span Text="It shares code with its" />
-                        <Span Text=" " />
-                        <Span Text="iOS, Android, and Windows" FontAttributes="Bold" />
-                        <Span Text=" " />
-                        <Span Text="versions." />
-                     </FormattedString.Spans>
-                  </FormattedString>
-               </Label.FormattedText>
-            </Label>
-            <Button Margin="0,10,0,0" Text="Learn more"
-                        Command="{Binding OpenWebCommand}"
+            <Entry Grid.Row="1" Text="{Binding Username}" HorizontalOptions="FillAndExpand" Placeholder="{Binding Source={x:Static resources:User.Username_Hint}}" />
+            <Entry Grid.Row="2" Text="{Binding Password}" HorizontalOptions="FillAndExpand" Placeholder="{Binding Source={x:Static resources:User.Password_Hint}}" IsPassword="True"  />
+
+            <Button Margin="0,10,0,0" Text="{Binding Source={x:Static resources:User.Login_Title}}"
+                        Command="{Binding LoginCommand}"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White" />
+
+            <Label Margin="0,5,0,0" Text="{Binding Source={x:Static resources:User.Signup_Title}}" FontAttributes="Bold" HorizontalOptions="Center">
+               <Label.GestureRecognizers>
+                  <TapGestureRecognizer Command="{Binding SignupCommand}" />
+               </Label.GestureRecognizers>
+            </Label>
          </StackLayout>
       </ScrollView>
    </Grid>

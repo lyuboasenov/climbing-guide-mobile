@@ -19,11 +19,11 @@ namespace Climbing.Guide.Mobile.Common.ViewModels {
          Items = new ObservableCollection<Item>();
          LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
-         MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) => {
-            var newItem = item as Item;
-            Items.Add(newItem);
-            await DataStore.AddItemAsync(newItem);
-         });
+         //MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) => {
+         //   var newItem = item as Item;
+         //   Items.Add(newItem);
+         //   await DataStore.AddItemAsync(newItem);
+         //});
       }
 
       async Task ExecuteLoadItemsCommand() {
@@ -34,10 +34,10 @@ namespace Climbing.Guide.Mobile.Common.ViewModels {
 
          try {
             Items.Clear();
-            var items = await DataStore.GetItemsAsync(true);
-            foreach (var item in items) {
-               Items.Add(item);
-            }
+            //var items = await DataStore.GetItemsAsync(true);
+            //foreach (var item in items) {
+            //   Items.Add(item);
+            //}
          } catch (Exception ex) {
             Debug.WriteLine(ex);
          } finally {

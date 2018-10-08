@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
-using Xamarin.Forms;
-
-using Climbing.Guide.Mobile.Common.Models;
-using Climbing.Guide.Mobile.Common.Services;
+﻿using Climbing.Guide.Core.API;
 using FreshMvvm;
+using Xamarin.Forms;
 
 namespace Climbing.Guide.Mobile.Common.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class BaseViewModel : FreshBasePageModel {
-      public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>() ?? new MockDataStore();
+      protected IRestApiClient RestClient {
+         get {
+            return RestApiClient.Instance;
+         }
+      }
 
       public BaseViewModel Parent { get; set; }
       public bool IsBusy { get; set; }

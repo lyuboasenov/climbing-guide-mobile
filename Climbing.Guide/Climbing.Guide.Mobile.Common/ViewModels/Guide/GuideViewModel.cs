@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 using Xamarin.Forms;
 
-namespace Climbing.Guide.Mobile.Common.ViewModels {
+namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class GuideViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;

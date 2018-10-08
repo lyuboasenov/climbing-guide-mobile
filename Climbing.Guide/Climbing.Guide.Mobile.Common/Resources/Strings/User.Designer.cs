@@ -22,7 +22,7 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class User {
+    public class User {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Climbing.Guide.Mobile.Common.Resources.Strings.User", typeof(User).Assembly);
@@ -51,7 +51,7 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,18 +61,45 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid username or password.
+        /// </summary>
+        public static string Login_Invalid_Message {
+            get {
+                return ResourceManager.GetString("Login_Invalid_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Login_Invalid_Title {
+            get {
+                return ResourceManager.GetString("Login_Invalid_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log in.
         /// </summary>
-        internal static string Login_Title {
+        public static string Login_Title {
             get {
                 return ResourceManager.GetString("Login_Title", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string Password_Hint {
+            get {
+                return ResourceManager.GetString("Password_Hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Profile.
         /// </summary>
-        internal static string Profile_Title {
+        public static string Profile_Title {
             get {
                 return ResourceManager.GetString("Profile_Title", resourceCulture);
             }
@@ -81,9 +108,18 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         /// <summary>
         ///   Looks up a localized string similar to Sign Up.
         /// </summary>
-        internal static string Signup_Title {
+        public static string Signup_Title {
             get {
                 return ResourceManager.GetString("Signup_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        public static string Username_Hint {
+            get {
+                return ResourceManager.GetString("Username_Hint", resourceCulture);
             }
         }
     }

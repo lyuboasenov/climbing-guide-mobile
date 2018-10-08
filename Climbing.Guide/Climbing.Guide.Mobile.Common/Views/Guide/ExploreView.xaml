@@ -3,10 +3,10 @@
    xmlns:views="clr-namespace:Climbing.Guide.Mobile.Common.Views"
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-   x:Class="Climbing.Guide.Mobile.Common.Views.AboutView"
+   x:Class="Climbing.Guide.Mobile.Common.Views.Guide.ExploreView"
    Title="{Binding Title}">
 
-    <ContentPage.Resources>
+   <ContentPage.Resources>
         <ResourceDictionary>
             <!--Page Level Resources: Compatibile with Xamarin Live Player -->
             <Color x:Key="Primary">#2196F3</Color>

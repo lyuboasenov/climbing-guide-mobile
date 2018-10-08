@@ -3,10 +3,10 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Climbing.Guide.Mobile.Common.Views.User {
+namespace Climbing.Guide.Mobile.Common.Views.Settings {
    [XamlCompilation(XamlCompilationOptions.Compile)]
-   public partial class ProfileView : BaseContentPage {
-      public ProfileView() {
+   public partial class SettingsView : BaseContentPage {
+      public SettingsView() {
          InitializeComponent();
       }
    }

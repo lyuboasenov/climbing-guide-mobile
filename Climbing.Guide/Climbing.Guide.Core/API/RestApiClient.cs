@@ -7,7 +7,7 @@ using Climbing.Guide.Core.API.Schemas;
 using Newtonsoft.Json;
 
 namespace Climbing.Guide.Core.API {
-   public class RestApiClient {
+   public class RestApiClient : IRestApiClient {
       private const string clientId = "KoZwAMrSN4XjWC2m0Lkp3gjN9t1h9Vano5avgBWI";
       private const string clientSecret = "FT0YD3LyTr4sZgBKRNUk0vEv8gIinHFbVOIqyd11xQ3zT4GG10NjcffaoPUm3Fw4zfTrCMV0xFxOVtabWWzPYDECFoBhr0ezsLwfl75C6kQC5YMeejEJfbAMr0ZetVKz";
 
@@ -75,7 +75,9 @@ namespace Climbing.Guide.Core.API {
          return await GetAccessTokenAsync(content);
       }
 
-      public async Task<bool> RefreshTokenAsync() {
+      #endregion Public
+
+      private async Task<bool> RefreshTokenAsync() {
          var httpClient = GetHttpClient();
          var content = new FormUrlEncodedContent(new Dictionary<string, string>() {
             { "refresh_token", RefreshToken },
@@ -83,8 +85,6 @@ namespace Climbing.Guide.Core.API {
          });
          return await GetAccessTokenAsync(content);
       }
-
-      #endregion Public
 
       private async Task<bool> GetAccessTokenAsync(FormUrlEncodedContent content) {
          var httpClient = GetHttpClient();

@@ -22,7 +22,7 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Main {
+    public class Main {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Climbing.Guide.Mobile.Common.Resources.Strings.Main", typeof(Main).Assembly);
@@ -51,7 +51,7 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,18 +63,72 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
-        internal static string About_Title {
+        public static string About_Title {
             get {
                 return ResourceManager.GetString("About_Title", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bye bye!.
+        /// </summary>
+        public static string Bye_Message {
+            get {
+                return ResourceManager.GetString("Bye_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CG.
+        /// </summary>
+        public static string CG {
+            get {
+                return ResourceManager.GetString("CG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Climbing Guide.
+        /// </summary>
+        public static string Climbing_Guide {
+            get {
+                return ResourceManager.GetString("Climbing_Guide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exit.
+        /// </summary>
+        public static string Exit_Title {
+            get {
+                return ResourceManager.GetString("Exit_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home.
         /// </summary>
-        internal static string Home_Title {
+        public static string Home_Title {
             get {
                 return ResourceManager.GetString("Home_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string Ok {
+            get {
+                return ResourceManager.GetString("Ok", resourceCulture);
             }
         }
     }
