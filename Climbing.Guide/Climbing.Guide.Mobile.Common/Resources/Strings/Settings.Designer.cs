@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Climbing.Guide.Mobile.Common {
+namespace Climbing.Guide.Mobile.Common.Resources.Strings {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Climbing.Guide.Mobile.Common {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Strings {
+    internal class Settings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Strings() {
+        internal Settings() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Climbing.Guide.Mobile.Common {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Climbing.Guide.Mobile.Common.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Climbing.Guide.Mobile.Common.Resources.Strings.Settings", typeof(Settings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,11 @@ namespace Climbing.Guide.Mobile.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About.
+        ///   Looks up a localized string similar to Settings.
         /// </summary>
-        internal static string About_Title {
+        internal static string Settings_Title {
             get {
-                return ResourceManager.GetString("About_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Home.
-        /// </summary>
-        internal static string Home_Title {
-            get {
-                return ResourceManager.GetString("Home_Title", resourceCulture);
+                return ResourceManager.GetString("Settings_Title", resourceCulture);
             }
         }
     }
