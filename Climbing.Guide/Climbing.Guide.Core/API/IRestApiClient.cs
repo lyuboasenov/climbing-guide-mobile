@@ -1,7 +1,4 @@
 ﻿using Climbing.Guide.Core.API.Schemas;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Core.API {
@@ -13,5 +10,6 @@ namespace Climbing.Guide.Core.API {
       IRegisterClient RegisterClient { get; }
 
       Task<bool> LoginAsync(string username, string password);
+      Task<bool> LogoutAsync();
    }
 }

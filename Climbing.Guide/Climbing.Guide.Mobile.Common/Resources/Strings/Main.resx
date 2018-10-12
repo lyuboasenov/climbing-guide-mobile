@@ -141,4 +141,16 @@
   <data name="Ok" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="Communication_Error_Message" xml:space="preserve">
+    <value>An error have occured while trying to access the backend service.</value>
+  </data>
+  <data name="Communication_Error_Message_Detailed_Format" xml:space="preserve">
+    <value>Code:{1}{0}Data: {2}</value>
+  </data>
+  <data name="Details_Button" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Error_Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
-﻿using Climbing.Guide.Mobile.Common.ViewModels;
+﻿using Climbing.Guide.Core.API;
+using Climbing.Guide.Mobile.Common.ViewModels;
 using FreshMvvm;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -54,19 +55,25 @@ namespace Climbing.Guide.Mobile.Common {
          masterDetailNav.AddPage<ViewModels.Guide.GuideViewModel>(ViewModels.Guide.GuideViewModel.VmTitle);
          masterDetailNav.AddPage<ViewModels.Guide.ExploreViewModel>(ViewModels.Guide.ExploreViewModel.VmTitle);
          masterDetailNav.AddPage<ViewModels.Guide.SearchViewModel>(ViewModels.Guide.SearchViewModel.VmTitle);
-         if (SessionManager.Current.IsLoggedIn) {
+         if (RestApiClient.Instance.IsLoggedIn) {
             masterDetailNav.AddPage<ViewModels.User.ProfileViewModel>(ViewModels.User.ProfileViewModel.VmTitle);
          } else {
             masterDetailNav.AddPage<ViewModels.User.LoginViewModel>(ViewModels.User.LoginViewModel.VmTitle, true, null);
          }
          masterDetailNav.AddPage<ViewModels.Settings.SettingsViewModel>(ViewModels.Settings.SettingsViewModel.VmTitle);
          masterDetailNav.AddPage<AboutViewModel>(AboutViewModel.VmTitle);
-         masterDetailNav.AddPage<ExitViewModel>(ExitViewModel.VmTitle);
+         if (RestApiClient.Instance.IsLoggedIn) {
+            masterDetailNav.AddPage<ViewModels.User.LogoutViewModel>(ViewModels.User.LogoutViewModel.VmTitle);
+         }
+         // masterDetailNav.AddPage<ExitViewModel>(ExitViewModel.VmTitle);
 
          return masterDetailNav;
       }
 
-      
+      public void UpdateNavigationContainer() {
+         var masterDetailNav = Current.GetNavigationContainer();
+         Current.App.MainPage = masterDetailNav;
+      }
 
       internal class Commands {
          public const string EXIT = "application-exit";

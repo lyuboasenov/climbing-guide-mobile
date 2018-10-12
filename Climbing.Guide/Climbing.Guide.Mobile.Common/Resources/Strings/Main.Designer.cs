@@ -106,6 +106,42 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error have occured while trying to access the backend service..
+        /// </summary>
+        public static string Communication_Error_Message {
+            get {
+                return ResourceManager.GetString("Communication_Error_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code:{1}{0}Data: {2}.
+        /// </summary>
+        public static string Communication_Error_Message_Detailed_Format {
+            get {
+                return ResourceManager.GetString("Communication_Error_Message_Detailed_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        public static string Details_Button {
+            get {
+                return ResourceManager.GetString("Details_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Error_Title {
+            get {
+                return ResourceManager.GetString("Error_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exit.
         /// </summary>
         public static string Exit_Title {

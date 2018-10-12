@@ -1,7 +1,6 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using FreshMvvm;
-using Climbing.Guide.Mobile.Common.ViewModels;
 using Climbing.Guide.Core.API;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -22,7 +21,14 @@ namespace Climbing.Guide.Mobile.Common {
          //FreshIOC.Container.Register<IUserDialogs>(UserDialogs.Instance);
 
          // TODO UPDATE api address 
-         RestApiClient.UpdateRestApiClientSettings(new RestApiClientSettings() { BaseUrl = "http://10.0.2.2:8000" });
+         RestApiClient.UpdateRestApiClientSettings(
+            new RestApiClientSettings() {
+#if DEBUG
+               BaseUrl = "http://10.0.2.2:8000"
+#elif RELEASE
+               BaseUrl = "http://10.0.2.2:8000"
+#endif
+            });
 
          NavigationManager.InitializeNavigation();
       }

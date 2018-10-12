@@ -19,7 +19,7 @@ namespace Climbing.Guide.Core.API {
       private string Token { get; set; }
       private DateTime TokenExpiration { get; set; } = DateTime.MaxValue;
       private string RefreshToken { get; set; }
-      private string Username { get; set; }
+      public string Username { get; set; }
 
       private IRegionsClient regionsClient;
       private IAreasClient areasClient;
@@ -58,6 +58,12 @@ namespace Climbing.Guide.Core.API {
          }
       }
 
+      public bool IsLoggedIn {
+         get {
+            return !string.IsNullOrEmpty(Token);
+         }
+      }
+
       #region Public
 
       public static void UpdateRestApiClientSettings(RestApiClientSettings settings) {
@@ -73,6 +79,25 @@ namespace Climbing.Guide.Core.API {
          });
          Username = username;
          return await GetAccessTokenAsync(content);
+      }
+
+      public async Task<bool> LogoutAsync() {
+         var content = new FormUrlEncodedContent(new Dictionary<string, string>() {
+            { "username", Token },
+            { "client_id", clientId }
+         });
+
+         var httpClient = GetHttpClient();
+         AddClientCredentials(httpClient);
+
+         var response = await httpClient.PostAsync("o/revoke_token/", content);
+
+         Token = string.Empty;
+         RefreshToken = string.Empty;
+         Username = string.Empty;
+         TokenExpiration = DateTime.MaxValue;
+
+         return response.IsSuccessStatusCode;
       }
 
       #endregion Public

@@ -11,10 +11,10 @@ namespace Climbing.Guide.Core.API.Schemas
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
     public partial interface IRegisterClient
     {
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<User> CreateAsync(User data);
     
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task<User> CreateAsync(User data, System.Threading.CancellationToken cancellationToken);
     
@@ -23,10 +23,10 @@ namespace Climbing.Guide.Core.API.Schemas
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
     public partial interface IAreasClient
     {
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<Area> ReadAsync(string region);
     
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task<Area> ReadAsync(string region, System.Threading.CancellationToken cancellationToken);
     
@@ -35,10 +35,10 @@ namespace Climbing.Guide.Core.API.Schemas
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
     public partial interface IRegionsClient
     {
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Region>> ListAsync();
     
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Region>> ListAsync(System.Threading.CancellationToken cancellationToken);
     
@@ -47,10 +47,10 @@ namespace Climbing.Guide.Core.API.Schemas
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
     public partial interface IRoutesClient
     {
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<Route> ReadAsync(string sector);
     
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task<Route> ReadAsync(string sector, System.Threading.CancellationToken cancellationToken);
     
@@ -59,10 +59,10 @@ namespace Climbing.Guide.Core.API.Schemas
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
     public partial interface ISectorsClient
     {
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<Sector> ReadAsync(string area);
     
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task<Sector> ReadAsync(string area, System.Threading.CancellationToken cancellationToken);
     
@@ -661,7 +661,7 @@ namespace Climbing.Guide.Core.API.Schemas
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
-    public partial class SwaggerException : System.Exception
+    public partial class RestApiCallException : System.Exception
     {
         public int StatusCode { get; private set; }
 
@@ -669,7 +669,7 @@ namespace Climbing.Guide.Core.API.Schemas
 
         public System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; private set; }
 
-        public SwaggerException(string message, int statusCode, string response, System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception innerException) 
+        public RestApiCallException(string message, int statusCode, string response, System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception innerException) 
             : base(message + "\n\nStatus: " + statusCode + "\nResponse: \n" + response.Substring(0, response.Length >= 512 ? 512 : response.Length), innerException)
         {
             StatusCode = statusCode;
@@ -684,11 +684,11 @@ namespace Climbing.Guide.Core.API.Schemas
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
-    public partial class SwaggerException<TResult> : SwaggerException
+    public partial class RestApiCallException<TResult> : RestApiCallException
     {
         public TResult Result { get; private set; }
 
-        public SwaggerException(string message, int statusCode, string response, System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception innerException) 
+        public RestApiCallException(string message, int statusCode, string response, System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception innerException) 
             : base(message, statusCode, response, headers, innerException)
         {
             Result = result;

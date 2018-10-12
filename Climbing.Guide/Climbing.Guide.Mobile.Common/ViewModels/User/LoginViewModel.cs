@@ -1,4 +1,5 @@
-﻿using Climbing.Guide.Mobile.Common.Resources;
+﻿using Climbing.Guide.Core.API.Schemas;
+using Climbing.Guide.Mobile.Common.Resources;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -24,12 +25,17 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
       public ICommand SignupCommand { get; }
       
       private async Task Login() {
-         var success = await RestClient.LoginAsync(Username, Password);
+         bool success = false;
+         try {
+            success = await RestClient.LoginAsync(Username, Password);
+         } catch (RestApiCallException ex) {
+            HandleRestApiCallException(ex);
+         }
 
          if (!success) {
             await CurrentPage.DisplayAlert(Resources.Strings.User.Login_Invalid_Title, Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
          } else {
-            await CurrentPage.Navigation.PopModalAsync();
+            NavigationManager.Current.UpdateNavigationContainer();
          }
       }
 

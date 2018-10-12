@@ -66,6 +66,9 @@
     <Compile Update="Views\User\ProfileView.xaml.cs">
       <DependentUpon>ProfileView.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\User\LogoutView.xaml.cs">
+      <DependentUpon>LogoutView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\User\SignupView.xaml.cs">
       <DependentUpon>SignupView.xaml</DependentUpon>
     </Compile>

@@ -1,5 +1,7 @@
-﻿using FreshMvvm;
+﻿using Climbing.Guide.Mobile.Common.ViewModels;
+using FreshMvvm;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
@@ -9,16 +11,33 @@ namespace Climbing.Guide.Mobile.Common.Views {
 
 
       private Dictionary<string, bool> ModalPages { get; set; } = new Dictionary<string, bool>();
+      private Dictionary<string, BaseViewModel> ViewModels { get; set; } = new Dictionary<string, BaseViewModel>();
       private string MenuPageTitle { get; set; }
       private string MenuIcon { get; set; }
       private ContentPage MenuPage { get; set; }
 
       public void AddPage<T>(string title, bool modal, object data = null) where T : FreshBasePageModel {
-         base.AddPage<T>(title, data);
-         ModalPages.Add(title, modal);
+         this.AddPage<T>(title, data);
+         if (!ModalPages.ContainsKey(title)) {
+            ModalPages.Add(title, modal);
+         }
       }
+
       public override void AddPage<T>(string title, object data = null) {
-         AddPage<T>(title, false, data);
+         ModalPages.Add(title, false);
+
+         if (typeof(T).GetInterfaces().Contains(typeof(ICGMasterDetailNavigationOnlyItem))) {
+            var viewModel = FreshIOC.Container.Resolve(typeof(T)) as BaseViewModel;
+            ViewModels.Add(title, viewModel);
+            PageNames.Add(title);
+         } else {
+            base.AddPage<T>(title, data);
+            ViewModels.Add(title, Pages[title].GetModel() as BaseViewModel);
+         }
+      }
+
+      public override void AddPage(string modelName, string title, object data = null) {
+         throw new NotSupportedException();
       }
 
       public void RemovePage(string title) {
@@ -45,9 +64,14 @@ namespace Climbing.Guide.Mobile.Common.Views {
             if (Pages.ContainsKey(selectedTitle)) {
                if (ModalPages[selectedTitle]) {
                   Navigation.PushModalAsync(Pages[selectedTitle]);
+                  listView.SelectedItem = null;
                } else {
                   Detail = Pages[selectedTitle];
                }
+            } else {
+               ICGMasterDetailNavigationOnlyItem viewModel = ViewModels[selectedTitle] as ICGMasterDetailNavigationOnlyItem;
+               viewModel.NavigationAction(null);
+               Detail = Pages[viewModel.PageTitleToNavigateTo];
             }
 
             IsPresented = false;
