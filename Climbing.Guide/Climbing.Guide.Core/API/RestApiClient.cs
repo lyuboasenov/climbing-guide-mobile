@@ -16,10 +16,10 @@ namespace Climbing.Guide.Core.API {
       private RestApiClientSettings Settings { get; set; }
 
       private HttpClient HttpClient { get; set; }  = new HttpClient() { BaseAddress = new Uri("http://127.0.0.1:8000/") };
-      private string Token { get; set; }
+      public string Token { get; private set; }
       private DateTime TokenExpiration { get; set; } = DateTime.MaxValue;
-      private string RefreshToken { get; set; }
-      public string Username { get; set; }
+      public string RefreshToken { get; private set; }
+      public string Username { get; private set; }
 
       private IRegionsClient regionsClient;
       private IAreasClient areasClient;
@@ -68,6 +68,9 @@ namespace Climbing.Guide.Core.API {
 
       public static void UpdateRestApiClientSettings(RestApiClientSettings settings) {
          Instance.Settings = settings;
+         Instance.Username = settings.Username;
+         Instance.Token = settings.Token;
+         Instance.RefreshToken = settings.RefreshToken;
          Instance.HttpClient = new HttpClient() { BaseAddress = new Uri(settings.BaseUrl) };
       }
 
@@ -89,7 +92,6 @@ namespace Climbing.Guide.Core.API {
          });
 
          var httpClient = GetHttpClient();
-         //AddClientCredentials(httpClient);
 
          var response = await httpClient.PostAsync("o/revoke_token/", content);
 

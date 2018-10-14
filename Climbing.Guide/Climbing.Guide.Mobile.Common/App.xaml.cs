@@ -3,6 +3,8 @@ using Xamarin.Forms.Xaml;
 using FreshMvvm;
 using Climbing.Guide.Core.API;
 using System.Threading.Tasks;
+using System;
+using Xamarin.Essentials;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Mobile.Common {
@@ -24,17 +26,40 @@ namespace Climbing.Guide.Mobile.Common {
          //FreshIOC.Container.Register<IDatabaseService, DatabaseService>();
          //FreshIOC.Container.Register<IUserDialogs>(UserDialogs.Instance);
 
+         InitializeRestApiClient();
+
+         Task.Run(NavigationManager.Current.InitializeNavigationAsync);
+      }
+
+      private void InitializeRestApiClient() {
+
+         string token = string.Empty;
+         string refreshToken = string.Empty;
+         string username = string.Empty;
+
+         Task.Run(async () => {
+            try {
+               token = await SecureStorage.GetAsync("token");
+               refreshToken = await SecureStorage.GetAsync("refresh_token");
+               username = await SecureStorage.GetAsync("username");
+            } catch (Exception ex) {
+               // Possible that device doesn't support secure storage on device.
+               Console.WriteLine($"Error: {ex.Message}");
+            }
+         }).Wait();
+
          // TODO UPDATE api address 
          RestApiClient.UpdateRestApiClientSettings(
             new RestApiClientSettings() {
 #if DEBUG
-               BaseUrl = "http://10.0.2.2:8000"
+               BaseUrl = "http://10.0.2.2:8000",
 #elif RELEASE
-               BaseUrl = "http://10.0.2.2:8000"
+               BaseUrl = "http://10.0.2.2:8000",
 #endif
+               Token = token,
+               RefreshToken = refreshToken,
+               Username = username
             });
-
-         Task.Run(NavigationManager.Current.InitializeNavigationAsync);
       }
 
       protected override void OnStart() {

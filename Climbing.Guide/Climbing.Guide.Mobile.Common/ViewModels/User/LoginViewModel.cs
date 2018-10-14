@@ -3,7 +3,7 @@ using Climbing.Guide.Mobile.Common.Resources;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Climbing.Guide.Mobile.Common.ViewModels.User {
@@ -35,6 +35,9 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
          if (!success) {
             await CurrentPage.DisplayAlert(Resources.Strings.User.Login_Invalid_Title, Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
          } else {
+            await SecureStorage.SetAsync("token", RestClient.Token);
+            await SecureStorage.SetAsync("refresh_token", RestClient.RefreshToken);
+            await SecureStorage.SetAsync("username", RestClient.Username);
             await NavigationManager.Current.UpdateNavigationContainerAsync();
          }
       }

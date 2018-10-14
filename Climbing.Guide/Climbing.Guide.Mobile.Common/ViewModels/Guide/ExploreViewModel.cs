@@ -11,52 +11,18 @@ using Xamarin.Essentials;
 
 namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class ExploreViewModel : BaseViewModel {
+   public class ExploreViewModel : GuideViewModel {
       public static string VmTitle { get; } = Resources.Strings.Guide.Explore_Title;
 
-      public ObservableCollection<Core.API.Schemas.Region> Regions { get; set; }
-      public ObservableCollection<Area> Areas { get; set; }
-      public ObservableCollection<Sector> Sectors { get; set; }
-      public ObservableCollection<Route> Routes { get; set; }
-
-      public Core.API.Schemas.Region SelectedRegion { get; set; }
-      public Area SelectedArea { get; set; }
-      public Sector SelectedSector { get; set; }
       public ObservableCollection<Pin> Pins { get; set; }
       public MapSpan VisibleRegion { get; set; }
       public Position SelectedLocation { get; set; }
 
-      public ICommand ClearFilterCommand { get; }
-
       public ExploreViewModel() {
          Title = VmTitle;
-
-         ClearFilterCommand = new Command(() => {
-            SelectedSector = null;
-            SelectedArea = null;
-            SelectedRegion = null;
-         }, () => null != SelectedSector || null != SelectedArea || null != SelectedRegion);
-
-         // Initialization of regions
-         Task.Run(UpdateFilter);
       }
 
-      // Update can execute of the login command
-      public void OnPropertyChanged(string propertyName, object before, object after) {
-         if (propertyName.CompareTo(nameof(SelectedRegion)) == 0 ||
-            propertyName.CompareTo(nameof(SelectedArea)) == 0 ||
-            propertyName.CompareTo(nameof(SelectedSector)) == 0) {
-            Task.Run(UpdateFilter);
-            (ClearFilterCommand as Command).ChangeCanExecute();
-         }
-
-         if(propertyName.CompareTo(nameof(VisibleRegion)) == 0) {
-            Console.WriteLine($"Visible region: Center({VisibleRegion.Center.Latitude}, {VisibleRegion.Center.Longitude}); Radius({VisibleRegion.Radius.Meters}); LatitudeDegrees({VisibleRegion.LatitudeDegrees}); LongitudeDegrees({VisibleRegion.LongitudeDegrees});");
-         }
-         RaisePropertyChanged(propertyName);
-      }
-
-      private async Task UpdateFilter() {
+      protected override async Task UpdateFilter() {
          if (null != SelectedSector) {
             // Load routes for the selected sector
             Routes = await RestClient.RoutesClient.ListAsync(SelectedSector.Id?.ToString());

@@ -9,6 +9,10 @@ namespace Climbing.Guide.Core.API {
       IRoutesClient RoutesClient { get; }
       IUsersClient UsersClient { get; }
 
+      string Username { get; }
+      string Token { get; }
+      string RefreshToken { get; }
+
       Task<bool> LoginAsync(string username, string password);
       Task<bool> LogoutAsync();
    }

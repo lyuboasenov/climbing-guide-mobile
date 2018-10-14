@@ -18,7 +18,7 @@
          <ColumnDefinition Width="Auto" />
       </Grid.ColumnDefinitions>
 
-      <views:BindableMap Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="4"
+      <views:BindableMap Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="4"
                          IsShowingUser="True"
                          MapType="Hybrid"
                          BindablePins="{Binding Pins}"
