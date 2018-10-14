@@ -9,7 +9,7 @@ namespace Climbing.Guide.Core.API.Schemas
     #pragma warning disable // Disable all warnings
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
-    public partial interface IRegisterClient
+    public partial interface IUsersClient
     {
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<User> CreateAsync(User data);
@@ -21,14 +21,14 @@ namespace Climbing.Guide.Core.API.Schemas
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
-    public partial interface IAreasClient
+    public partial interface ISectorsClient
     {
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<Area> ReadAsync(string region);
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Sector>> ListAsync(string area);
     
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        System.Threading.Tasks.Task<Area> ReadAsync(string region, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Sector>> ListAsync(string area, System.Threading.CancellationToken cancellationToken);
     
     }
     
@@ -45,26 +45,26 @@ namespace Climbing.Guide.Core.API.Schemas
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
-    public partial interface IRoutesClient
+    public partial interface IAreasClient
     {
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<Route> ReadAsync(string sector);
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Area>> ListAsync(string region);
     
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        System.Threading.Tasks.Task<Route> ReadAsync(string sector, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Area>> ListAsync(string region, System.Threading.CancellationToken cancellationToken);
     
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
-    public partial interface ISectorsClient
+    public partial interface IRoutesClient
     {
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<Sector> ReadAsync(string area);
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Route>> ListAsync(string sector);
     
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        System.Threading.Tasks.Task<Sector> ReadAsync(string area, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Route>> ListAsync(string sector, System.Threading.CancellationToken cancellationToken);
     
     }
     
@@ -160,14 +160,14 @@ namespace Climbing.Guide.Core.API.Schemas
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class Area : System.ComponentModel.INotifyPropertyChanged
+    public partial class Sector : System.ComponentModel.INotifyPropertyChanged
     {
         private int? _id;
         private string _name;
         private string _info;
-        private string _latitude;
-        private string _longitude;
-        private string _size;
+        private decimal _latitude;
+        private decimal _longitude;
+        private decimal _size;
     
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Id
@@ -212,8 +212,7 @@ namespace Climbing.Guide.Core.API.Schemas
         }
     
         [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Latitude
+        public decimal Latitude
         {
             get { return _latitude; }
             set 
@@ -227,8 +226,7 @@ namespace Climbing.Guide.Core.API.Schemas
         }
     
         [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Longitude
+        public decimal Longitude
         {
             get { return _longitude; }
             set 
@@ -242,8 +240,7 @@ namespace Climbing.Guide.Core.API.Schemas
         }
     
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Size
+        public decimal Size
         {
             get { return _size; }
             set 
@@ -261,9 +258,9 @@ namespace Climbing.Guide.Core.API.Schemas
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
         
-        public static Area FromJson(string data)
+        public static Sector FromJson(string data)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Area>(data);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Sector>(data);
         }
     
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
@@ -283,9 +280,9 @@ namespace Climbing.Guide.Core.API.Schemas
         private int? _id;
         private string _name;
         private string _info;
-        private string _latitude;
-        private string _longitude;
-        private string _size;
+        private decimal _latitude;
+        private decimal _longitude;
+        private decimal _size;
     
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Id
@@ -330,8 +327,7 @@ namespace Climbing.Guide.Core.API.Schemas
         }
     
         [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Latitude
+        public decimal Latitude
         {
             get { return _latitude; }
             set 
@@ -345,8 +341,7 @@ namespace Climbing.Guide.Core.API.Schemas
         }
     
         [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Longitude
+        public decimal Longitude
         {
             get { return _longitude; }
             set 
@@ -360,8 +355,7 @@ namespace Climbing.Guide.Core.API.Schemas
         }
     
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Size
+        public decimal Size
         {
             get { return _size; }
             set 
@@ -396,6 +390,121 @@ namespace Climbing.Guide.Core.API.Schemas
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class Area : System.ComponentModel.INotifyPropertyChanged
+    {
+        private int? _id;
+        private string _name;
+        private string _info;
+        private decimal _latitude;
+        private decimal _longitude;
+        private decimal _size;
+    
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Id
+        {
+            get { return _id; }
+            set 
+            {
+                if (_id != value)
+                {
+                    _id = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Name
+        {
+            get { return _name; }
+            set 
+            {
+                if (_name != value)
+                {
+                    _name = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("info", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Info
+        {
+            get { return _info; }
+            set 
+            {
+                if (_info != value)
+                {
+                    _info = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Always)]
+        public decimal Latitude
+        {
+            get { return _latitude; }
+            set 
+            {
+                if (_latitude != value)
+                {
+                    _latitude = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Always)]
+        public decimal Longitude
+        {
+            get { return _longitude; }
+            set 
+            {
+                if (_longitude != value)
+                {
+                    _longitude = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.Always)]
+        public decimal Size
+        {
+            get { return _size; }
+            set 
+            {
+                if (_size != value)
+                {
+                    _size = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+        
+        public static Area FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Area>(data);
+        }
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class Route : System.ComponentModel.INotifyPropertyChanged
     {
         private int? _id;
@@ -404,8 +513,8 @@ namespace Climbing.Guide.Core.API.Schemas
         private int _difficulty;
         private int? _rating;
         private System.Uri _schemaThumb;
-        private string _latitude;
-        private string _longitude;
+        private decimal _latitude;
+        private decimal _longitude;
     
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Id
@@ -492,8 +601,7 @@ namespace Climbing.Guide.Core.API.Schemas
         }
     
         [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Latitude
+        public decimal Latitude
         {
             get { return _latitude; }
             set 
@@ -507,8 +615,7 @@ namespace Climbing.Guide.Core.API.Schemas
         }
     
         [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Longitude
+        public decimal Longitude
         {
             get { return _longitude; }
             set 
@@ -529,124 +636,6 @@ namespace Climbing.Guide.Core.API.Schemas
         public static Route FromJson(string data)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<Route>(data);
-        }
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
-    
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class Sector : System.ComponentModel.INotifyPropertyChanged
-    {
-        private int? _id;
-        private string _name;
-        private string _info;
-        private string _latitude;
-        private string _longitude;
-        private string _size;
-    
-        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? Id
-        {
-            get { return _id; }
-            set 
-            {
-                if (_id != value)
-                {
-                    _id = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
-    
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Name
-        {
-            get { return _name; }
-            set 
-            {
-                if (_name != value)
-                {
-                    _name = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
-    
-        [Newtonsoft.Json.JsonProperty("info", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Info
-        {
-            get { return _info; }
-            set 
-            {
-                if (_info != value)
-                {
-                    _info = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
-    
-        [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Latitude
-        {
-            get { return _latitude; }
-            set 
-            {
-                if (_latitude != value)
-                {
-                    _latitude = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
-    
-        [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Longitude
-        {
-            get { return _longitude; }
-            set 
-            {
-                if (_longitude != value)
-                {
-                    _longitude = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
-    
-        [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Size
-        {
-            get { return _size; }
-            set 
-            {
-                if (_size != value)
-                {
-                    _size = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
-    
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-        
-        public static Sector FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Sector>(data);
         }
     
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;

@@ -2,6 +2,7 @@
 using Xamarin.Forms.Xaml;
 using FreshMvvm;
 using Climbing.Guide.Core.API;
+using System.Threading.Tasks;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Mobile.Common {
@@ -9,6 +10,9 @@ namespace Climbing.Guide.Mobile.Common {
 
       public App() {
          InitializeComponent();
+
+         // Show splash
+         MainPage = new Views.SplashView();
 
          //Set theme to light
          //var themeResources = typeof(Xamarin.Forms.Themes.DarkThemeResources);
@@ -30,7 +34,7 @@ namespace Climbing.Guide.Mobile.Common {
 #endif
             });
 
-         NavigationManager.InitializeNavigation();
+         Task.Run(NavigationManager.Current.InitializeNavigationAsync);
       }
 
       protected override void OnStart() {

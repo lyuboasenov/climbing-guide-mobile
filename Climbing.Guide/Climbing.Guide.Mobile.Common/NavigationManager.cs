@@ -11,13 +11,10 @@ namespace Climbing.Guide.Mobile.Common {
 
       private App App { get; } = (App)App.Current;
 
-      public static void InitializeNavigation() {
-         var masterDetailNav = Current.GetNavigationContainer();
-         Current.App.MainPage = masterDetailNav;
-
+      public async Task InitializeNavigationAsync() {
          MessagingCenter.Subscribe<Views.BaseContentPage>(Current.App, "GoBackToMainPage", (m) => {
-            Device.BeginInvokeOnMainThread(() => {
-               Current.App.MainPage = masterDetailNav;
+            Device.BeginInvokeOnMainThread(async () => {
+               Current.App.MainPage = await GetNavigationContainerAsync();
             });
          });
 
@@ -30,6 +27,11 @@ namespace Climbing.Guide.Mobile.Common {
                Current.App.Quit();
             });
          });
+
+         System.Threading.Thread.Sleep(5000);
+
+         // Init main navigation
+         Current.App.MainPage = await Current.GetNavigationContainerAsync();
       }
 
       public async Task PushModalAsync(Page page) {
@@ -48,7 +50,7 @@ namespace Climbing.Guide.Mobile.Common {
          await container.Navigation.PopModalAsync();
       }
 
-      private Page GetNavigationContainer() {
+      private async Task<Page> GetNavigationContainerAsync() {
          var masterDetailNav = new Views.CGMasterDetailNavigationContainer();
          masterDetailNav.Init(Resources.Strings.Main.CG);
          masterDetailNav.AddPage<HomeViewModel>(HomeViewModel.VmTitle);
@@ -70,9 +72,8 @@ namespace Climbing.Guide.Mobile.Common {
          return masterDetailNav;
       }
 
-      public void UpdateNavigationContainer() {
-         var masterDetailNav = Current.GetNavigationContainer();
-         Current.App.MainPage = masterDetailNav;
+      public async Task UpdateNavigationContainerAsync() {
+         Current.App.MainPage = await Current.GetNavigationContainerAsync();
       }
 
       internal class Commands {

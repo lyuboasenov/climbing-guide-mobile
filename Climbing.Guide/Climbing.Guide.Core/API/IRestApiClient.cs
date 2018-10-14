@@ -7,7 +7,7 @@ namespace Climbing.Guide.Core.API {
       IAreasClient AreasClient { get; }
       ISectorsClient SectorsClient { get; }
       IRoutesClient RoutesClient { get; }
-      IRegisterClient RegisterClient { get; }
+      IUsersClient UsersClient { get; }
 
       Task<bool> LoginAsync(string username, string password);
       Task<bool> LogoutAsync();

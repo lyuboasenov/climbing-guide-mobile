@@ -35,7 +35,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
          if (!success) {
             await CurrentPage.DisplayAlert(Resources.Strings.User.Login_Invalid_Title, Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
          } else {
-            NavigationManager.Current.UpdateNavigationContainer();
+            await NavigationManager.Current.UpdateNavigationContainerAsync();
          }
       }
 

@@ -11,13 +11,12 @@ namespace Climbing.Guide.Core.API.Client
     #pragma warning disable // Disable all warnings
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
-    public partial class RegisterClient : IRegisterClient
+    public partial class UsersClient : IUsersClient
     {
-        private string _baseUrl = "http://127.0.0.1:8000/";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
     
-        public RegisterClient(System.Net.Http.HttpClient httpClient)
+        public UsersClient(System.Net.Http.HttpClient httpClient)
         {
             _httpClient = httpClient; 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
@@ -26,12 +25,6 @@ namespace Climbing.Guide.Core.API.Client
                 UpdateJsonSerializerSettings(settings);
                 return settings;
             });
-        }
-    
-        public string BaseUrl 
-        {
-            get { return _baseUrl; }
-            set { _baseUrl = value; }
         }
     
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
@@ -52,7 +45,7 @@ namespace Climbing.Guide.Core.API.Client
         public async System.Threading.Tasks.Task<User> CreateAsync(User data, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/account_api/register");
+            urlBuilder_.Append("account/users");
     
             var client_ = _httpClient;
             try
@@ -152,13 +145,12 @@ namespace Climbing.Guide.Core.API.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
-    public partial class AreasClient : IAreasClient
+    public partial class SectorsClient : ISectorsClient
     {
-        private string _baseUrl = "http://127.0.0.1:8000/";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
     
-        public AreasClient(System.Net.Http.HttpClient httpClient)
+        public SectorsClient(System.Net.Http.HttpClient httpClient)
         {
             _httpClient = httpClient; 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
@@ -169,12 +161,6 @@ namespace Climbing.Guide.Core.API.Client
             });
         }
     
-        public string BaseUrl 
-        {
-            get { return _baseUrl; }
-            set { _baseUrl = value; }
-        }
-    
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
     
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
@@ -183,21 +169,21 @@ namespace Climbing.Guide.Core.API.Client
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
     
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<Area> ReadAsync(string region)
+        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Sector>> ListAsync(string area)
         {
-            return ReadAsync(region, System.Threading.CancellationToken.None);
+            return ListAsync(area, System.Threading.CancellationToken.None);
         }
     
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<Area> ReadAsync(string region, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Sector>> ListAsync(string area, System.Threading.CancellationToken cancellationToken)
         {
-            if (region == null)
-                throw new System.ArgumentNullException("region");
+            if (area == null)
+                throw new System.ArgumentNullException("area");
     
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/en/guide_api/areas/{region}/");
-            urlBuilder_.Replace("{region}", System.Uri.EscapeDataString(ConvertToString(region, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Append("en/guide/areas/{area}/sectors");
+            urlBuilder_.Replace("{area}", System.Uri.EscapeDataString(ConvertToString(area, System.Globalization.CultureInfo.InvariantCulture)));
     
             var client_ = _httpClient;
             try
@@ -228,10 +214,10 @@ namespace Climbing.Guide.Core.API.Client
                         if (status_ == "200") 
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(Area); 
+                            var result_ = default(System.Collections.ObjectModel.ObservableCollection<Sector>); 
                             try
                             {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<Area>(responseData_, _settings.Value);
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.ObjectModel.ObservableCollection<Sector>>(responseData_, _settings.Value);
                                 return result_; 
                             } 
                             catch (System.Exception exception_) 
@@ -246,7 +232,7 @@ namespace Climbing.Guide.Core.API.Client
                             throw new RestApiCallException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
             
-                        return default(Area);
+                        return default(System.Collections.ObjectModel.ObservableCollection<Sector>);
                     }
                     finally
                     {
@@ -296,7 +282,6 @@ namespace Climbing.Guide.Core.API.Client
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
     public partial class RegionsClient : IRegionsClient
     {
-        private string _baseUrl = "http://127.0.0.1:8000/";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
     
@@ -309,12 +294,6 @@ namespace Climbing.Guide.Core.API.Client
                 UpdateJsonSerializerSettings(settings);
                 return settings;
             });
-        }
-    
-        public string BaseUrl 
-        {
-            get { return _baseUrl; }
-            set { _baseUrl = value; }
         }
     
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
@@ -335,7 +314,7 @@ namespace Climbing.Guide.Core.API.Client
         public async System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Region>> ListAsync(System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/en/guide_api/regions");
+            urlBuilder_.Append("en/guide/regions");
     
             var client_ = _httpClient;
             try
@@ -432,13 +411,12 @@ namespace Climbing.Guide.Core.API.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
-    public partial class RoutesClient : IRoutesClient
+    public partial class AreasClient : IAreasClient
     {
-        private string _baseUrl = "http://127.0.0.1:8000/";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
     
-        public RoutesClient(System.Net.Http.HttpClient httpClient)
+        public AreasClient(System.Net.Http.HttpClient httpClient)
         {
             _httpClient = httpClient; 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
@@ -449,12 +427,6 @@ namespace Climbing.Guide.Core.API.Client
             });
         }
     
-        public string BaseUrl 
-        {
-            get { return _baseUrl; }
-            set { _baseUrl = value; }
-        }
-    
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
     
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
@@ -463,21 +435,21 @@ namespace Climbing.Guide.Core.API.Client
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
     
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<Route> ReadAsync(string sector)
+        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Area>> ListAsync(string region)
         {
-            return ReadAsync(sector, System.Threading.CancellationToken.None);
+            return ListAsync(region, System.Threading.CancellationToken.None);
         }
     
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<Route> ReadAsync(string sector, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Area>> ListAsync(string region, System.Threading.CancellationToken cancellationToken)
         {
-            if (sector == null)
-                throw new System.ArgumentNullException("sector");
+            if (region == null)
+                throw new System.ArgumentNullException("region");
     
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/en/guide_api/routes/{sector}/");
-            urlBuilder_.Replace("{sector}", System.Uri.EscapeDataString(ConvertToString(sector, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Append("en/guide/regions/{region}/areas");
+            urlBuilder_.Replace("{region}", System.Uri.EscapeDataString(ConvertToString(region, System.Globalization.CultureInfo.InvariantCulture)));
     
             var client_ = _httpClient;
             try
@@ -508,10 +480,10 @@ namespace Climbing.Guide.Core.API.Client
                         if (status_ == "200") 
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(Route); 
+                            var result_ = default(System.Collections.ObjectModel.ObservableCollection<Area>); 
                             try
                             {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<Route>(responseData_, _settings.Value);
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.ObjectModel.ObservableCollection<Area>>(responseData_, _settings.Value);
                                 return result_; 
                             } 
                             catch (System.Exception exception_) 
@@ -526,7 +498,7 @@ namespace Climbing.Guide.Core.API.Client
                             throw new RestApiCallException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
             
-                        return default(Route);
+                        return default(System.Collections.ObjectModel.ObservableCollection<Area>);
                     }
                     finally
                     {
@@ -574,13 +546,12 @@ namespace Climbing.Guide.Core.API.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
-    public partial class SectorsClient : ISectorsClient
+    public partial class RoutesClient : IRoutesClient
     {
-        private string _baseUrl = "http://127.0.0.1:8000/";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
     
-        public SectorsClient(System.Net.Http.HttpClient httpClient)
+        public RoutesClient(System.Net.Http.HttpClient httpClient)
         {
             _httpClient = httpClient; 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
@@ -591,12 +562,6 @@ namespace Climbing.Guide.Core.API.Client
             });
         }
     
-        public string BaseUrl 
-        {
-            get { return _baseUrl; }
-            set { _baseUrl = value; }
-        }
-    
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
     
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
@@ -605,21 +570,21 @@ namespace Climbing.Guide.Core.API.Client
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
     
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<Sector> ReadAsync(string area)
+        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Route>> ListAsync(string sector)
         {
-            return ReadAsync(area, System.Threading.CancellationToken.None);
+            return ListAsync(sector, System.Threading.CancellationToken.None);
         }
     
         /// <exception cref="RestApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<Sector> ReadAsync(string area, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Route>> ListAsync(string sector, System.Threading.CancellationToken cancellationToken)
         {
-            if (area == null)
-                throw new System.ArgumentNullException("area");
+            if (sector == null)
+                throw new System.ArgumentNullException("sector");
     
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/en/guide_api/sectors/{area}/");
-            urlBuilder_.Replace("{area}", System.Uri.EscapeDataString(ConvertToString(area, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Append("en/guide/sectors/{sector}/routes");
+            urlBuilder_.Replace("{sector}", System.Uri.EscapeDataString(ConvertToString(sector, System.Globalization.CultureInfo.InvariantCulture)));
     
             var client_ = _httpClient;
             try
@@ -650,10 +615,10 @@ namespace Climbing.Guide.Core.API.Client
                         if (status_ == "200") 
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(Sector); 
+                            var result_ = default(System.Collections.ObjectModel.ObservableCollection<Route>); 
                             try
                             {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<Sector>(responseData_, _settings.Value);
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.ObjectModel.ObservableCollection<Route>>(responseData_, _settings.Value);
                                 return result_; 
                             } 
                             catch (System.Exception exception_) 
@@ -668,7 +633,7 @@ namespace Climbing.Guide.Core.API.Client
                             throw new RestApiCallException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
             
-                        return default(Sector);
+                        return default(System.Collections.ObjectModel.ObservableCollection<Route>);
                     }
                     finally
                     {

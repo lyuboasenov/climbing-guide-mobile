@@ -153,4 +153,10 @@
   <data name="Error_Title" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="Current_Location" xml:space="preserve">
+    <value>You are here!</value>
+  </data>
+  <data name="Splash_Title" xml:space="preserve">
+    <value>Splash</value>
+  </data>
 </root>

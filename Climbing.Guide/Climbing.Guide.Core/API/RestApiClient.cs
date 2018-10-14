@@ -25,7 +25,7 @@ namespace Climbing.Guide.Core.API {
       private IAreasClient areasClient;
       private ISectorsClient sectorsClient;
       private IRoutesClient routesClient;
-      private IRegisterClient registerClient;
+      private IUsersClient usersClient;
 
       // Singleton property
       public IRegionsClient RegionsClient {
@@ -52,9 +52,9 @@ namespace Climbing.Guide.Core.API {
          }
       }
 
-      public IRegisterClient RegisterClient {
+      public IUsersClient UsersClient {
          get {
-            return GetGenericClient(ref registerClient, (client) => new Client.RegisterClient(client));
+            return GetGenericClient(ref usersClient, (client) => new Client.UsersClient(client));
          }
       }
 
@@ -84,11 +84,12 @@ namespace Climbing.Guide.Core.API {
       public async Task<bool> LogoutAsync() {
          var content = new FormUrlEncodedContent(new Dictionary<string, string>() {
             { "username", Token },
-            { "client_id", clientId }
+            { "client_id", clientId },
+            { "client_secret", clientSecret }
          });
 
          var httpClient = GetHttpClient();
-         AddClientCredentials(httpClient);
+         //AddClientCredentials(httpClient);
 
          var response = await httpClient.PostAsync("o/revoke_token/", content);
 

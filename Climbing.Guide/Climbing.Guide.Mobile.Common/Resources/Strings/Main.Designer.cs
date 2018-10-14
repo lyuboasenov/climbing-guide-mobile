@@ -124,6 +124,15 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You are here!.
+        /// </summary>
+        public static string Current_Location {
+            get {
+                return ResourceManager.GetString("Current_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Details.
         /// </summary>
         public static string Details_Button {
@@ -165,6 +174,15 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         public static string Ok {
             get {
                 return ResourceManager.GetString("Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Splash.
+        /// </summary>
+        public static string Splash_Title {
+            get {
+                return ResourceManager.GetString("Splash_Title", resourceCulture);
             }
         }
     }
