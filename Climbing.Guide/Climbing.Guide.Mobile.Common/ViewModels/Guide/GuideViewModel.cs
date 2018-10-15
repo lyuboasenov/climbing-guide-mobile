@@ -19,6 +19,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
       public Core.API.Schemas.Region SelectedRegion { get; set; }
       public Area SelectedArea { get; set; }
       public Sector SelectedSector { get; set; }
+      public Route SelectedRoute { get; set; }
 
       public ICommand ClearFilterCommand { get; }
 
@@ -26,6 +27,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
          Title = VmTitle;
 
          ClearFilterCommand = new Command(() => {
+            SelectedRoute = null;
             SelectedSector = null;
             SelectedArea = null;
             SelectedRegion = null;
@@ -42,11 +44,32 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
 
       // Update can execute of the login command
       public void OnPropertyChanged(string propertyName, object before, object after) {
-         if (propertyName.CompareTo(nameof(SelectedRegion)) == 0 ||
-            propertyName.CompareTo(nameof(SelectedArea)) == 0 ||
-            propertyName.CompareTo(nameof(SelectedSector)) == 0) {
+         if (propertyName.CompareTo(nameof(SelectedRegion)) == 0) {
+            Areas = null;
+            SelectedArea = null;
+            Sectors = null;
+            SelectedSector = null;
+            Routes = null;
+            SelectedRoute = null;
             Task.Run(UpdateFilter);
             (ClearFilterCommand as Command).ChangeCanExecute();
+         }
+         if (propertyName.CompareTo(nameof(SelectedArea)) == 0) {
+            Sectors = null;
+            SelectedSector = null;
+            Routes = null;
+            SelectedRoute = null;
+            Task.Run(UpdateFilter);
+            (ClearFilterCommand as Command).ChangeCanExecute();
+         }
+         if (propertyName.CompareTo(nameof(SelectedSector)) == 0) {
+            Routes = null;
+            SelectedRoute = null;
+            Task.Run(UpdateFilter);
+            (ClearFilterCommand as Command).ChangeCanExecute();
+         }
+         if (propertyName.CompareTo(nameof(SelectedRoute)) == 0) {
+            Task.Run(RouteSelected);
          }
 
          RaisePropertyChanged(propertyName);
@@ -55,16 +78,22 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
       protected virtual async Task UpdateFilter() {
          if (null != SelectedSector) {
             // Load routes for the selected sector
-            Routes = await RestClient.RoutesClient.ListAsync(SelectedSector.Id?.ToString());
+            Routes = await Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString());
          } else if (null != SelectedArea) {
-            Sectors = await RestClient.SectorsClient.ListAsync(SelectedArea.Id?.ToString());
+            Sectors = await Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString());
             RaisePropertyChanged(nameof(Sectors));
          } else if (null != SelectedRegion) {
-            Areas = await RestClient.AreasClient.ListAsync(SelectedRegion.Id?.ToString());
+            Areas = await Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString());
             RaisePropertyChanged(nameof(Areas));
          } else {
-            Regions = await RestClient.RegionsClient.ListAsync();
+            Regions = await Client.RegionsClient.ListAsync();
             RaisePropertyChanged(nameof(Regions));
+         }
+      }
+
+      protected virtual async Task RouteSelected() {
+         if (null != SelectedRoute) {
+            await NavigationManager.Current.PushModalAsync<ViewModels.Routes.RouteViewModel>(SelectedRoute);
          }
       }
    }

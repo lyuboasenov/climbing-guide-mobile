@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <views:BaseContentPage
    xmlns:views="clr-namespace:Climbing.Guide.Mobile.Common.Views"
+   xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
    x:Class="Climbing.Guide.Mobile.Common.Views.Guide.GuideView"
+   x:Name="Page"
    Title="{Binding Title}">
 
    <Grid>
@@ -25,9 +27,10 @@
       <Button Grid.Column="3" Grid.Row="0" Command="{Binding ClearFilterCommand}" />
 
       <ListView Grid.Row="1"
-                 Grid.Column="0"
-                 Grid.ColumnSpan="4"
-                 ItemsSource="{Binding Routes}">
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                ItemsSource="{Binding Routes}"
+                SelectedItem="{Binding SelectedRoute}">
          <ListView.ItemTemplate>
             <DataTemplate>
                <ViewCell>
@@ -38,6 +41,7 @@
                      </Grid.ColumnDefinitions>
                      <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                      </Grid.RowDefinitions>
                      <Label Grid.Column="0" Grid.Row="0" Text="{Binding Name}" />

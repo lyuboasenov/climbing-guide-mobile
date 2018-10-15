@@ -27,12 +27,9 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
       private async Task Logout() {
          bool success = false;
          try {
-            success = await RestClient.LogoutAsync();
-            SecureStorage.Remove("token");
-            SecureStorage.Remove("refresh_token");
-            SecureStorage.Remove("username");
+            success = await Client.LogoutAsync();
          } catch (RestApiCallException ex) {
-            HandleRestApiCallException(ex);
+            await HandleRestApiCallException(ex);
          }
 
          await NavigationManager.Current.UpdateNavigationContainerAsync();

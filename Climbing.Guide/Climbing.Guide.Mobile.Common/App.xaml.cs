@@ -1,10 +1,10 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using FreshMvvm;
-using Climbing.Guide.Core.API;
 using System.Threading.Tasks;
 using System;
 using Xamarin.Essentials;
+using Climbing.Guide.Mobile.Common.Services;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Mobile.Common {
@@ -49,8 +49,8 @@ namespace Climbing.Guide.Mobile.Common {
          }).Wait();
 
          // TODO UPDATE api address 
-         RestApiClient.UpdateRestApiClientSettings(
-            new RestApiClientSettings() {
+         RestApiClient.Instance.UpdateRestApiClientSettings(
+            new Core.API.RestApiClientSettings() {
 #if DEBUG
                BaseUrl = "http://10.0.2.2:8000",
 #elif RELEASE

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage
+   xmlns:views="clr-namespace:Climbing.Guide.Mobile.Common.Views"
+   xmlns:resources="clr-namespace:Climbing.Guide.Mobile.Common.Resources.Strings"
+   xmlns="http://xamarin.com/schemas/2014/forms"
+   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+   x:Class="Climbing.Guide.Mobile.Common.Views.Routes.RouteView"
+   Title="{Binding Title}">
+
+   <Grid>
+      <Grid.ColumnDefinitions>
+         <ColumnDefinition Width="*" />
+         <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+         <RowDefinition Height="Auto" />
+         <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+
+      <Label Text="{Binding Route.Name}" />
+      <Label Grid.Column="1" Text="{Binding Route.Difficulty}" />
+
+      <ScrollView Grid.Row="1" Grid.ColumnSpan="2">
+         <Grid>
+            <Grid.ColumnDefinitions>
+               <ColumnDefinition Width="Auto" />
+               <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+               <RowDefinition Height="Auto" />
+               <RowDefinition Height="Auto" />
+               <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Text="{Binding Source={x:Static resources:Routes.Info}}" />
+            <StackLayout Grid.Row="0" Grid.Column="1">
+               <Label Text="{Binding Route.Info}" />
+            </StackLayout>
+
+            <Label Grid.Row="1" Text="{Binding Source={x:Static resources:Routes.Map}}" />
+            <StackLayout Grid.Row="1" Grid.Column="1">
+               <Label Text="Map here!" />
+            </StackLayout>
+
+            <Label Grid.Row="2" Text="{Binding Source={x:Static resources:Routes.Schema}}" />
+            <StackLayout Grid.Row="2" Grid.Column="1">
+               <Button Text="View schema" Command="{Binding ViewSchemaCommand}" />
+            </StackLayout>
+         </Grid>
+      </ScrollView>
+
+   </Grid>
+</views:BaseContentPage>

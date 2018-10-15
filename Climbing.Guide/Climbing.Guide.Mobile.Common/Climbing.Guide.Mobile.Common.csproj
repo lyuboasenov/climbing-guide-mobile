@@ -36,6 +36,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Main.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Strings\Routes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Routes.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Strings\Settings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -45,6 +50,9 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>User.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Routes\RouteView.xaml.cs">
+      <DependentUpon>RouteView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\SplashView.xaml.cs">
       <DependentUpon>SplashView.xaml</DependentUpon>
@@ -92,6 +100,10 @@
     <EmbeddedResource Update="Resources\Strings\Main.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Main.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Strings\Routes.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Routes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Strings\Settings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

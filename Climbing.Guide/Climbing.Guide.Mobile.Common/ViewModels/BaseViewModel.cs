@@ -1,12 +1,12 @@
-﻿using Climbing.Guide.Core.API;
-using Climbing.Guide.Core.API.Schemas;
+﻿using Climbing.Guide.Mobile.Common.Services;
 using FreshMvvm;
 using System;
+using System.Threading.Tasks;
 
 namespace Climbing.Guide.Mobile.Common.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class BaseViewModel : FreshBasePageModel {
-      protected IRestApiClient RestClient {
+      protected RestApiClient Client {
          get {
             return RestApiClient.Instance;
          }
@@ -22,7 +22,9 @@ namespace Climbing.Guide.Mobile.Common.ViewModels {
       /// <param name="ex">The communication exception to handle</param>
       /// <param name="errorMessage">Error message to be displayed in a alert window.</param>
       /// <param name="detailedErrorMessageFormat">Format string to be used in detailed message forming, to be displayed in detailed alert window.</param>
-      protected async void HandleRestApiCallException(RestApiCallException ex, string errorMessage, string detailedErrorMessageFormat) {
+      protected async Task HandleRestApiCallException(Core.API.Schemas.RestApiCallException ex,
+         string errorMessage,
+         string detailedErrorMessageFormat) {
          if (await CurrentPage.DisplayAlert(
                Resources.Strings.Main.Error_Title,
                errorMessage,
@@ -38,8 +40,8 @@ namespace Climbing.Guide.Mobile.Common.ViewModels {
       /// Displays error message and detailed error message if selected.
       /// </summary>
       /// <param name="ex">The communication exception to handle</param>
-      protected async void HandleRestApiCallException(RestApiCallException ex) {
-         HandleRestApiCallException(ex,
+      protected async Task HandleRestApiCallException(Core.API.Schemas.RestApiCallException ex) {
+         await HandleRestApiCallException(ex,
             Resources.Strings.Main.Communication_Error_Message,
             Resources.Strings.Main.Communication_Error_Message_Detailed_Format);
       }

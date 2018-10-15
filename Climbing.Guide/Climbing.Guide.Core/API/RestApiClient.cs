@@ -7,7 +7,7 @@ using Climbing.Guide.Core.API.Schemas;
 using Newtonsoft.Json;
 
 namespace Climbing.Guide.Core.API {
-   public class RestApiClient : IRestApiClient {
+   public class RestApiClient {
       private const string clientId = "KoZwAMrSN4XjWC2m0Lkp3gjN9t1h9Vano5avgBWI";
       private const string clientSecret = "FT0YD3LyTr4sZgBKRNUk0vEv8gIinHFbVOIqyd11xQ3zT4GG10NjcffaoPUm3Fw4zfTrCMV0xFxOVtabWWzPYDECFoBhr0ezsLwfl75C6kQC5YMeejEJfbAMr0ZetVKz";
 
@@ -64,17 +64,21 @@ namespace Climbing.Guide.Core.API {
          }
       }
 
-      #region Public
+      protected RestApiClient() {
 
-      public static void UpdateRestApiClientSettings(RestApiClientSettings settings) {
-         Instance.Settings = settings;
-         Instance.Username = settings.Username;
-         Instance.Token = settings.Token;
-         Instance.RefreshToken = settings.RefreshToken;
-         Instance.HttpClient = new HttpClient() { BaseAddress = new Uri(settings.BaseUrl) };
       }
 
-      public async Task<bool> LoginAsync(string username, string password) {
+      #region Public
+
+      public void UpdateRestApiClientSettings(RestApiClientSettings settings) {
+         Settings = settings;
+         Username = settings.Username;
+         Token = settings.Token;
+         RefreshToken = settings.RefreshToken;
+         HttpClient = new HttpClient() { BaseAddress = new Uri(settings.BaseUrl) };
+      }
+
+      public virtual async Task<bool> LoginAsync(string username, string password) {
          var content = new FormUrlEncodedContent(new Dictionary<string,string>() {
             { "username", username },
             { "password", password },
@@ -84,7 +88,7 @@ namespace Climbing.Guide.Core.API {
          return await GetAccessTokenAsync(content);
       }
 
-      public async Task<bool> LogoutAsync() {
+      public virtual async Task<bool> LogoutAsync() {
          var content = new FormUrlEncodedContent(new Dictionary<string, string>() {
             { "username", Token },
             { "client_id", clientId },

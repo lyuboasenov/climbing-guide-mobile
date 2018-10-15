@@ -27,17 +27,14 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
       private async Task Login() {
          bool success = false;
          try {
-            success = await RestClient.LoginAsync(Username, Password);
+            success = await Client.LoginAsync(Username, Password);
          } catch (RestApiCallException ex) {
-            HandleRestApiCallException(ex);
+            await HandleRestApiCallException(ex);
          }
 
          if (!success) {
             await CurrentPage.DisplayAlert(Resources.Strings.User.Login_Invalid_Title, Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
          } else {
-            await SecureStorage.SetAsync("token", RestClient.Token);
-            await SecureStorage.SetAsync("refresh_token", RestClient.RefreshToken);
-            await SecureStorage.SetAsync("username", RestClient.Username);
             await NavigationManager.Current.UpdateNavigationContainerAsync();
          }
       }
