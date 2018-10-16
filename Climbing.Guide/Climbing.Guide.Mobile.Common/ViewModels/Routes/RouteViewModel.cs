@@ -22,6 +22,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Routes {
 
       public override void Init(object initData) {
          Route = initData as Route;
+         Title = string.Format("{0}   {1}", Route.Name, Converters.GradeConverter.Convert(Route));
       }
 
       private async Task ViewSchema() {

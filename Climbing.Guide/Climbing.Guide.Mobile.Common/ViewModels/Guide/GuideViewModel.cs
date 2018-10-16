@@ -22,6 +22,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
       public Route SelectedRoute { get; set; }
 
       public ICommand ClearFilterCommand { get; }
+      public ICommand RouteTappedCommand { get; }
 
       public GuideViewModel() {
          Title = VmTitle;
@@ -37,6 +38,8 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
             Sectors = null;
             Routes = null;
          }, () => null != SelectedSector || null != SelectedArea || null != SelectedRegion);
+
+         RouteTappedCommand = new Command<Route>(async (route) => { await RouteTapped(route); });
 
          // Initialization of regions
          Task.Run(UpdateFilter);
@@ -93,8 +96,14 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
 
       protected virtual async Task RouteSelected() {
          if (null != SelectedRoute) {
-            await NavigationManager.Current.PushModalAsync<ViewModels.Routes.RouteViewModel>(SelectedRoute);
+            Device.BeginInvokeOnMainThread(async () => {
+               await NavigationManager.Current.PushModalAsync<Routes.RouteViewModel>(SelectedRoute);
+            });
          }
+      }
+
+      private async Task RouteTapped(Route route) {
+         await NavigationManager.Current.PushModalAsync<Routes.RouteViewModel>(route);
       }
    }
 }

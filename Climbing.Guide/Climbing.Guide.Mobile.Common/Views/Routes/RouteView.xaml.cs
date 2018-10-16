@@ -1,7 +1,4 @@
-﻿using System;
-
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Xamarin.Forms.Xaml;
 
 namespace Climbing.Guide.Mobile.Common.Views.Routes {
    [XamlCompilation(XamlCompilationOptions.Compile)]

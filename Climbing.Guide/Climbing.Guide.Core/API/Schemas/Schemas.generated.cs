@@ -512,9 +512,11 @@ namespace Climbing.Guide.Core.API.Schemas
         private string _info;
         private int _difficulty;
         private int? _rating;
+        private System.Uri _schema;
         private System.Uri _schemaThumb;
         private decimal _latitude;
         private decimal _longitude;
+        private RouteType? _type;
     
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Id
@@ -586,6 +588,20 @@ namespace Climbing.Guide.Core.API.Schemas
             }
         }
     
+        [Newtonsoft.Json.JsonProperty("schema", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Uri Schema
+        {
+            get { return _schema; }
+            set 
+            {
+                if (_schema != value)
+                {
+                    _schema = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
         [Newtonsoft.Json.JsonProperty("schemaThumb", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Uri SchemaThumb
         {
@@ -628,6 +644,20 @@ namespace Climbing.Guide.Core.API.Schemas
             }
         }
     
+        [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public RouteType? Type
+        {
+            get { return _type; }
+            set 
+            {
+                if (_type != value)
+                {
+                    _type = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
         public string ToJson() 
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
@@ -646,6 +676,17 @@ namespace Climbing.Guide.Core.API.Schemas
             if (handler != null) 
                 handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
+    public enum RouteType
+    {
+        _1 = 1,
+    
+        _2 = 2,
+    
+        _4 = 4,
     
     }
 

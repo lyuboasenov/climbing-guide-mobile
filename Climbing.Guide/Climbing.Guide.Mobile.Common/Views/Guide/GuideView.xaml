@@ -4,9 +4,17 @@
    xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+   xmlns:behaviors="clr-namespace:Climbing.Guide.Mobile.Common.Behaviors"
+   xmlns:converters="clr-namespace:Climbing.Guide.Mobile.Common.Converters"
    x:Class="Climbing.Guide.Mobile.Common.Views.Guide.GuideView"
    x:Name="Page"
    Title="{Binding Title}">
+
+   <views:BaseContentPage.Resources>
+      <ResourceDictionary>
+         <converters:ItemTappedEventArgsToItemConverter x:Key="ItemTappedConverter" />
+      </ResourceDictionary>
+   </views:BaseContentPage.Resources>
 
    <Grid>
       <Grid.RowDefinitions>
@@ -30,7 +38,12 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="4"
                 ItemsSource="{Binding Routes}"
-                SelectedItem="{Binding SelectedRoute}">
+                SelectionMode="None">
+         <ListView.Behaviors>
+            <behaviors:EventToCommandBehavior EventName="ItemTapped"
+                                              Command="{Binding RouteTappedCommand}"
+                                              Converter="{StaticResource ItemTappedConverter}" />
+         </ListView.Behaviors>
          <ListView.ItemTemplate>
             <DataTemplate>
                <ViewCell>
@@ -42,10 +55,9 @@
                      <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
                      </Grid.RowDefinitions>
                      <Label Grid.Column="0" Grid.Row="0" Text="{Binding Name}" />
-                     <Label Grid.Column="0" Grid.Row="1" Text="{Binding Description}" />
+                     <Label Grid.Column="0" Grid.Row="1" Text="{Binding Info}" />
 
                      <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding Difficulty}" />
                   </Grid>

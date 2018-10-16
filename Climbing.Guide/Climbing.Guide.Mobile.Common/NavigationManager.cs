@@ -28,10 +28,15 @@ namespace Climbing.Guide.Mobile.Common {
             });
          });
 
-         System.Threading.Thread.Sleep(5000);
+         Page navigationContainer = null;
+         var tasks = new[] {
+            Task.Run(() => navigationContainer = Current.GetNavigationContainerAsync()),
+            Task.Run(() => System.Threading.Thread.Sleep(5000))
+         };
+         Task.WaitAll(tasks);
 
          // Init main navigation
-         Current.App.MainPage = Current.GetNavigationContainerAsync();
+         Current.App.MainPage = navigationContainer;
       }
 
       public async Task PushModalAsync(Page page) {
@@ -42,12 +47,14 @@ namespace Climbing.Guide.Mobile.Common {
       public async Task PushModalAsync<T>(object data = null) where T : FreshBasePageModel {
          var page = FreshPageModelResolver.ResolvePageModel<T>(data);
          Views.CGMasterDetailNavigationContainer container = (Views.CGMasterDetailNavigationContainer)App.MainPage;
-         await container.Navigation.PushModalAsync(page);
+         //await container.Navigation.PushAsync(page);
+         await container.PushPage(page, page.GetModel(), true);
       }
 
       public async Task PopModalAsync() {
          Views.CGMasterDetailNavigationContainer container = (Views.CGMasterDetailNavigationContainer)App.MainPage;
-         await container.Navigation.PopModalAsync();
+         //await container.Navigation.PopAsync();
+         await container.PopPage();
       }
 
       private Page GetNavigationContainerAsync() {
@@ -72,7 +79,7 @@ namespace Climbing.Guide.Mobile.Common {
          return masterDetailNav;
       }
 
-      public async Task UpdateNavigationContainerAsync() {
+      public void UpdateNavigationContainerAsync() {
          Current.App.MainPage = Current.GetNavigationContainerAsync();
       }
 
