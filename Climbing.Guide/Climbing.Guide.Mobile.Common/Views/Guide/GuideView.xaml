@@ -13,6 +13,7 @@
    <views:BaseContentPage.Resources>
       <ResourceDictionary>
          <converters:ItemTappedEventArgsToItemConverter x:Key="ItemTappedConverter" />
+         <converters:GradeConverter x:Key="GradeConverter" />
       </ResourceDictionary>
    </views:BaseContentPage.Resources>
 
@@ -59,7 +60,7 @@
                      <Label Grid.Column="0" Grid.Row="0" Text="{Binding Name}" />
                      <Label Grid.Column="0" Grid.Row="1" Text="{Binding Info}" />
 
-                     <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding Difficulty}" />
+                     <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding ., Converter={StaticResource GradeConverter}}" />
                   </Grid>
                </ViewCell>
             </DataTemplate>

@@ -16,8 +16,11 @@ namespace Climbing.Guide.Mobile.Common.Converters {
       }
 
       public static string Convert(Route route) {
-         return Grade.GetGradeList(route.Type.Value).First(g => g.AbsoluteValue == route.Difficulty).Name;
-
+         string result = string.Empty;
+         if (null != route) {
+            result = Grade.GetGradeList(route.Type.Value).First(g => g.AbsoluteValue == route.Difficulty).Name;
+         }
+         return result;
       }
    }
 }

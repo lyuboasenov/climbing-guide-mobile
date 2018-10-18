@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -105,6 +106,37 @@ namespace Climbing.Guide.Core.API {
          TokenExpiration = DateTime.MaxValue;
 
          return response.IsSuccessStatusCode;
+      }
+
+      public async Task<string> DownloadRouteSchemaThumbAsync(int routeId, Uri schemaThumbUri) {
+         var localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), $"climbing-guide/routes/schema/thumb/{routeId}.jpeg");
+         await DownloadAsync(schemaThumbUri, localPath);
+         return localPath;
+      }
+
+      public async Task<string> DownloadRouteSchemaAsync(int routeId, Uri schemaUri) {
+         var localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), $"climbing-guide/routes/schema/full/{routeId}.jpeg");
+         await DownloadAsync(schemaUri, localPath);
+         return localPath;
+      }
+
+      public async Task DownloadAsync(Uri uri, string localPath) {
+         var localFile = new FileInfo(localPath);
+         if (!localFile.Directory.Exists) {
+            localFile.Directory.Create();
+         }
+
+         if (!localFile.Exists) {
+            using (var response = await HttpClient.GetAsync(uri)) {
+               response.EnsureSuccessStatusCode();
+
+               using (var localFileStream = localFile.Create()) {
+                  using (var responseStream = await response.Content.ReadAsStreamAsync()) {
+                     await responseStream.CopyToAsync(localFileStream);
+                  }
+               }
+            }
+         }
       }
 
       #endregion Public
