@@ -47,13 +47,15 @@ namespace Climbing.Guide.Mobile.Common.Views.CustomViews {
 
          Size imageSize = Size.Zero;
 
-         using (var bitmap = SkiaSharpHelper.LoadBitmap(SchemaLocalPath, Math.Max(CanvasSize.Height, CanvasSize.Width)))
-         using (var paint = new SKPaint {
-            FilterQuality = SKFilterQuality.High, // high quality scaling
-            IsAntialias = true
-         }) {
-            imageSize = new Size(bitmap.Width, bitmap.Height);
-            e.Surface.Canvas.DrawBitmap(bitmap, 0, 0, paint);
+         if (!string.IsNullOrEmpty(SchemaLocalPath)) {
+            using (var bitmap = SkiaSharpHelper.LoadBitmap(SchemaLocalPath, Math.Max(CanvasSize.Height, CanvasSize.Width)))
+            using (var paint = new SKPaint {
+               FilterQuality = SKFilterQuality.High, // high quality scaling
+               IsAntialias = true
+            }) {
+               imageSize = new Size(bitmap.Width, bitmap.Height);
+               e.Surface.Canvas.DrawBitmap(bitmap, 0, 0, paint);
+            }
          }
 
          if (null != SchemaRoute) {
