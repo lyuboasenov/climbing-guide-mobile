@@ -20,8 +20,6 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
 
       public LogoutViewModel() {
          Title = VmTitle;
-
-         // Logout().RunSynchronously();
       }
 
       private async Task Logout() {
@@ -32,7 +30,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
             await HandleRestApiCallException(ex);
          }
 
-         NavigationManager.Current.UpdateNavigationContainerAsync();
+         Navigation.UpdateNavigationContainerAsync();
       }
    }
 }

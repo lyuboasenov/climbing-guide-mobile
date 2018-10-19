@@ -5,11 +5,6 @@ using SlideOverKit;
 
 namespace Climbing.Guide.Mobile.Common.Views {
    public class BaseContentPage : MenuContainerPage {
-      public BaseContentPage() {
-         //         ToolbarItems.Add(new ToolbarItem("Main Menu", null, () => {
-         //            Application.Current.MainPage = new NavigationPage(new LaunchPage((App)Application.Current));
-         //         }));
-      }
 
       protected override void OnBindingContextChanged() {
          base.OnBindingContextChanged();

@@ -34,7 +34,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Routes {
          });
 
          SchemaRoute = new ObservableCollection<Point>() {
-            new Point(0, 0), new Point(0.7, 0.7), new Point(1, 1)
+            new Point(0, 0), new Point(0.7, 0), new Point(0.7, 0.7), new Point(1, 1)
          };
       }
 

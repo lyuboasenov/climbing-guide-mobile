@@ -2,15 +2,14 @@
 using FreshMvvm;
 using System;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Climbing.Guide.Mobile.Common.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class BaseViewModel : FreshBasePageModel {
-      protected RestApiClient Client {
-         get {
-            return RestApiClient.Instance;
-         }
-      }
+      protected IRestApiClient Client => DependencyService.Get<IRestApiClient>();
+
+      internal INavigationService Navigation => DependencyService.Get<INavigationService>();
 
       public BaseViewModel Parent { get; set; }
       public bool IsBusy { get; set; }

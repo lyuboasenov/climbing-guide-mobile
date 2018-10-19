@@ -1,9 +1,6 @@
 ﻿using Climbing.Guide.Core.API.Schemas;
-using Climbing.Guide.Mobile.Common.Resources;
-using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Climbing.Guide.Mobile.Common.ViewModels.User {
@@ -35,7 +32,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
          if (!success) {
             await CurrentPage.DisplayAlert(Resources.Strings.User.Login_Invalid_Title, Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
          } else {
-            NavigationManager.Current.UpdateNavigationContainerAsync();
+            Navigation.UpdateNavigationContainerAsync();
          }
       }
 
@@ -48,7 +45,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
       }
 
       private async Task Signup() {
-         await NavigationManager.Current.PushModalAsync<ViewModels.User.SignupViewModel>();
+         await Navigation.PushAsync<SignupViewModel>();
       }
    }
 }

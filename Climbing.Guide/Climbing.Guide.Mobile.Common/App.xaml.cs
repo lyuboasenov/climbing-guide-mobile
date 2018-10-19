@@ -28,7 +28,7 @@ namespace Climbing.Guide.Mobile.Common {
 
          InitializeRestApiClient();
 
-         Task.Run(NavigationManager.Current.InitializeNavigationAsync);
+         DependencyService.Get<INavigationService>().InitializeNavigation();
       }
 
       private void InitializeRestApiClient() {
@@ -46,20 +46,22 @@ namespace Climbing.Guide.Mobile.Common {
                // Possible that device doesn't support secure storage on device.
                Console.WriteLine($"Error: {ex.Message}");
             }
-         }).Wait();
+         }).GetAwaiter().GetResult();
+
+         var restApiClientSettings =
+            DependencyService.Get<ICoreFactoryService>().GetObject<Core.API.IRestApiClientSettings>();
 
          // TODO UPDATE api address 
-         RestApiClient.Instance.UpdateRestApiClientSettings(
-            new Core.API.RestApiClientSettings() {
 #if DEBUG
-               BaseUrl = "http://10.0.2.2:8000",
+         restApiClientSettings.BaseUrl = "http://10.0.2.2:8000";
 #elif RELEASE
-               BaseUrl = "http://10.0.2.2:8000",
+         restApiClientSettings.BaseUrl = "http://10.0.2.2:8000";
 #endif
-               Token = token,
-               RefreshToken = refreshToken,
-               Username = username
-            });
+         restApiClientSettings.Token = token;
+         restApiClientSettings.RefreshToken = refreshToken;
+         restApiClientSettings.Username = username;
+
+         DependencyService.Get<IRestApiClient>().UpdateRestApiClientSettings(restApiClientSettings);
       }
 
       protected override void OnStart() {

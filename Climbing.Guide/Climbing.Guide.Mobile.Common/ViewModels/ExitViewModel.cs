@@ -11,7 +11,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels {
 
       public ExitViewModel() {
          Title = VmTitle;
-         MessagingCenter.Send<App>((App)App.Current, NavigationManager.Commands.EXIT);
+         // MessagingCenter.Send<App>((App)App.Current, NavigationService.Commands.EXIT);
       }
    }
 }

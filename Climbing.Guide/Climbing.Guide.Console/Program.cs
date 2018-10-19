@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Climbing.Guide.Core.API;
+using System;
 
 namespace Climbing.Guide.Console {
    class Program {
@@ -27,7 +28,7 @@ namespace Climbing.Guide.Console {
 
       private static void TestRestApiLogin() {
          string choice = "";
-         Core.API.RestApiClient client = Core.API.RestApiClient.Instance;
+         var client = GetRestApiClient();
          do {
             System.Console.ReadLine();
             System.Console.Write("username:");
@@ -48,7 +49,7 @@ namespace Climbing.Guide.Console {
       }
 
       private static void TestRestApiCalls() {
-         Core.API.RestApiClient client = Core.API.RestApiClient.Instance;
+         var client = GetRestApiClient();
          var regions = client.RegionsClient.ListAsync().Result;
 
          System.Console.Clear();
@@ -57,6 +58,10 @@ namespace Climbing.Guide.Console {
          }
 
          System.Console.ReadLine();
+      }
+
+      private static IRestApiClient GetRestApiClient() {
+         return new RestApiClient();
       }
    }
 }

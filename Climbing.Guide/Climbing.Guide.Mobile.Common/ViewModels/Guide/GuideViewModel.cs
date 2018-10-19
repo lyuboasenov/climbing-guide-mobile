@@ -112,13 +112,13 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
       protected virtual void RouteSelected() {
          if (null != SelectedRoute) {
             Device.BeginInvokeOnMainThread(async () => {
-               await NavigationManager.Current.PushModalAsync<Routes.RouteViewModel>(SelectedRoute);
+               await Navigation.PushAsync<Routes.RouteViewModel>(SelectedRoute);
             });
          }
       }
 
       private async Task RouteTapped(Route route) {
-         await NavigationManager.Current.PushModalAsync<Routes.RouteViewModel>(route);
+         await Navigation.PushAsync<Routes.RouteViewModel>(route);
       }
    }
 }

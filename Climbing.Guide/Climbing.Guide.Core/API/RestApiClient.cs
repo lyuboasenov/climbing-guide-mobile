@@ -8,13 +8,12 @@ using Climbing.Guide.Core.API.Schemas;
 using Newtonsoft.Json;
 
 namespace Climbing.Guide.Core.API {
-   public class RestApiClient {
+   public class RestApiClient : IRestApiClient {
+
+      private IRestApiClientSettings Settings { get; set; }
+
       private const string clientId = "KoZwAMrSN4XjWC2m0Lkp3gjN9t1h9Vano5avgBWI";
       private const string clientSecret = "FT0YD3LyTr4sZgBKRNUk0vEv8gIinHFbVOIqyd11xQ3zT4GG10NjcffaoPUm3Fw4zfTrCMV0xFxOVtabWWzPYDECFoBhr0ezsLwfl75C6kQC5YMeejEJfbAMr0ZetVKz";
-
-      public static RestApiClient Instance { get; } = new RestApiClient();
-
-      private RestApiClientSettings Settings { get; set; }
 
       private HttpClient HttpClient { get; set; }  = new HttpClient() { BaseAddress = new Uri("http://127.0.0.1:8000/") };
       public string Token { get; private set; }
@@ -27,6 +26,14 @@ namespace Climbing.Guide.Core.API {
       private ISectorsClient sectorsClient;
       private IRoutesClient routesClient;
       private IUsersClient usersClient;
+
+      public RestApiClient() {
+
+      }
+
+      public RestApiClient(IRestApiClientSettings settings) {
+         UpdateRestApiClientSettings(settings);
+      }
 
       // Singleton property
       public IRegionsClient RegionsClient {
@@ -65,13 +72,9 @@ namespace Climbing.Guide.Core.API {
          }
       }
 
-      protected RestApiClient() {
-
-      }
-
       #region Public
 
-      public void UpdateRestApiClientSettings(RestApiClientSettings settings) {
+      public void UpdateRestApiClientSettings(IRestApiClientSettings settings) {
          Settings = settings;
          Username = settings.Username;
          Token = settings.Token;
@@ -108,25 +111,13 @@ namespace Climbing.Guide.Core.API {
          return response.IsSuccessStatusCode;
       }
 
-      public async Task<string> DownloadRouteSchemaThumbAsync(int routeId, Uri schemaThumbUri) {
-         var localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), $"climbing-guide/routes/schema/thumb/{routeId}.jpeg");
-         await DownloadAsync(schemaThumbUri, localPath);
-         return localPath;
-      }
-
-      public async Task<string> DownloadRouteSchemaAsync(int routeId, Uri schemaUri) {
-         var localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), $"climbing-guide/routes/schema/full/{routeId}.jpeg");
-         await DownloadAsync(schemaUri, localPath);
-         return localPath;
-      }
-
-      public async Task DownloadAsync(Uri uri, string localPath) {
+      public async Task DownloadAsync(Uri uri, string localPath, bool overwrite = false) {
          var localFile = new FileInfo(localPath);
          if (!localFile.Directory.Exists) {
             localFile.Directory.Create();
          }
 
-         if (!localFile.Exists) {
+         if (!localFile.Exists || overwrite) {
             using (var response = await HttpClient.GetAsync(uri)) {
                response.EnsureSuccessStatusCode();
 
