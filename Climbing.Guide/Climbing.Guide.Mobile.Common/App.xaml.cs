@@ -26,9 +26,8 @@ namespace Climbing.Guide.Mobile.Common {
          //FreshIOC.Container.Register<IDatabaseService, DatabaseService>();
          //FreshIOC.Container.Register<IUserDialogs>(UserDialogs.Instance);
 
-         InitializeRestApiClient();
-
-         DependencyService.Get<INavigationService>().InitializeNavigation();
+         Task.Run(() => InitializeRestApiClient() ).
+            ContinueWith((task) => Task.Run(() => DependencyService.Get<INavigationService>().InitializeNavigation()));
       }
 
       private void InitializeRestApiClient() {
