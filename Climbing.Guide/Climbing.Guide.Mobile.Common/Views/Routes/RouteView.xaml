@@ -5,6 +5,7 @@
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
    xmlns:converters="clr-namespace:Climbing.Guide.Mobile.Common.Converters"
+   xmlns:customviews="clr-namespace:Climbing.Guide.Mobile.Common.Views.CustomViews"
    x:Class="Climbing.Guide.Mobile.Common.Views.Routes.RouteView"
    Title="{Binding Title}" >
    <views:BaseContentPage.Resources>
@@ -30,7 +31,7 @@
             <Grid.RowDefinitions>
                <RowDefinition Height="Auto" />
                <RowDefinition Height="Auto" />
-               <RowDefinition Height="Auto" />
+               <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Text="{Binding Source={x:Static resources:Routes.Info}}" />
@@ -44,9 +45,10 @@
             </StackLayout>
 
             <Label Grid.Row="2" Text="{Binding Source={x:Static resources:Routes.Schema}}" />
-            <StackLayout Grid.Row="2" Grid.Column="1">
-               <Image Source="{Binding LocalSchemaThumbPath, Converter={StaticResource PathToImageSourceConverter}}" />
-            </StackLayout>
+            <customviews:RouteSchemaVeiw Grid.Row="2"
+                                         Grid.Column="1"
+                                         SchemaLocalPath="{Binding LocalSchemaThumbPath}"
+                                         SchemaRoute="{Binding SchemaRoute}" />
          </Grid>
       </ScrollView>
 
