@@ -2,9 +2,13 @@
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views1="clr-namespace:SuaveControls.Views;assembly=SuaveControls.FloatingActionButton"
+             xmlns:resources="clr-namespace:Climbing.Guide.Mobile.Common.Resources"
              x:Class="Climbing.Guide.Mobile.Common.App">
    <Application.Resources>
       <ResourceDictionary>
+         <ResourceDictionary.MergedDictionaries>
+            <resources:FontFileResources />
+         </ResourceDictionary.MergedDictionaries>
          <!--Global Styles-->
          <Color x:Key="Primary">#2196F3</Color>
          <Color x:Key="Accent">#96d1ff</Color>
