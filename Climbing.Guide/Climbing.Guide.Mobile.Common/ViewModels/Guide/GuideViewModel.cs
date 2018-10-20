@@ -23,6 +23,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
 
       public ICommand ClearFilterCommand { get; private set; }
       public ICommand RouteTappedCommand { get; private set; }
+      public ICommand AddRouteCommand { get; private set; }
 
       public GuideViewModel() {
          Title = VmTitle;
@@ -45,6 +46,10 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
          }, () => null != SelectedSector || null != SelectedArea || null != SelectedRegion);
 
          RouteTappedCommand = new Command<Route>(async (route) => { await RouteTapped(route); });
+
+         AddRouteCommand = new Command(async () => {
+            await DisplayAlert("Add route", "You are trying to add a route", Resources.Strings.Main.Ok);
+         });
       }
 
       public void OnSelectedRegionChanged() {

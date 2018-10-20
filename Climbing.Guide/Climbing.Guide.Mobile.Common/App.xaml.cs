@@ -20,13 +20,18 @@ namespace Climbing.Guide.Mobile.Common {
 
          //Substitute builtin PageModelMapper with a custom one.
          FreshPageModelResolver.PageModelMapper = new ViewModelMapper();
-
-         //FreshIOC.Container.Register<IDatabaseService, DatabaseService>();
+         
          //FreshIOC.Container.Register<IUserDialogs>(UserDialogs.Instance);
 
          Task.Run(() => {
-            RegisterServices();
-            ServiceLocator.Get<INavigationService>().InitializeNavigation();
+            try {
+               RegisterServices();
+               ServiceLocator.Get<INavigationService>().InitializeNavigation();
+            } catch (System.Exception ex) {
+               System.Console.WriteLine($"=====================================================================================================================");
+               System.Console.WriteLine($"Error occured while initializing the application: {ex.Message}");
+               System.Console.WriteLine($"=====================================================================================================================");
+            }
          });
       }
 

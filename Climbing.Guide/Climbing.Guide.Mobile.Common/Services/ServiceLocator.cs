@@ -14,7 +14,7 @@ namespace Climbing.Guide.Mobile.Common.Services {
 
       public static void Register<T>(T service) {
          Register(typeof(T), service.GetType());
-         ObjectRegistry.Add(typeof(T), service);
+         ObjectRegistry[typeof(T)] = service;
       }
 
       public static T Get<T>() where T : class {

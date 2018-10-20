@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Climbing.Guide.Mobile.Common;
 using Foundation;
+using SuaveControls.FloatingActionButton.iOS.Renderers;
 using UIKit;
 
 namespace Climbing.Guide.Mobile.iOS {
@@ -23,6 +24,7 @@ namespace Climbing.Guide.Mobile.iOS {
 
          // Initialize maps
          Xamarin.FormsMaps.Init();
+         FloatingActionButtonRenderer.InitRenderer();
          LoadApplication(new App());
 
          return base.FinishedLaunching(app, options);
