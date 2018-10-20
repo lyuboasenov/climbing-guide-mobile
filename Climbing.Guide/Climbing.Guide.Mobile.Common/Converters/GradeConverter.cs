@@ -1,9 +1,9 @@
 ﻿using Climbing.Guide.Core.API.Schemas;
 using Climbing.Guide.Core.Models.Routes;
 using System;
-using System.Linq;
 using System.Globalization;
 using Xamarin.Forms;
+using Climbing.Guide.Mobile.Common.Services;
 
 namespace Climbing.Guide.Mobile.Common.Converters {
    public class GradeConverter : IValueConverter {
@@ -18,7 +18,7 @@ namespace Climbing.Guide.Mobile.Common.Converters {
       public static string Convert(Route route) {
          string result = string.Empty;
          if (null != route) {
-            result = Grade.GetGradeList(route.Type.Value).First(g => g.AbsoluteValue == route.Difficulty).Name;
+            result = ServiceLocator.Get<IGradeService>().GetGrade(route.Difficulty, GradeType.V).Name;
          }
          return result;
       }

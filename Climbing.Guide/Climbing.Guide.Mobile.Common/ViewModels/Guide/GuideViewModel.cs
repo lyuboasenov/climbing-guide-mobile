@@ -21,12 +21,17 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
       public Sector SelectedSector { get; set; }
       public Route SelectedRoute { get; set; }
 
-      public ICommand ClearFilterCommand { get; }
-      public ICommand RouteTappedCommand { get; }
+      public ICommand ClearFilterCommand { get; private set; }
+      public ICommand RouteTappedCommand { get; private set; }
 
       public GuideViewModel() {
          Title = VmTitle;
 
+         // Initialization of regions
+         UpdateFilter();
+      }
+
+      protected override void InitializeCommands() {
          ClearFilterCommand = new Command(() => {
             SelectedRoute = null;
             SelectedSector = null;
@@ -40,81 +45,83 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
          }, () => null != SelectedSector || null != SelectedArea || null != SelectedRegion);
 
          RouteTappedCommand = new Command<Route>(async (route) => { await RouteTapped(route); });
-
-         // Initialization of regions
-         Task.Run(UpdateFilter);
       }
 
-      // Update can execute of the login command
-      public void OnPropertyChanged(string propertyName, object before, object after) {
-         if (propertyName.CompareTo(nameof(SelectedRegion)) == 0) {
-            Areas = null;
-            SelectedArea = null;
-            Sectors = null;
-            SelectedSector = null;
-            Routes = null;
-            SelectedRoute = null;
-            Task.Run(UpdateFilter);
-            (ClearFilterCommand as Command).ChangeCanExecute();
-         }
-         if (propertyName.CompareTo(nameof(SelectedArea)) == 0) {
-            Sectors = null;
-            SelectedSector = null;
-            Routes = null;
-            SelectedRoute = null;
-            Task.Run(UpdateFilter);
-            (ClearFilterCommand as Command).ChangeCanExecute();
-         }
-         if (propertyName.CompareTo(nameof(SelectedSector)) == 0) {
-            Routes = null;
-            SelectedRoute = null;
-            Task.Run(UpdateFilter);
-            (ClearFilterCommand as Command).ChangeCanExecute();
-         }
-         if (propertyName.CompareTo(nameof(SelectedRoute)) == 0) {
-            RouteSelected();
-         }
+      public void OnSelectedRegionChanged() {
+         Areas = null;
+         SelectedArea = null;
+         Sectors = null;
+         SelectedSector = null;
+         Routes = null;
+         SelectedRoute = null;
+         (ClearFilterCommand as Command).ChangeCanExecute();
 
-         RaisePropertyChanged(propertyName);
+         UpdateFilter();
       }
 
-      protected virtual async Task UpdateFilter() {
-         if (null != SelectedSector) {
-            // Load routes for the selected sector
-            Routes = await Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString());
-         } else if (null != SelectedArea) {
-            Sectors = await Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString());
-            RaisePropertyChanged(nameof(Sectors));
+      public void OnSelectedAreaChanged() {
+         Sectors = null;
+         SelectedSector = null;
+         Routes = null;
+         SelectedRoute = null;
+         (ClearFilterCommand as Command).ChangeCanExecute();
 
-            // Selects first of the received sectors
-            if (Sectors.Count > 0) {
-               SelectedSector = Sectors[0];
-            }
-         } else if (null != SelectedRegion) {
-            Areas = await Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString());
-            RaisePropertyChanged(nameof(Areas));
+         UpdateFilter();
+      }
 
-            // Selects first of the received areas
-            if (Areas.Count > 0) {
-               SelectedArea = Areas[0];
-            }
-         } else {
-            Regions = await Client.RegionsClient.ListAsync();
-            RaisePropertyChanged(nameof(Regions));
+      public void OnSelectedSectorChanged() {
+         Routes = null;
+         SelectedRoute = null;
+         (ClearFilterCommand as Command).ChangeCanExecute();
 
-            // Selects first of the received regions
-            if (Regions.Count > 0) {
-               SelectedRegion = Regions[0];
+         UpdateFilter();
+      }
+
+      public void OnSelectedRouteChanged() {
+         RouteSelected();
+      }
+
+      protected virtual void UpdateFilter() {
+         Task.Run(UpdateFilterAsync);
+      }
+
+      protected virtual async Task UpdateFilterAsync() {
+         try {
+            if (null != SelectedSector) {
+               // Load routes for the selected sector
+               Routes = await Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString());
+            } else if (null != SelectedArea) {
+               Sectors = await Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString());
+               RaisePropertyChanged(nameof(Sectors));
+
+               // Selects first of the received sectors
+               if (Sectors.Count > 0) {
+                  SelectedSector = Sectors[0];
+               }
+            } else if (null != SelectedRegion) {
+               Areas = await Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString());
+               RaisePropertyChanged(nameof(Areas));
+
+               // Selects first of the received areas
+               if (Areas.Count > 0) {
+                  SelectedArea = Areas[0];
+               }
+            } else {
+               Regions = await Client.RegionsClient.ListAsync();
+               RaisePropertyChanged(nameof(Regions));
+
+               // Selects first of the received regions
+               if (Regions.Count > 0) {
+                  SelectedRegion = Regions[0];
+               }
             }
+         } catch(RestApiCallException ex) {
+            await HandleRestApiCallException(ex);
          }
       }
 
       protected virtual void RouteSelected() {
-         if (null != SelectedRoute) {
-            Device.BeginInvokeOnMainThread(async () => {
-               await Navigation.PushAsync<Routes.RouteViewModel>(SelectedRoute);
-            });
-         }
+
       }
 
       private async Task RouteTapped(Route route) {

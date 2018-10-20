@@ -22,7 +22,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
          Title = VmTitle;
       }
 
-      protected override async Task UpdateFilter() {
+      protected override async Task UpdateFilterAsync() {
          if (null != SelectedSector) {
             // Load routes for the selected sector
             Routes = await Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString());

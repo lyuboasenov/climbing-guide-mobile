@@ -2,8 +2,6 @@
 using Xamarin.Forms.Xaml;
 using FreshMvvm;
 using System.Threading.Tasks;
-using System;
-using Xamarin.Essentials;
 using Climbing.Guide.Mobile.Common.Services;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -26,41 +24,20 @@ namespace Climbing.Guide.Mobile.Common {
          //FreshIOC.Container.Register<IDatabaseService, DatabaseService>();
          //FreshIOC.Container.Register<IUserDialogs>(UserDialogs.Instance);
 
-         Task.Run(() => InitializeRestApiClient() ).
-            ContinueWith((task) => Task.Run(() => DependencyService.Get<INavigationService>().InitializeNavigation()));
+         Task.Run(() => {
+            RegisterServices();
+            ServiceLocator.Get<INavigationService>().InitializeNavigation();
+         });
       }
 
-      private void InitializeRestApiClient() {
-
-         string token = string.Empty;
-         string refreshToken = string.Empty;
-         string username = string.Empty;
-
-         Task.Run(async () => {
-            try {
-               token = await SecureStorage.GetAsync("token");
-               refreshToken = await SecureStorage.GetAsync("refresh_token");
-               username = await SecureStorage.GetAsync("username");
-            } catch (Exception ex) {
-               // Possible that device doesn't support secure storage on device.
-               Console.WriteLine($"Error: {ex.Message}");
-            }
-         }).GetAwaiter().GetResult();
-
-         var restApiClientSettings =
-            DependencyService.Get<ICoreFactoryService>().GetObject<Core.API.IRestApiClientSettings>();
-
-         // TODO UPDATE api address 
+      private void RegisterServices() {
 #if DEBUG
-         restApiClientSettings.BaseUrl = "http://10.0.2.2:8000";
+         ServiceLocator.Register<IRestApiClient>(new RestApiClient("http://10.0.2.2:8000"));
 #elif RELEASE
-         restApiClientSettings.BaseUrl = "http://10.0.2.2:8000";
+         ServiceLocator.Register<IRestApiClient>(new RestApiClient("https://api.climbingguide.org"));
 #endif
-         restApiClientSettings.Token = token;
-         restApiClientSettings.RefreshToken = refreshToken;
-         restApiClientSettings.Username = username;
-
-         DependencyService.Get<IRestApiClient>().UpdateRestApiClientSettings(restApiClientSettings);
+         ServiceLocator.Register<INavigationService, NavigationService>();
+         ServiceLocator.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
       }
 
       protected override void OnStart() {

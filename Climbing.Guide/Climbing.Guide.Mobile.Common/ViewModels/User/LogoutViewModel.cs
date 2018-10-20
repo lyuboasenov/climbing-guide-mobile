@@ -30,7 +30,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
             await HandleRestApiCallException(ex);
          }
 
-         Navigation.UpdateNavigationContainerAsync();
+         Navigation.UpdateNavigationContainer();
       }
    }
 }

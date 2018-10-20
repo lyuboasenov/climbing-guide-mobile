@@ -2,12 +2,36 @@
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
-using Xamarin.Forms;
 
-// Register RestAPIClient in the DependencyService
-[assembly: Dependency(typeof(Climbing.Guide.Mobile.Common.Services.RestApiClient))]
 namespace Climbing.Guide.Mobile.Common.Services {
    public class RestApiClient : Core.API.RestApiClient, IRestApiClient {
+
+      public RestApiClient() {
+
+      }
+
+      public RestApiClient(string baseUrl) {
+         string token = string.Empty;
+         string refreshToken = string.Empty;
+         string username = string.Empty;
+
+         try {
+            token = SecureStorage.GetAsync("token").GetAwaiter().GetResult();
+            refreshToken = SecureStorage.GetAsync("refresh_token").GetAwaiter().GetResult();
+            username = SecureStorage.GetAsync("username").GetAwaiter().GetResult();
+         } catch (Exception ex) {
+            // Possible that device doesn't support secure storage on device.
+            Console.WriteLine($"Error: {ex.Message}");
+         }
+
+         UpdateRestApiClientSettings(new Core.API.RestApiClientSettings() {
+            BaseUrl = baseUrl,
+            Username = username,
+            Token = token,
+            RefreshToken = refreshToken
+         });
+      }
+
       public override async Task<bool> LoginAsync(string username, string password) {
          var result = await base.LoginAsync(username, password);
 

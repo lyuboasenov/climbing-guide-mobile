@@ -3,8 +3,6 @@ using FreshMvvm;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-// Register NavigationService in the DependencyService
-[assembly: Dependency(typeof(Climbing.Guide.Mobile.Common.Services.NavigationService))]
 namespace Climbing.Guide.Mobile.Common.Services {
    internal class NavigationService : INavigationService {
 
@@ -14,8 +12,8 @@ namespace Climbing.Guide.Mobile.Common.Services {
          Page navigationContainer = null;
          var tasks = new[] {
             Task.Run(() => SubscribeToMessages()),
-            Task.Run(() => navigationContainer = GetNavigationContainerAsync()),
-            Task.Run(() => System.Threading.Thread.Sleep(5000))
+            Task.Run(() => navigationContainer = GetNavigationContainer()),
+            Task.Run(() => System.Threading.Thread.Sleep(3000))
          };
          Task.WaitAll(tasks);
 
@@ -34,12 +32,12 @@ namespace Climbing.Guide.Mobile.Common.Services {
          await container.PopPage();
       }
 
-      public void UpdateNavigationContainerAsync() {
-         App.MainPage = GetNavigationContainerAsync();
+      public void UpdateNavigationContainer() {
+         App.MainPage = GetNavigationContainer();
       }
 
-      private Page GetNavigationContainerAsync() {
-         var userLoggedIn = DependencyService.Get<IRestApiClient>().IsLoggedIn;
+      private Page GetNavigationContainer() {
+         var userLoggedIn = ServiceLocator.Get<IRestApiClient>().IsLoggedIn;
 
          var masterDetailNav = new Views.CGMasterDetailNavigationContainer();
          masterDetailNav.Init(Resources.Strings.Main.CG);
@@ -65,15 +63,13 @@ namespace Climbing.Guide.Mobile.Common.Services {
       private void SubscribeToMessages() {
          MessagingCenter.Subscribe<Views.BaseContentPage>(App, "GoBackToMainPage", (m) => {
             Device.BeginInvokeOnMainThread(() => {
-               App.MainPage = GetNavigationContainerAsync();
+               App.MainPage = GetNavigationContainer();
             });
          });
 
          MessagingCenter.Subscribe<App>(App, Commands.EXIT, (m) => {
             Device.BeginInvokeOnMainThread(() => {
                System.Threading.Thread.Sleep(2000);
-               //var closer = DependencyService.Get<Services.ICloseApplication>();
-               //closer?.closeApplication();
                App.MainPage.DisplayAlert("Ping", "Pong", "ok");
                App.Quit();
             });
