@@ -92,7 +92,6 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
                Routes = await Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString());
             } else if (null != SelectedArea) {
                Sectors = await Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString());
-               RaisePropertyChanged(nameof(Sectors));
 
                // Selects first of the received sectors
                if (Sectors.Count > 0) {
@@ -100,7 +99,6 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
                }
             } else if (null != SelectedRegion) {
                Areas = await Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString());
-               RaisePropertyChanged(nameof(Areas));
 
                // Selects first of the received areas
                if (Areas.Count > 0) {
@@ -108,7 +106,6 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
                }
             } else {
                Regions = await Client.RegionsClient.ListAsync();
-               RaisePropertyChanged(nameof(Regions));
 
                // Selects first of the received regions
                if (Regions.Count > 0) {
