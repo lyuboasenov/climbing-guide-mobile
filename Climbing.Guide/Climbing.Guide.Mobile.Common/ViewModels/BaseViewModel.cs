@@ -32,11 +32,11 @@ namespace Climbing.Guide.Mobile.Common.ViewModels {
       protected async Task HandleRestApiCallException(Core.API.Schemas.RestApiCallException ex,
          string errorMessage,
          string detailedErrorMessageFormat) {
-         if (await CurrentPage.DisplayAlert(
+         if (await DisplayAlert(
                Resources.Strings.Main.Error_Title,
                errorMessage,
                Resources.Strings.Main.Ok, Resources.Strings.Main.Details_Button)) {
-            await CurrentPage.DisplayAlert(
+            await DisplayAlert(
                Resources.Strings.Main.Error_Title,
                string.Format(detailedErrorMessageFormat, Environment.NewLine, ex.StatusCode, ex.Response),
                Resources.Strings.Main.Ok);
@@ -51,6 +51,19 @@ namespace Climbing.Guide.Mobile.Common.ViewModels {
          await HandleRestApiCallException(ex,
             Resources.Strings.Main.Communication_Error_Message,
             Resources.Strings.Main.Communication_Error_Message_Detailed_Format);
+      }
+
+
+      protected async Task<string> DisplayActionSheet(string title, string cancel, string destruction, params string[] buttons) {
+         return await CurrentPage.DisplayActionSheet(title, cancel, destruction, buttons);
+      }
+
+      protected async Task DisplayAlert(string title, string message, string cancel) {
+         await CurrentPage.DisplayAlert(title, message, cancel);
+      }
+
+      protected async Task<bool> DisplayAlert(string title, string message, string accept, string cancel) {
+         return await CurrentPage.DisplayAlert(title, message, accept, cancel);
       }
    }
 }
