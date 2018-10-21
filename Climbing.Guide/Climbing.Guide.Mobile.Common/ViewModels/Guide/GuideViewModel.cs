@@ -28,8 +28,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
       public GuideViewModel() {
          Title = VmTitle;
 
-         // Initialization of regions
-         UpdateFilter();
+         InitializeRegions();
       }
 
       protected override void InitializeCommands() {
@@ -52,7 +51,23 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
          });
       }
 
-      public void OnSelectedRegionChanged() {
+      protected virtual void InitializeRegions() {
+         Task.Run(async () => {
+            try {
+               Regions = await Client.RegionsClient.ListAsync();
+            } catch (RestApiCallException ex) {
+               await HandleRestApiCallException(ex);
+               return;
+            }
+
+            // Selects first of the received regions
+            if (Regions.Count > 0) {
+               SelectedRegion = Regions[0];
+            }
+         }).Wait();
+      }
+
+      public virtual void OnSelectedRegionChanged() {
          Areas = null;
          SelectedArea = null;
          Sectors = null;
@@ -61,68 +76,58 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
          SelectedRoute = null;
          (ClearFilterCommand as Command).ChangeCanExecute();
 
-         UpdateFilter();
+         Task.Run(async () => {
+            try {
+               Areas = await Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString());
+            } catch (RestApiCallException ex) {
+               await HandleRestApiCallException(ex);
+               return;
+            }
+
+            // Selects first of the received areas
+            if (Areas.Count > 0) {
+               SelectedArea = Areas[0];
+            }
+         }).Wait();
       }
 
-      public void OnSelectedAreaChanged() {
+      public virtual void OnSelectedAreaChanged() {
          Sectors = null;
          SelectedSector = null;
          Routes = null;
          SelectedRoute = null;
          (ClearFilterCommand as Command).ChangeCanExecute();
 
-         UpdateFilter();
+         Task.Run(async () => {
+            try {
+               Sectors = await Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString());
+            } catch (RestApiCallException ex) {
+               await HandleRestApiCallException(ex);
+               return;
+            }
+
+            // Selects first of the received sectors
+            if (Sectors.Count > 0) {
+               SelectedSector = Sectors[0];
+            }
+         }).Wait();
       }
 
-      public void OnSelectedSectorChanged() {
+      public virtual void OnSelectedSectorChanged() {
          Routes = null;
          SelectedRoute = null;
          (ClearFilterCommand as Command).ChangeCanExecute();
 
-         UpdateFilter();
-      }
-
-      public void OnSelectedRouteChanged() {
-         RouteSelected();
-      }
-
-      protected virtual void UpdateFilter() {
-         Task.Run(UpdateFilterAsync);
-      }
-
-      protected virtual async Task UpdateFilterAsync() {
-         try {
-            if (null != SelectedSector) {
-               // Load routes for the selected sector
+         Task.Run(async () => {
+            try {
                Routes = await Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString());
-            } else if (null != SelectedArea) {
-               Sectors = await Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString());
-
-               // Selects first of the received sectors
-               if (Sectors.Count > 0) {
-                  SelectedSector = Sectors[0];
-               }
-            } else if (null != SelectedRegion) {
-               Areas = await Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString());
-
-               // Selects first of the received areas
-               if (Areas.Count > 0) {
-                  SelectedArea = Areas[0];
-               }
-            } else {
-               Regions = await Client.RegionsClient.ListAsync();
-
-               // Selects first of the received regions
-               if (Regions.Count > 0) {
-                  SelectedRegion = Regions[0];
-               }
+            } catch (RestApiCallException ex) {
+               await HandleRestApiCallException(ex);
             }
-         } catch(RestApiCallException ex) {
-            await HandleRestApiCallException(ex);
-         }
+         }).Wait();
       }
 
-      protected virtual void RouteSelected() {
+      public virtual void OnSelectedRouteChanged() {
 
       }
 

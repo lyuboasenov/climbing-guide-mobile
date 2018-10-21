@@ -14,14 +14,8 @@ namespace Climbing.Guide.Mobile.Common {
          // Show splash
          MainPage = new Views.SplashView();
 
-         //Set theme to light
-         //var themeResources = typeof(Xamarin.Forms.Themes.DarkThemeResources);
-         //App.Current.Resources = new ResourceDictionary { MergedWith = themeResources };
-
          //Substitute builtin PageModelMapper with a custom one.
          FreshPageModelResolver.PageModelMapper = new ViewModelMapper();
-         
-         //FreshIOC.Container.Register<IUserDialogs>(UserDialogs.Instance);
 
          Task.Run(() => {
             try {

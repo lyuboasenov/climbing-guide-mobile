@@ -169,11 +169,29 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to location.
+        /// </summary>
+        public static string Location_Permissino {
+            get {
+                return ResourceManager.GetString("Location_Permissino", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ok.
         /// </summary>
         public static string Ok {
             get {
                 return ResourceManager.GetString("Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insufisient permission! Please grant {0} permission..
+        /// </summary>
+        public static string Permission_Exception_Format {
+            get {
+                return ResourceManager.GetString("Permission_Exception_Format", resourceCulture);
             }
         }
         

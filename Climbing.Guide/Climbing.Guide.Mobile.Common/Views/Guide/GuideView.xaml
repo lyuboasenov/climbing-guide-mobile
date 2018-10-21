@@ -68,13 +68,14 @@
          </ListView.ItemTemplate>
       </ListView>
 
-      <views1:FloatingActionButton Grid.Column="3" Grid.Row="1"
+      <Button Grid.Column="3" Grid.Row="1"
                                    HorizontalOptions="EndAndExpand"
                                    VerticalOptions="EndAndExpand"
                                    WidthRequest="50"
                                    HeightRequest="50"
+                                   BorderRadius="25"
                                    FontFamily="{x:Static resources:FontFileResources.FontAwesomeRegular}"
                                    Text="{x:Static resources:GlyphNames.Plus}"
-                                   Command="{Binding AddRouteCommand}" />
+                                   Command="{Binding AddRouteCommand}"/>
    </Grid>
 </views:BaseContentPage>

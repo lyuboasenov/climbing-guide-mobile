@@ -159,4 +159,10 @@
   <data name="Splash_Title" xml:space="preserve">
     <value>Splash</value>
   </data>
+  <data name="Location_Permissino" xml:space="preserve">
+    <value>location</value>
+  </data>
+  <data name="Permission_Exception_Format" xml:space="preserve">
+    <value>Insufisient permission! Please grant {0} permission.</value>
+  </data>
 </root>
