@@ -22,14 +22,14 @@ namespace Climbing.Guide.Mobile.Common {
                RegisterServices();
                ServiceLocator.Get<INavigationService>().InitializeNavigation();
             } catch (System.Exception ex) {
-               System.Console.WriteLine($"=====================================================================================================================");
-               System.Console.WriteLine($"Error occured while initializing the application: {ex.Message}");
-               System.Console.WriteLine($"=====================================================================================================================");
+               ServiceLocator.Get<IErrorService>().LogException(ex);
             }
          });
       }
 
       private void RegisterServices() {
+         ServiceLocator.Register<IErrorService, ErrorService>();
+         ServiceLocator.Register<IAlertService, AlertService>();
 #if DEBUG
          ServiceLocator.Register<IRestApiClient>(new RestApiClient("http://10.0.2.2:8000"));
 #elif RELEASE

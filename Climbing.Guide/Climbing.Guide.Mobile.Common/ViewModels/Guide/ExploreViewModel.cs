@@ -5,6 +5,7 @@ using Climbing.Guide.Mobile.Common.Utils;
 using Xamarin.Forms.Maps;
 using Xamarin.Essentials;
 using System.Threading.Tasks;
+using Climbing.Guide.Mobile.Common.Services;
 
 namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -28,7 +29,9 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
             position = Geolocation.GetLastKnownLocationAsync().GetAwaiter().GetResult();
          } catch (PermissionException pEx) {
             Task.Run(async () => 
-               await HandleException(pEx, Resources.Strings.Main.Permission_Exception_Format, Resources.Strings.Main.Location_Permissino)
+               await GetService<IErrorService>().HandleExceptionAsync(pEx,
+                  Resources.Strings.Main.Permission_Exception_Format,
+                  Resources.Strings.Main.Location_Permissino)
             );
          }
          

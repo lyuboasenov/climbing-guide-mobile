@@ -1,4 +1,5 @@
 ﻿using Climbing.Guide.Core.API.Schemas;
+using Climbing.Guide.Mobile.Common.Services;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -26,7 +27,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
          try {
             success = await Client.LoginAsync(Username, Password);
          } catch (RestApiCallException ex) {
-            await HandleRestApiCallException(ex);
+            await GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
          }
 
          if (!success) {

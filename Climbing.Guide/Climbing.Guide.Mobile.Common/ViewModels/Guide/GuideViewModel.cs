@@ -1,5 +1,5 @@
 ﻿using Climbing.Guide.Core.API.Schemas;
-using System;
+using Climbing.Guide.Mobile.Common.Services;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -47,7 +47,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
          RouteTappedCommand = new Command<Route>(async (route) => { await RouteTapped(route); });
 
          AddRouteCommand = new Command(async () => {
-            await DisplayAlert("Add route", "You are trying to add a route", Resources.Strings.Main.Ok);
+            await GetService<IAlertService>().DisplayAlertAsync("Add route", "You are trying to add a route", Resources.Strings.Main.Ok);
          });
       }
 
@@ -56,7 +56,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
             try {
                Regions = await Client.RegionsClient.ListAsync();
             } catch (RestApiCallException ex) {
-               await HandleRestApiCallException(ex);
+               await GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
                return;
             }
 
@@ -80,7 +80,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
             try {
                Areas = await Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString());
             } catch (RestApiCallException ex) {
-               await HandleRestApiCallException(ex);
+               await GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
                return;
             }
 
@@ -102,7 +102,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
             try {
                Sectors = await Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString());
             } catch (RestApiCallException ex) {
-               await HandleRestApiCallException(ex);
+               await GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
                return;
             }
 
@@ -122,7 +122,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
             try {
                Routes = await Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString());
             } catch (RestApiCallException ex) {
-               await HandleRestApiCallException(ex);
+               await GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
             }
          }).Wait();
       }

@@ -1,8 +1,7 @@
 ﻿using Climbing.Guide.Core.API.Schemas;
+using Climbing.Guide.Mobile.Common.Services;
 using System;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Climbing.Guide.Mobile.Common.ViewModels.User {
@@ -27,7 +26,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
          try {
             success = await Client.LogoutAsync();
          } catch (RestApiCallException ex) {
-            await HandleRestApiCallException(ex);
+            await GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
          }
 
          Navigation.UpdateNavigationContainer();
