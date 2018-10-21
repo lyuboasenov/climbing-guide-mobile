@@ -34,7 +34,16 @@
       <Picker Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Areas}" SelectedItem="{Binding SelectedArea}" ItemDisplayBinding="{Binding Name}" />
       <Picker Grid.Column="2" Grid.Row="0" ItemsSource="{Binding Sectors}" SelectedItem="{Binding SelectedSector}" ItemDisplayBinding="{Binding Name}" />
 
-      <Button Grid.Column="3" Grid.Row="0" Command="{Binding ClearFilterCommand}" />
+      <Button Grid.Column="3" Grid.Row="0"
+              BackgroundColor="{x:StaticResource RedButtonColor}"
+              HorizontalOptions="EndAndExpand"
+              VerticalOptions="EndAndExpand"
+              WidthRequest="40"
+              HeightRequest="40"
+              BorderRadius="20"
+              FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+              Text="{x:Static resources:GlyphNames.Times}"
+              Command="{Binding ClearFilterCommand}" />
 
       <ListView Grid.Row="1"
                 Grid.Column="0"
@@ -69,13 +78,15 @@
       </ListView>
 
       <Button Grid.Column="3" Grid.Row="1"
-                                   HorizontalOptions="EndAndExpand"
-                                   VerticalOptions="EndAndExpand"
-                                   WidthRequest="50"
-                                   HeightRequest="50"
-                                   BorderRadius="25"
-                                   FontFamily="{x:Static resources:FontFileResources.FontAwesomeRegular}"
-                                   Text="{x:Static resources:GlyphNames.Plus}"
-                                   Command="{Binding AddRouteCommand}"/>
+              HorizontalOptions="EndAndExpand"
+              VerticalOptions="EndAndExpand"
+              WidthRequest="40"
+              HeightRequest="40"
+              BorderRadius="20"
+              Margin="15"
+              IsVisible="{Binding Client.IsLoggedIn}"
+              FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+              Text="{x:Static resources:GlyphNames.Plus}"
+              Command="{Binding AddRouteCommand}"/>
    </Grid>
 </views:BaseContentPage>

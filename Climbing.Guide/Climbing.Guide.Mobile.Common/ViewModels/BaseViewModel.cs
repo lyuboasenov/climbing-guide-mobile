@@ -4,7 +4,7 @@ using FreshMvvm;
 namespace Climbing.Guide.Mobile.Common.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class BaseViewModel : FreshBasePageModel {
-      protected IRestApiClient Client => ServiceLocator.Get<IRestApiClient>();
+      public IRestApiClient Client => ServiceLocator.Get<IRestApiClient>();
 
       internal INavigationService Navigation => ServiceLocator.Get<INavigationService>();
 

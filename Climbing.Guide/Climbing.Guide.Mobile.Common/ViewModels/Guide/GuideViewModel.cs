@@ -38,7 +38,6 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
             SelectedArea = null;
             SelectedRegion = null;
 
-            Regions = null;
             Areas = null;
             Sectors = null;
             Routes = null;
@@ -47,24 +46,41 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
          RouteTappedCommand = new Command<Route>(async (route) => { await RouteTapped(route); });
 
          AddRouteCommand = new Command(async () => {
-            await GetService<IAlertService>().DisplayAlertAsync("Add route", "You are trying to add a route", Resources.Strings.Main.Ok);
+            var result = await GetService<IAlertService>().DisplayActionSheetAsync(
+               Resources.Strings.Routes.Add_Title,
+               Resources.Strings.Main.Cancel,
+               null,
+               Resources.Strings.Routes.Add_Region_Selection_Item,
+               Resources.Strings.Routes.Add_Area_Selection_Item,
+               Resources.Strings.Routes.Add_Sector_Selection_Item,
+               Resources.Strings.Routes.Add_Route_From_Image_Selection_Item,
+               Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item);
+
+            if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Region_Selection_Item) == 0) {
+               // show add region
+            } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Area_Selection_Item) == 0) {
+               // show add area
+            } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Sector_Selection_Item) == 0) {
+               // show add sector
+            } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Route_From_Image_Selection_Item) == 0) {
+               // take picture and add route
+            } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item) == 0) {
+               // pick image and add route
+            }
          });
       }
 
       protected virtual void InitializeRegions() {
-         Task.Run(async () => {
-            try {
-               Regions = await Client.RegionsClient.ListAsync();
-            } catch (RestApiCallException ex) {
-               await GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
-               return;
-            }
+         try {
+            Regions = Client.RegionsClient.ListAsync().GetAwaiter().GetResult();
+         } catch (RestApiCallException ex) {
+            GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
+         }
 
-            // Selects first of the received regions
-            if (Regions.Count > 0) {
-               SelectedRegion = Regions[0];
-            }
-         }).Wait();
+         // Selects first of the received regions
+         if (Regions.Count > 0) {
+            SelectedRegion = Regions[0];
+         }
       }
 
       public virtual void OnSelectedRegionChanged() {
@@ -76,11 +92,11 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
          SelectedRoute = null;
          (ClearFilterCommand as Command).ChangeCanExecute();
 
-         Task.Run(async () => {
+         if (null != SelectedRegion) {
             try {
-               Areas = await Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString());
+               Areas = Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString()).GetAwaiter().GetResult();
             } catch (RestApiCallException ex) {
-               await GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
+               GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex).Wait();
                return;
             }
 
@@ -88,7 +104,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
             if (Areas.Count > 0) {
                SelectedArea = Areas[0];
             }
-         }).Wait();
+         }
       }
 
       public virtual void OnSelectedAreaChanged() {
@@ -98,11 +114,11 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
          SelectedRoute = null;
          (ClearFilterCommand as Command).ChangeCanExecute();
 
-         Task.Run(async () => {
+         if (null != SelectedArea) {
             try {
-               Sectors = await Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString());
+               Sectors = Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString()).GetAwaiter().GetResult();
             } catch (RestApiCallException ex) {
-               await GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
+               GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex).Wait();
                return;
             }
 
@@ -110,7 +126,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
             if (Sectors.Count > 0) {
                SelectedSector = Sectors[0];
             }
-         }).Wait();
+         }
       }
 
       public virtual void OnSelectedSectorChanged() {
@@ -118,13 +134,13 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
          SelectedRoute = null;
          (ClearFilterCommand as Command).ChangeCanExecute();
 
-         Task.Run(async () => {
+         if (null != SelectedSector) {
             try {
-               Routes = await Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString());
+               Routes = Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString()).GetAwaiter().GetResult();
             } catch (RestApiCallException ex) {
-               await GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
+               GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex).Wait();
             }
-         }).Wait();
+         }
       }
 
       public virtual void OnSelectedRouteChanged() {

@@ -16,6 +16,7 @@
          <Color x:Key="TextColor">#999999</Color>
          <Color x:Key="BackgroundPrimary">#37464f</Color>
          <Color x:Key="NavigationPrimary">#2196F3</Color>
+         <Color x:Key="RedButtonColor">#A52826</Color>
 
          <Style TargetType="views1:FloatingActionButton">
             <Setter Property="BackgroundColor" Value="#00000000" />
@@ -26,6 +27,7 @@
          <Style TargetType="Button" ApplyToDerivedTypes="true">
             <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
             <Setter Property="TextColor" Value="{StaticResource TextColor}" />
+            <Setter Property="Margin" Value="5" />
          </Style>
 
          <Style TargetType="NavigationPage">

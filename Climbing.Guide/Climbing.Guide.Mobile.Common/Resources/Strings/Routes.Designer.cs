@@ -61,6 +61,60 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Area.
+        /// </summary>
+        public static string Add_Area_Selection_Item {
+            get {
+                return ResourceManager.GetString("Add_Area_Selection_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Region.
+        /// </summary>
+        public static string Add_Region_Selection_Item {
+            get {
+                return ResourceManager.GetString("Add_Region_Selection_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick image and add a route.
+        /// </summary>
+        public static string Add_Route_From_Gallery_Selection_Item {
+            get {
+                return ResourceManager.GetString("Add_Route_From_Gallery_Selection_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take a picture and add a route.
+        /// </summary>
+        public static string Add_Route_From_Image_Selection_Item {
+            get {
+                return ResourceManager.GetString("Add_Route_From_Image_Selection_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sector.
+        /// </summary>
+        public static string Add_Sector_Selection_Item {
+            get {
+                return ResourceManager.GetString("Add_Sector_Selection_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        public static string Add_Title {
+            get {
+                return ResourceManager.GetString("Add_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Info.
         /// </summary>
         public static string Info {

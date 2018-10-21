@@ -2,7 +2,6 @@
 <views:BaseContentPage
    xmlns:views="clr-namespace:Climbing.Guide.Mobile.Common.Views"
    xmlns:resources="clr-namespace:Climbing.Guide.Mobile.Common.Resources"
-
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
    x:Class="Climbing.Guide.Mobile.Common.Views.HomeView"
@@ -33,8 +32,12 @@
                   </FormattedString>
                </Label.FormattedText>
             </Label>
+            <Label FontFamily="{x:Static resources:FontFileResources.FontAwesomeRegular}" Text="{x:Static resources:GlyphNames.Plus}"/>
             <Label FontFamily="{x:Static resources:FontFileResources.FontAwesomeBrands}" Text="{x:Static resources:GlyphNames._500Px}"/>
+            <Label FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}" Text="{x:Static resources:GlyphNames.Plus}"/>
+            <Label Style="{x:StaticResource FontAwesomeRegular}" Text="{x:Static resources:GlyphNames.Plus}"/>
             <Label Style="{x:StaticResource FontAwesomeBrands}" Text="{x:Static resources:GlyphNames._500Px}"/>
+            <Label Style="{x:StaticResource FontAwesomeSolid}" Text="{x:Static resources:GlyphNames.Plus}"/>
             <Label>
                <Label.FormattedText>
                   <FormattedString>
