@@ -45,40 +45,39 @@
               Text="{x:Static resources:GlyphNames.Times}"
               Command="{Binding ClearFilterCommand}" />
 
-      <ListView Grid.Row="1"
-                Grid.Column="0"
-                Grid.ColumnSpan="4"
-                ItemsSource="{Binding Routes}"
-                SelectionMode="None">
-         <ListView.Behaviors>
-            <behaviors:EventToCommandBehavior EventName="ItemTapped"
+      <ScrollView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
+         <ListView ItemsSource="{Binding Routes}"
+                   SelectionMode="None">
+            <ListView.Behaviors>
+               <behaviors:EventToCommandBehavior EventName="ItemTapped"
                                               Command="{Binding RouteTappedCommand}"
                                               Converter="{StaticResource ItemTappedConverter}" />
-         </ListView.Behaviors>
-         <ListView.ItemTemplate>
-            <DataTemplate>
-               <ViewCell>
-                  <Grid>
-                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                     </Grid.ColumnDefinitions>
-                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                     </Grid.RowDefinitions>
-                     <Label Grid.Column="0" Grid.Row="0" Text="{Binding Name}" />
-                     <Label Grid.Column="0" Grid.Row="1" Text="{Binding Info}" />
+            </ListView.Behaviors>
+            <ListView.ItemTemplate>
+               <DataTemplate>
+                  <ViewCell>
+                     <Grid>
+                        <Grid.ColumnDefinitions>
+                           <ColumnDefinition Width="*" />
+                           <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                           <RowDefinition Height="*" />
+                           <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0" Grid.Row="0" Text="{Binding Name}" />
+                        <Label Grid.Column="0" Grid.Row="1" Text="{Binding Info}" />
 
-                     <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding ., Converter={StaticResource GradeConverter}}" />
-                  </Grid>
-               </ViewCell>
-            </DataTemplate>
-         </ListView.ItemTemplate>
-      </ListView>
+                        <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding ., Converter={StaticResource GradeConverter}}" />
+                     </Grid>
+                  </ViewCell>
+               </DataTemplate>
+            </ListView.ItemTemplate>
+         </ListView>
+      </ScrollView>
 
-      <Button Grid.Column="3" Grid.Row="1"
-              HorizontalOptions="EndAndExpand"
+      <Button Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1"
+              HorizontalOptions="CenterAndExpand"
               VerticalOptions="EndAndExpand"
               WidthRequest="40"
               HeightRequest="40"
