@@ -46,7 +46,11 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
       }
 
       private async Task Signup() {
-         await Navigation.PushAsync<SignupViewModel>();
+         try {
+            await CoreMethods.PushPageModel<SignupViewModel>();
+         } catch (System.Exception ex) {
+            GetService<IErrorService>().LogException(ex);
+         }
       }
    }
 }

@@ -21,16 +21,20 @@ namespace Climbing.Guide.Mobile.Common.Services {
          App.MainPage = navigationContainer;
       }
 
-      public async Task PushAsync<T>(object data = null) where T : FreshBasePageModel {
-         var page = FreshPageModelResolver.ResolvePageModel<T>(data);
-         Views.CGMasterDetailNavigationContainer container = (Views.CGMasterDetailNavigationContainer)App.MainPage;
-         await container.PushPage(page, page.GetModel(), true);
-      }
+      //public async Task PushAsync<T>(object data = null) where T : FreshBasePageModel {
+      //   var page = FreshPageModelResolver.ResolvePageModel<T>(data);
+      //   Views.CGMasterDetailNavigationContainer container = (Views.CGMasterDetailNavigationContainer)App.MainPage;
+      //   await container.PushPage(page, page.GetModel(), true);
+      //}
 
-      public async Task PopAsync() {
-         Views.CGMasterDetailNavigationContainer container = (Views.CGMasterDetailNavigationContainer)App.MainPage;
-         await container.PopPage();
-      }
+      //public async Task PopAsync() {
+      //   Views.CGMasterDetailNavigationContainer container = (Views.CGMasterDetailNavigationContainer)App.MainPage;
+      //   await container.PopPage();
+      //}
+
+      //public void SendBackButtonPressed() {
+      //   ((Views.CGMasterDetailNavigationContainer)App.MainPage).SendBackButtonPressed();
+      //}
 
       public void UpdateNavigationContainer() {
          App.MainPage = GetNavigationContainer();
@@ -55,7 +59,6 @@ namespace Climbing.Guide.Mobile.Common.Services {
          if (userLoggedIn) {
             masterDetailNav.AddPage<ViewModels.User.LogoutViewModel>(ViewModels.User.LogoutViewModel.VmTitle);
          }
-         // masterDetailNav.AddPage<ExitViewModel>(ExitViewModel.VmTitle);
 
          return masterDetailNav;
       }
