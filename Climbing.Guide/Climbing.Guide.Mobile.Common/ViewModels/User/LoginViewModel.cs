@@ -33,8 +33,10 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
          if (!success) {
             await GetService<IAlertService>().DisplayAlertAsync(Resources.Strings.User.Login_Invalid_Title, Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
          } else {
-            //TODO
-            //Navigation.UpdateNavigationContainer();
+            GetService<IEventService>().GetEvent<Events.ShellMenuInalidated>().Publish(string.Empty);
+            Username = string.Empty;
+            Password = string.Empty;
+            await NavigationService.NavigateAsync(NavigationService.GetShellNavigationUri(nameof(Views.HomeView)));
          }
       }
 
@@ -48,8 +50,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
 
       private async Task Signup() {
          try {
-            //TODO
-            //await CoreMethods.PushPageModel<SignupViewModel>();
+            await NavigationService.NavigateAsync(NavigationService.GetShellNavigationUri(nameof(Views.User.SignupView)));
          } catch (System.Exception ex) {
             GetService<IErrorService>().LogException(ex);
          }

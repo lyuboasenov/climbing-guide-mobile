@@ -1,4 +1,5 @@
 ﻿using Climbing.Guide.Core.API.Schemas;
+using Prism.Navigation;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -21,19 +22,21 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Routes {
          ViewSchemaCommand = new Command(async () => await ViewSchema());
       }
 
-      //TODO
-      //public override void Init(object initData) {
-      //   Route = initData as Route;
-      //   Title = string.Format("{0}   {1}", Route.Name, Converters.GradeConverter.Convert(Route));
-         
-      //   Task.Run(() => Client.DownloadRouteSchemaAsync(Route.Id.Value, Route.Schema)).ContinueWith((task) => {
-      //      LocalSchemaThumbPath = task.Result;
-      //   });
+      public override void OnNavigatedTo(INavigationParameters parameters) {
+         base.OnNavigatedTo(parameters);
+         Route = parameters[nameof(Core.API.Schemas.Route)] as Route;
+         if (null != Route) {
+            Title = string.Format("{0}   {1}", Route.Name, Converters.GradeConverter.Convert(Route));
 
-      //   SchemaRoute = new ObservableCollection<Point>() {
-      //      new Point(0, 0), new Point(0.7, 0), new Point(0.7, 0.7), new Point(1, 1)
-      //   };
-      //}
+            Task.Run(() => Client.DownloadRouteSchemaAsync(Route.Id.Value, Route.Schema)).ContinueWith((task) => {
+               LocalSchemaThumbPath = task.Result;
+            });
+
+            SchemaRoute = new ObservableCollection<Point>() {
+            new Point(0, 0), new Point(0.7, 0), new Point(0.7, 0.7), new Point(1, 1)
+         };
+         }
+      }
 
       private async Task ViewSchema() {
          //await CurrentPage.DisplayAlert("View schema", "SCHEMA!!!!", Resources.Strings.Main.Ok);

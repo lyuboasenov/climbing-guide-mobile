@@ -12,12 +12,15 @@ namespace Climbing.Guide.Mobile.Common.ViewModels {
       public ObservableCollection<MenuItemModel> MenuItems { get; set; }
       public MenuItemModel SelectedMenuItem { get; set; }
 
-      private Uri ShellNavigationBase { get; } = UriHelper.Get(UriHelper.Schema.nav, "Shell/NavigationPage");
       private Uri LogoutUri { get; } = UriHelper.Get(UriHelper.Schema.act, "Logout");
 
       public ShellMenuViewModel() : base() {
          Title = Resources.Strings.Main.CG;
          InitializeMenuItems();
+
+         GetService<IEventService>().GetEvent<Events.ShellMenuInalidated>().Subscribe((payload) => {
+            InitializeMenuItems();
+         });
       }
 
       public void OnSelectedMenuItemChanged() {
@@ -46,36 +49,36 @@ namespace Climbing.Guide.Mobile.Common.ViewModels {
          var userLoggedIn = IoC.Container.Get<IRestApiClient>().IsLoggedIn;
 
          MenuItems.Add(GetMenuItem(HomeViewModel.VmTitle,
-            ShellNavigationBase.GetChild("HomeView")));
+            NavigationService.GetShellNavigationUri(nameof(Views.HomeView))));
 
          MenuItems.Add(GetMenuItem(Guide.GuideViewModel.VmTitle,
-            ShellNavigationBase.GetChild("GuideView"),
+            NavigationService.GetShellNavigationUri(nameof(Views.Guide.GuideView)),
             Resources.Strings.Guide.Section_Title));
 
          MenuItems.Add(GetMenuItem(Guide.ExploreViewModel.VmTitle,
-            ShellNavigationBase.GetChild("ExploreView"),
+            NavigationService.GetShellNavigationUri(nameof(Views.Guide.ExploreView)),
             Resources.Strings.Guide.Section_Title));
 
          MenuItems.Add(GetMenuItem(Guide.SearchViewModel.VmTitle,
-            ShellNavigationBase.GetChild("SearchView"),
+            NavigationService.GetShellNavigationUri(nameof(Views.Guide.SearchView)),
             Resources.Strings.Guide.Section_Title));
 
          if (userLoggedIn) {
             MenuItems.Add(GetMenuItem(User.ProfileViewModel.VmTitle,
-               ShellNavigationBase.GetChild("ProfileView"),
+               NavigationService.GetShellNavigationUri(nameof(Views.User.ProfileView)),
                Resources.Strings.User.Section_Title));
          } else {
             MenuItems.Add(GetMenuItem(User.LoginViewModel.VmTitle,
-               ShellNavigationBase.GetChild("LoginView"),
+               NavigationService.GetShellNavigationUri(nameof(Views.User.LoginView)),
                Resources.Strings.User.Section_Title));
          }
 
          MenuItems.Add(GetMenuItem(Settings.SettingsViewModel.VmTitle,
-            ShellNavigationBase.GetChild("SettingsView"),
+            NavigationService.GetShellNavigationUri(nameof(Views.Settings.SettingsView)),
             Resources.Strings.User.Section_Title));
 
          MenuItems.Add(GetMenuItem(AboutViewModel.VmTitle,
-            ShellNavigationBase.GetChild("AboutView")));
+            NavigationService.GetShellNavigationUri(nameof(Views.AboutView))));
 
          if (userLoggedIn) {
             MenuItems.Add(GetMenuItem(Resources.Strings.User.Logout_Title,

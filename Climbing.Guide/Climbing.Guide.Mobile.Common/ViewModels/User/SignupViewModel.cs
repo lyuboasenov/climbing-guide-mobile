@@ -1,6 +1,4 @@
-﻿using Climbing.Guide.Mobile.Common.Resources;
-using Climbing.Guide.Mobile.Common.Services;
-using System;
+﻿using System;
 using System.Windows.Input;
 
 using Xamarin.Forms;
@@ -15,7 +13,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
       public string ConfirmPassword { get; set; }
 
       public ICommand SignupCommand { get; private set; }
-      public ICommand BackCommand { get; private set; }
+      public ICommand LoginCommand { get; private set; }
 
       public SignupViewModel() {
          Title = VmTitle;
@@ -25,7 +23,7 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
          base.InitializeCommands();
 
          SignupCommand = new Command(SignUp, CanSignUp);
-         BackCommand = new Command(GoBack);
+         LoginCommand = new Command(Login);
       }
 
       public void OnPropertyChanged(string propertyName, object before, object after) {
@@ -44,10 +42,8 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
          throw new NotImplementedException();
       }
 
-      private void GoBack(object obj) {
-         //TODO
-         //CoreMethods.PopPageModel(true);
-         //GetService<INavigationService>().SendBackButtonPressed();
+      private void Login() {
+         NavigationService.NavigateAsync(NavigationService.GetShellNavigationUri(nameof(Views.User.LoginView)));
       }
    }
 }

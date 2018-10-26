@@ -32,9 +32,9 @@
                </Grid.ColumnDefinitions>
 
                <Button Grid.Column="0"
-                       Command="{Binding BackCommand}"
+                       Command="{Binding LoginCommand}"
                        FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
-                       Text="{x:Static resources:GlyphNames.ArrowLeft}"/>
+                       Text="{x:Static resources:GlyphNames.User}"/>
                
                <Button Grid.Column="1"
                        Command="{Binding SignupCommand}"

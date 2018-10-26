@@ -1,5 +1,6 @@
 ﻿using Prism.Navigation;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -51,6 +52,23 @@ namespace Climbing.Guide.Mobile.Common.Services {
 
       public async Task<INavigationResult> NavigateAsync(string name, INavigationParameters parameters) {
          return await InternalNavigationService.NavigateAsync(name, parameters);
+      }
+
+      public Uri GetNavigationUri(string absolutePath) {
+         return Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav, absolutePath);
+      }
+
+      public Uri GetShellNavigationUri(string relativePath) {
+         return Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav, $"{nameof(Views.Shell)}/NavigationPage/{relativePath}");
+      }
+
+      public INavigationParameters GetParameters(params KeyValuePair<string, object>[] parameters) {
+         var result = new NavigationParameters();
+         foreach(var parameter in parameters) {
+            result.Add(parameter.Key, parameter.Value);
+         }
+
+         return result;
       }
 
       internal class Commands {

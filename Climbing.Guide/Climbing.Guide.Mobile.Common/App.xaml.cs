@@ -4,7 +4,6 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Climbing.Guide.Mobile.Common.Services;
 using System;
-using System.Linq;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Mobile.Common {
@@ -21,7 +20,8 @@ namespace Climbing.Guide.Mobile.Common {
          // NavigationService creation
          (Container as IContainerExtension).RegisterInstance<Prism.Navigation.INavigationService>(NavigationService);
 
-         await NavigationService.NavigateAsync(Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav, "Shell/NavigationPage/HomeView"));
+         await NavigationService.NavigateAsync(
+            Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav, $"{nameof(Views.Shell)}/NavigationPage/{nameof(Views.HomeView)}"));
       }
 
       protected override IContainerExtension CreateContainerExtension() {
@@ -53,8 +53,8 @@ namespace Climbing.Guide.Mobile.Common {
 
       protected override void RegisterTypes(IContainerRegistry containerRegistry) {
          RegisterNavigation(containerRegistry);
-         
-         containerRegistry.Register<IActionService, ActionService>();
+
+         containerRegistry.Register<IEventService, EventService>();
          containerRegistry.Register<IErrorService, ErrorService>();
          containerRegistry.Register<IAlertService, AlertService>();
 #if DEBUG
@@ -73,14 +73,6 @@ namespace Climbing.Guide.Mobile.Common {
                containerRegistry.RegisterForNavigation(type, type.Name);
             }
          }
-
-         //containerRegistry.RegisterForNavigation<Views.Shell>();
-         
-
-         //containerRegistry.RegisterForNavigation<Views.ShellMenu>();
-         //containerRegistry.RegisterForNavigation<Views.HomeView>();
-         //containerRegistry.RegisterForNavigation<Views.AboutView>();
-
       }
    }
 }

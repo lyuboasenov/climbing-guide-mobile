@@ -149,8 +149,11 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
 
       private async Task RouteTapped(Route route) {
          try {
-            //TODO
-            //await CoreMethods.PushPageModel<Routes.RouteViewModel>(route);
+            var navParams = new Prism.Navigation.NavigationParameters();
+            navParams.Add(nameof(Route), route);
+            await NavigationService.NavigateAsync(
+               NavigationService.GetShellNavigationUri(nameof(Views.Routes.RouteView)),
+               NavigationService.GetParameters(new System.Collections.Generic.KeyValuePair<string, object>(nameof(Route), route)));
          } catch(System.Exception ex) {
             GetService<IErrorService>().LogException(ex);
          }
