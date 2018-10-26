@@ -149,7 +149,8 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.Guide {
 
       private async Task RouteTapped(Route route) {
          try {
-            await CoreMethods.PushPageModel<Routes.RouteViewModel>(route);
+            //TODO
+            //await CoreMethods.PushPageModel<Routes.RouteViewModel>(route);
          } catch(System.Exception ex) {
             GetService<IErrorService>().LogException(ex);
          }

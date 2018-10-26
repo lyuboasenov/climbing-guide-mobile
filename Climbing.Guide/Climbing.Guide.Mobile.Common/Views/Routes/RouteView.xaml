@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<views:BaseContentPage
+<ContentPage
    xmlns:views="clr-namespace:Climbing.Guide.Mobile.Common.Views"
    xmlns:resources="clr-namespace:Climbing.Guide.Mobile.Common.Resources.Strings"
    xmlns="http://xamarin.com/schemas/2014/forms"
@@ -8,9 +8,9 @@
    xmlns:customviews="clr-namespace:Climbing.Guide.Mobile.Common.Views.CustomViews"
    x:Class="Climbing.Guide.Mobile.Common.Views.Routes.RouteView"
    Title="{Binding Title}" >
-   <views:BaseContentPage.Resources>
+   <ContentPage.Resources>
       <converters:PathToImageSourceConverter x:Key="PathToImageSourceConverter" />
-   </views:BaseContentPage.Resources>
+   </ContentPage.Resources>
 
    <Grid>
       <Grid.ColumnDefinitions>
@@ -53,4 +53,4 @@
       </ScrollView>
 
    </Grid>
-</views:BaseContentPage>
+</ContentPage>

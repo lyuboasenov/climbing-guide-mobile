@@ -165,4 +165,7 @@
   <data name="Permission_Exception_Format" xml:space="preserve">
     <value>Insufisient permission! Please grant {0} permission.</value>
   </data>
+  <data name="Action_Service_Action_Not_Found" xml:space="preserve">
+    <value>Requested action not found. Try first registring the action.</value>
+  </data>
 </root>

@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<views:BaseContentPage
+<ContentPage
    xmlns:views="clr-namespace:Climbing.Guide.Mobile.Common.Views"
    xmlns:resources="clr-namespace:Climbing.Guide.Mobile.Common.Resources"
+   xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+   prism:ViewModelLocator.AutowireViewModel="True"
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
    x:Class="Climbing.Guide.Mobile.Common.Views.HomeView"
@@ -68,4 +70,4 @@
          </StackLayout>
       </ScrollView>
    </Grid>
-</views:BaseContentPage>
+</ContentPage>

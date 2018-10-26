@@ -138,6 +138,9 @@
   <data name="Profile_Title" xml:space="preserve">
     <value>Profile</value>
   </data>
+  <data name="Section_Title" xml:space="preserve">
+    <value>User</value>
+  </data>
   <data name="Signup_Title" xml:space="preserve">
     <value>Sign Up</value>
   </data>

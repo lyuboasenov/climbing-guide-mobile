@@ -70,6 +70,15 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Requested action not found. Try first registring the action..
+        /// </summary>
+        public static string Action_Service_Action_Not_Found {
+            get {
+                return ResourceManager.GetString("Action_Service_Action_Not_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bye bye!.
         /// </summary>
         public static string Bye_Message {

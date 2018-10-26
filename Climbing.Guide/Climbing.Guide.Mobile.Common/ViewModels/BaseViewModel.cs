@@ -1,12 +1,13 @@
 ﻿using Climbing.Guide.Mobile.Common.Services;
-using FreshMvvm;
+using Prism.Mvvm;
+using Prism.Navigation;
 
 namespace Climbing.Guide.Mobile.Common.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class BaseViewModel : FreshBasePageModel {
-      public IRestApiClient Client => ServiceLocator.Get<IRestApiClient>();
+   public class BaseViewModel : BindableBase, INavigationAware, IDestructible {
+      public IRestApiClient Client => IoC.Container.Get<IRestApiClient>();
 
-      internal INavigationService Navigation => ServiceLocator.Get<INavigationService>();
+      protected Services.INavigationService NavigationService => IoC.Container.Get<Services.INavigationService>();
 
       public BaseViewModel Parent { get; set; }
       public bool IsBusy { get; set; }
@@ -21,7 +22,23 @@ namespace Climbing.Guide.Mobile.Common.ViewModels {
       }
 
       protected T GetService<T>() where T : class {
-         return ServiceLocator.Get<T>();
+         return IoC.Container.Get<T>();
+      }
+
+      public virtual void OnNavigatedFrom(INavigationParameters parameters) {
+
+      }
+
+      public virtual void OnNavigatedTo(INavigationParameters parameters) {
+
+      }
+
+      public virtual void OnNavigatingTo(INavigationParameters parameters) {
+
+      }
+
+      public virtual void Destroy() {
+
       }
    }
 }

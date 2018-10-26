@@ -5,7 +5,7 @@ using Xamarin.Forms.Xaml;
 
 namespace Climbing.Guide.Mobile.Common.Views.Settings {
    [XamlCompilation(XamlCompilationOptions.Compile)]
-   public partial class SettingsView : BaseContentPage {
+   public partial class SettingsView : ContentPage {
       public SettingsView() {
          InitializeComponent();
       }

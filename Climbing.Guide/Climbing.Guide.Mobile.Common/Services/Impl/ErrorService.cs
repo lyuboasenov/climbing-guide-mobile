@@ -10,7 +10,7 @@ namespace Climbing.Guide.Mobile.Common.Services {
       private IAlertService AlertService {
          get {
             if (null == alertService) {
-               alertService = ServiceLocator.Get<IAlertService>();
+               alertService = IoC.Container.Get<IAlertService>();
             }
 
             return alertService;

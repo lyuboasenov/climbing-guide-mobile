@@ -124,6 +124,15 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User.
+        /// </summary>
+        public static string Section_Title {
+            get {
+                return ResourceManager.GetString("Section_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sign Up.
         /// </summary>
         public static string Signup_Title {

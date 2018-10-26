@@ -45,7 +45,8 @@ namespace Climbing.Guide.Mobile.Common.ViewModels.User {
       }
 
       private void GoBack(object obj) {
-         CoreMethods.PopPageModel(true);
+         //TODO
+         //CoreMethods.PopPageModel(true);
          //GetService<INavigationService>().SendBackButtonPressed();
       }
    }

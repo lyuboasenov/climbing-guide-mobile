@@ -5,7 +5,7 @@ using Xamarin.Forms.Xaml;
 
 namespace Climbing.Guide.Mobile.Common.Views.User {
    [XamlCompilation(XamlCompilationOptions.Compile)]
-   public partial class SignupView : BaseContentPage {
+   public partial class SignupView : ContentPage {
       public SignupView() {
          InitializeComponent();
       }

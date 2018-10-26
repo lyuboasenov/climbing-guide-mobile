@@ -40,5 +40,9 @@
 	<string>Can we use your location when your app is being used?</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Can we use your location at all times?</string>
+	<key>UIMainStoryboardFile</key>
+	<string>LaunchScreen</string>
+	<key>XSLaunchImageAssets</key>
+	<string>Assets.xcassets/LaunchImages.launchimage</string>
 </dict>
 </plist>

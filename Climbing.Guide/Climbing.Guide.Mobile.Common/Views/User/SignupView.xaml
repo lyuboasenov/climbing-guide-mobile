@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<views:BaseContentPage
+<ContentPage
    xmlns:views="clr-namespace:Climbing.Guide.Mobile.Common.Views"
    xmlns:resources="clr-namespace:Climbing.Guide.Mobile.Common.Resources"
    xmlns:strings="clr-namespace:Climbing.Guide.Mobile.Common.Resources.Strings"
@@ -45,4 +45,4 @@
          </StackLayout>
       </ScrollView>
    </Grid>
-</views:BaseContentPage>
+</ContentPage>

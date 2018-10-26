@@ -1,54 +1,86 @@
-﻿using Xamarin.Forms;
+﻿using Prism;
+using Prism.Ioc;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using FreshMvvm;
-using System.Threading.Tasks;
 using Climbing.Guide.Mobile.Common.Services;
+using System;
+using System.Linq;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Mobile.Common {
-   public partial class App : Application {
+   public partial class App {
 
-      public App() {
+      public App() : this(null) { }
+
+      public App(IPlatformInitializer initializer) : base(initializer) { }
+
+      protected override async void OnInitialized() {
          InitializeComponent();
 
-         // Show splash
-         MainPage = new Views.SplashView();
+         // HACK: register Prism.Navigation.INavigationService in order to be used in
+         // NavigationService creation
+         (Container as IContainerExtension).RegisterInstance<Prism.Navigation.INavigationService>(NavigationService);
 
-         //Substitute builtin PageModelMapper with a custom one.
-         FreshPageModelResolver.PageModelMapper = new ViewModelMapper();
-
-         Task.Run(() => {
-            try {
-               RegisterServices();
-               ServiceLocator.Get<INavigationService>().InitializeNavigation();
-            } catch (System.Exception ex) {
-               ServiceLocator.Get<IErrorService>().LogException(ex);
-            }
-         });
+         await NavigationService.NavigateAsync(Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav, "Shell/NavigationPage/HomeView"));
       }
 
-      private void RegisterServices() {
-         ServiceLocator.Register<IErrorService, ErrorService>();
-         ServiceLocator.Register<IAlertService, AlertService>();
+      protected override IContainerExtension CreateContainerExtension() {
+         return new IoC.Container(base.CreateContainerExtension());
+      }
+
+      protected override void ConfigureViewModelLocator() {
+         base.ConfigureViewModelLocator();
+
+         Prism.Mvvm.ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver(ViewTypeToViewModelTypeResolver);
+      }
+
+      private Type ViewTypeToViewModelTypeResolver(Type type) {
+         var viewName = type.FullName;
+         if (String.IsNullOrEmpty(viewName) ||
+            !viewName.StartsWith("Climbing.Guide"))
+            return null;
+
+         string viewModelName = string.Empty;
+         if (viewName.EndsWith("View")) {
+            viewModelName = viewName + "Model";
+         } else {
+            viewModelName = viewName + "ViewModel";
+         }
+         viewModelName = viewModelName.Replace(".Views.", ".ViewModels.");
+
+         return Type.GetType(viewModelName);
+      }
+
+      protected override void RegisterTypes(IContainerRegistry containerRegistry) {
+         RegisterNavigation(containerRegistry);
+         
+         containerRegistry.Register<IActionService, ActionService>();
+         containerRegistry.Register<IErrorService, ErrorService>();
+         containerRegistry.Register<IAlertService, AlertService>();
 #if DEBUG
-         ServiceLocator.Register<IRestApiClient>(new RestApiClient("http://10.0.2.2:8000"));
+         containerRegistry.RegisterInstance<IRestApiClient>(new RestApiClient("http://10.0.2.2:8000"));
 #elif RELEASE
-         ServiceLocator.Register<IRestApiClient>(new RestApiClient("https://api.climbingguide.org"));
+         containerRegistry.RegisterInstance<IRestApiClient>(new RestApiClient("https://api.climbingguide.org"));
 #endif
-         ServiceLocator.Register<INavigationService, NavigationService>();
-         ServiceLocator.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
+         containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
+         containerRegistry.Register<INavigationService, NavigationService>();
       }
 
-      protected override void OnStart() {
-         // Handle when your app starts
-      }
+      private void RegisterNavigation(IContainerRegistry containerRegistry) {
+         containerRegistry.RegisterForNavigation<NavigationPage>();
+         foreach (var type in System.Reflection.Assembly.GetExecutingAssembly().GetTypes()) {
+            if (type.FullName.Contains(".Views.") && type.IsSubclassOf(typeof(Page))) {
+               containerRegistry.RegisterForNavigation(type, type.Name);
+            }
+         }
 
-      protected override void OnSleep() {
-         // Handle when your app sleeps
-      }
+         //containerRegistry.RegisterForNavigation<Views.Shell>();
+         
 
-      protected override void OnResume() {
-         // Handle when your app resumes
+         //containerRegistry.RegisterForNavigation<Views.ShellMenu>();
+         //containerRegistry.RegisterForNavigation<Views.HomeView>();
+         //containerRegistry.RegisterForNavigation<Views.AboutView>();
+
       }
    }
 }

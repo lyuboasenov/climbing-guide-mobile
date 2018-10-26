@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Application xmlns="http://xamarin.com/schemas/2014/forms"
+<prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Unity;assembly=Prism.Unity.Forms"
              xmlns:resources="clr-namespace:Climbing.Guide.Mobile.Common.Resources"
              x:Class="Climbing.Guide.Mobile.Common.App">
    <Application.Resources>
@@ -32,4 +33,4 @@
          </Style>
       </ResourceDictionary>
    </Application.Resources>
-</Application>
+</prism:PrismApplication>

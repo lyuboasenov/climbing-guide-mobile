@@ -18,7 +18,7 @@ namespace Climbing.Guide.Mobile.Common.Converters {
       public static string Convert(Route route) {
          string result = string.Empty;
          if (null != route) {
-            result = ServiceLocator.Get<IGradeService>().GetGrade(route.Difficulty, GradeType.V).Name;
+            result = IoC.Container.Get<IGradeService>().GetGrade(route.Difficulty, GradeType.V).Name;
          }
          return result;
       }

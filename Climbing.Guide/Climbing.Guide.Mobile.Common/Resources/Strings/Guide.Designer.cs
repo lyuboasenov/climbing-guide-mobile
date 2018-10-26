@@ -86,5 +86,14 @@ namespace Climbing.Guide.Mobile.Common.Resources.Strings {
                 return ResourceManager.GetString("Search_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Guiding.
+        /// </summary>
+        public static string Section_Title {
+            get {
+                return ResourceManager.GetString("Section_Title", resourceCulture);
+            }
+        }
     }
 }
