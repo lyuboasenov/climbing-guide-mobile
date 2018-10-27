@@ -150,9 +150,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\Climbing.Guide.Mobile.Common\Climbing.Guide.Mobile.Common.csproj">
+    <ProjectReference Include="..\Climbing.Guide.Mobile.Forms\Climbing.Guide.Mobile.Forms.csproj">
       <Project>{16EC4920-51C1-4977-BF88-AEE8B52128A2}</Project>
-      <Name>Climbing.Guide.Mobile.Common</Name>
+      <Name>Climbing.Guide.Mobile.Forms</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

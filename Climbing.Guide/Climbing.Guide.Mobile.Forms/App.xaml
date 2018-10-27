@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Unity;assembly=Prism.Unity.Forms"
+             xmlns:resources="clr-namespace:Climbing.Guide.Mobile.Forms.Resources"
+             x:Class="Climbing.Guide.Mobile.Forms.App">
+   <Application.Resources>
+      <ResourceDictionary>
+         <ResourceDictionary.MergedDictionaries>
+            <resources:FontFileResources />
+         </ResourceDictionary.MergedDictionaries>
+         <!--Global Styles-->
+         <Color x:Key="Primary">#2196F3</Color>
+         <Color x:Key="Accent">#96d1ff</Color>
+         <Color x:Key="LightTextColor">#FFFFFF</Color>
+         <Color x:Key="TextColor">#999999</Color>
+         <Color x:Key="BackgroundPrimary">#37464f</Color>
+         <Color x:Key="NavigationPrimary">#2196F3</Color>
+         <Color x:Key="RedButtonColor">#A52826</Color>
+
+         <Style TargetType="Button" ApplyToDerivedTypes="true">
+            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+            <Setter Property="TextColor" Value="{StaticResource TextColor}" />
+            <Setter Property="Margin" Value="5" />
+         </Style>
+
+         <Style TargetType="NavigationPage">
+            <Setter Property="BarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
+            <Setter Property="BarTextColor" Value="{StaticResource LightTextColor}" />
+         </Style>
+         <Style TargetType="Page" ApplyToDerivedTypes="true">
+            <Setter Property="BackgroundColor" Value="{StaticResource BackgroundPrimary}" />
+         </Style>
+      </ResourceDictionary>
+   </Application.Resources>
+</prism:PrismApplication>

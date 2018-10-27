@@ -1,6 +1,6 @@
 ﻿using System;
 using Android.Gms.Maps;
-using Climbing.Guide.Mobile.Common.Views;
+using Climbing.Guide.Mobile.Forms.Views;
 using Climbing.Guide.Mobile.Droid.Views.Renderers;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;

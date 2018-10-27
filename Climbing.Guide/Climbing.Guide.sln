@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Climbing.Guide.Mobile.Andro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Climbing.Guide.Mobile.iOS", "Climbing.Guide.Mobile.iOS\Climbing.Guide.Mobile.iOS.csproj", "{B85F2175-2C71-4827-8FDB-DFBE78EE5E2A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Climbing.Guide.Mobile.Common", "Climbing.Guide.Mobile.Common\Climbing.Guide.Mobile.Common.csproj", "{D0692222-3842-42D6-B93A-B44B941BD9EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Climbing.Guide.Mobile.Forms", "Climbing.Guide.Mobile.Forms\Climbing.Guide.Mobile.Forms.csproj", "{D0692222-3842-42D6-B93A-B44B941BD9EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Climbing.Guide.Console", "Climbing.Guide.Console\Climbing.Guide.Console.csproj", "{3991771C-DEA0-4FDB-91B1-4467378E4B71}"
 EndProject

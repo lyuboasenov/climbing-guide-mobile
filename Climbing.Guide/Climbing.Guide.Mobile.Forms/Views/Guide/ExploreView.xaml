@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+   xmlns:views="clr-namespace:Climbing.Guide.Mobile.Forms.Views"
+   xmlns="http://xamarin.com/schemas/2014/forms"
+   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+   x:Class="Climbing.Guide.Mobile.Forms.Views.Guide.ExploreView"
+   Title="{Binding Title}">
+
+   <Grid>
+      <Grid.RowDefinitions>
+         <RowDefinition Height="Auto" />
+         <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+         <ColumnDefinition Width="*" />
+         <ColumnDefinition Width="*" />
+         <ColumnDefinition Width="*" />
+         <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+
+      <views:BindableMap Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="4"
+                         IsShowingUser="True"
+                         MapType="Hybrid"
+                         BindablePins="{Binding Pins}"
+                         BindableVisibleRegion="{Binding VisibleRegion, Mode=TwoWay}"/>
+
+      <Picker Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Regions}" SelectedItem="{Binding SelectedRegion}" ItemDisplayBinding="{Binding Name}" />
+      <Picker Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Areas}" SelectedItem="{Binding SelectedArea}" ItemDisplayBinding="{Binding Name}" />
+      <Picker Grid.Column="2" Grid.Row="0" ItemsSource="{Binding Sectors}" SelectedItem="{Binding SelectedSector}" ItemDisplayBinding="{Binding Name}" />
+
+      <Button Grid.Column="3" Grid.Row="0" Command="{Binding ClearFilterCommand}" />
+
+   </Grid>
+</ContentPage>

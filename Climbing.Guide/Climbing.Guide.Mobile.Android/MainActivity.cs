@@ -2,7 +2,7 @@
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
-using Climbing.Guide.Mobile.Common;
+using Climbing.Guide.Mobile.Forms;
 
 namespace Climbing.Guide.Mobile.Droid {
    [Activity(Label = "CG", Icon = "@mipmap/icon", Theme = "@style/splashscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleTop)]

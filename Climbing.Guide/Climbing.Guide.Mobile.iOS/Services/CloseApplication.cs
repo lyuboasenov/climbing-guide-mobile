@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using Climbing.Guide.Mobile.Common.Services;
+using Climbing.Guide.Mobile.Forms.Services;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(Climbing.Guide.Mobile.iOS.Services.CloseApplication))]
