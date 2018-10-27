@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-   xmlns:views="clr-namespace:Climbing.Guide.Mobile.Forms.Views"
    xmlns:resources="clr-namespace:Climbing.Guide.Mobile.Forms.Resources"
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
