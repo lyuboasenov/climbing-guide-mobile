@@ -57,13 +57,15 @@ namespace Climbing.Guide.Mobile.Forms {
          containerRegistry.Register<IEventService, EventService>();
          containerRegistry.Register<IErrorService, ErrorService>();
          containerRegistry.Register<IAlertService, AlertService>();
+         containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
+         containerRegistry.Register<INavigationService, NavigationService>();
+
 #if DEBUG
          containerRegistry.RegisterInstance<IRestApiClient>(new RestApiClient("http://10.0.2.2:8000"));
 #elif RELEASE
          containerRegistry.RegisterInstance<IRestApiClient>(new RestApiClient("https://api.climbingguide.org"));
 #endif
-         containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
-         containerRegistry.Register<INavigationService, NavigationService>();
+         containerRegistry.RegisterInstance<IProgressService>(DependencyService.Get<IProgressService>());
       }
 
       private void RegisterNavigation(IContainerRegistry containerRegistry) {

@@ -15,8 +15,8 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.User {
       public LoginViewModel() {
          Title = VmTitle;
 
-         Username = string.Empty;
-         Password = string.Empty;
+         //Username = string.Empty;
+         //Password = string.Empty;
 
          LoginCommand = new Command(async () => await Login(), () => !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password));
          SignupCommand = new Command(async () => await Signup());

@@ -13,6 +13,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
       public MenuItemModel SelectedMenuItem { get; set; }
 
       private Uri LogoutUri { get; } = UriHelper.Get(UriHelper.Schema.act, "Logout");
+      private Uri TestUri { get; } = UriHelper.Get(UriHelper.Schema.act, "Test");
 
       public ShellMenuViewModel() : base() {
          Title = Resources.Strings.Main.CG;
@@ -22,7 +23,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
       }
 
       public void OnSelectedMenuItemChanged() {
-         Task.Run(async () => await OnSelectedMenuItemChangedAsync());
+         Task.Run(() => OnSelectedMenuItemChangedAsync());
       }
 
       public async Task OnSelectedMenuItemChangedAsync() {
@@ -30,6 +31,8 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
             if (null != SelectedMenuItem) {
                if (SelectedMenuItem.NavigationUri == LogoutUri) {
                   await LogoutAsync();
+               } else if (SelectedMenuItem.NavigationUri == TestUri) {
+                  await TestAsync();
                } else {
                   await GetService<INavigationService>().NavigateAsync(SelectedMenuItem.NavigationUri);
                }
@@ -82,6 +85,22 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
             MenuItems.Add(GetMenuItem(Resources.Strings.User.Logout_Title,
                LogoutUri));
          }
+#if DEBUG
+         MenuItems.Add(GetMenuItem(Resources.Strings.User.Logout_Title,
+            TestUri));
+#endif
+      }
+
+      private async Task TestAsync() {
+         var progressService = GetService<IProgressService>();
+         await progressService.ShowProgressIndicatorAsync();
+
+         for(int i = 0; i < 100; i++) {
+            await progressService.UpdateLoadingProgressAsync(i, 100, $"{i} / 100 items processed.");
+            await Task.Delay(500);
+         }
+
+         await progressService.HideProgressIndicatorAsync();
       }
 
       private async Task LogoutAsync() {

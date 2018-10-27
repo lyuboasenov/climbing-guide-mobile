@@ -71,6 +71,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Services\CloseApplication.cs" />
+    <Compile Include="Services\ProgressServiceiOS.cs" />
     <Compile Include="Views\Renderers\BindableMapRenderer.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />

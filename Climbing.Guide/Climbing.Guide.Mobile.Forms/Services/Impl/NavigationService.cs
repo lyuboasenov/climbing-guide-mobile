@@ -7,28 +7,54 @@ namespace Climbing.Guide.Mobile.Forms.Services {
    public class NavigationService : INavigationService {
 
       private Prism.Navigation.INavigationService InternalNavigationService { get; set; }
+      private IProgressService ProgressService { get; set; }
 
-      public NavigationService(Prism.Navigation.INavigationService navigationService) {
+      public NavigationService(Prism.Navigation.INavigationService navigationService, IProgressService progressService) {
          InternalNavigationService = navigationService;
+         ProgressService = progressService;
       }
 
       public async Task<ITaskResult<bool>> GoBackAsync() {
-         var result = await InternalNavigationService.GoBackAsync();
+         await ProgressService.ShowLoadingIndicatorAsync();
+         INavigationResult result;
+         try {
+            result = await InternalNavigationService.GoBackAsync();
+         } finally {
+            await ProgressService.HideLoadingIndicatorAsync();
+         }
          return result.ToITaskResult();
       }
 
       public async Task<ITaskResult<bool>> GoBackAsync(params object[] parameters) {
-         var result = await InternalNavigationService.GoBackAsync(GetParameters(parameters));
+         await ProgressService.ShowLoadingIndicatorAsync();
+         INavigationResult result;
+         try {
+               result = await InternalNavigationService.GoBackAsync(GetParameters(parameters));
+         } finally {
+            await ProgressService.HideLoadingIndicatorAsync();
+         }
          return result.ToITaskResult();
       }
 
       public async Task<ITaskResult<bool>> NavigateAsync(Uri uri) {
-         var result = await InternalNavigationService.NavigateAsync(uri);
+         await ProgressService.ShowLoadingIndicatorAsync();
+         INavigationResult result;
+         try {
+            result = await InternalNavigationService.NavigateAsync(uri);
+         } finally {
+            await ProgressService.HideLoadingIndicatorAsync();
+         }
          return result.ToITaskResult();
       }
 
       public async Task<ITaskResult<bool>> NavigateAsync(Uri uri, params object[] parameters) {
-         var result = await InternalNavigationService.NavigateAsync(uri, GetParameters(parameters));
+         await ProgressService.ShowLoadingIndicatorAsync();
+         INavigationResult result;
+         try {
+            result = await InternalNavigationService.NavigateAsync(uri, GetParameters(parameters));
+         } finally {
+            await ProgressService.HideLoadingIndicatorAsync();
+         }
          return result.ToITaskResult();
       }
       
