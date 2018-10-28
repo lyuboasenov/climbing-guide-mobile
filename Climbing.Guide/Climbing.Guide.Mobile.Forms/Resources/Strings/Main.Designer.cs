@@ -214,6 +214,15 @@ namespace Climbing.Guide.Mobile.Forms.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error occured while trying to access {0}..
+        /// </summary>
+        public static string Shell_Navigation_Error_Message {
+            get {
+                return ResourceManager.GetString("Shell_Navigation_Error_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Splash.
         /// </summary>
         public static string Splash_Title {

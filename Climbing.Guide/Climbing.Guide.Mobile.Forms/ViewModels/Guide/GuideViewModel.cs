@@ -148,12 +148,16 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
       }
 
       private async Task RouteTapped(Route route) {
-         try {
-            await NavigationService.NavigateAsync(
-               NavigationService.GetShellNavigationUri(nameof(Views.Routes.RouteView)),
-               route);
-         } catch(System.Exception ex) {
-            GetService<IErrorService>().LogException(ex);
+         var navigationResult = await NavigationService.NavigateAsync(
+            NavigationService.GetShellNavigationUri(nameof(Views.Routes.RouteEditView)),
+            route);
+         //TODO: Initiate Route view instead of route edit
+         //await NavigationService.NavigateAsync(
+         //   NavigationService.GetShellNavigationUri(nameof(Views.Routes.RouteView)),
+         //   route);
+         if (!navigationResult.Result) {
+            await GetService<IErrorService>().HandleExceptionAsync(navigationResult.Exception,
+               Resources.Strings.Routes.Route_View_Error_Message, route.Name);
          }
       }
    }

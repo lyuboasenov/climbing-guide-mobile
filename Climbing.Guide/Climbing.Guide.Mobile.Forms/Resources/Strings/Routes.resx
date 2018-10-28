@@ -144,11 +144,59 @@
   <data name="Rating" xml:space="preserve">
     <value>Rating</value>
   </data>
+  <data name="Route_Edit_Area" xml:space="preserve">
+    <value>Area</value>
+  </data>
+  <data name="Route_Edit_Difficulty" xml:space="preserve">
+    <value>Difficulty</value>
+  </data>
+  <data name="Route_Edit_FA" xml:space="preserve">
+    <value>FA</value>
+  </data>
+  <data name="Route_Edit_Info" xml:space="preserve">
+    <value>Information about the route</value>
+  </data>
+  <data name="Route_Edit_Into_Title" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Route_Edit_Length" xml:space="preserve">
+    <value>Length in meters</value>
+  </data>
+  <data name="Route_Edit_Map_Title" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="Route_Edit_Name" xml:space="preserve">
+    <value>Route name</value>
+  </data>
+  <data name="Route_Edit_Region" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="Route_Edit_Route_Type" xml:space="preserve">
+    <value>Route type</value>
+  </data>
+  <data name="Route_Edit_Route_Type_Alpine" xml:space="preserve">
+    <value>Alpine route</value>
+  </data>
+  <data name="Route_Edit_Route_Type_Boulder" xml:space="preserve">
+    <value>Boulder</value>
+  </data>
+  <data name="Route_Edit_Route_Type_Sport" xml:space="preserve">
+    <value>Sport route</value>
+  </data>
+  <data name="Route_Edit_Schema_Title" xml:space="preserve">
+    <value>Schema</value>
+  </data>
+  <data name="Route_Edit_Sector" xml:space="preserve">
+    <value>Sector</value>
+  </data>
   <data name="Route_Title" xml:space="preserve">
     <value>Route</value>
   </data>
   <data name="Route_Title_Format" xml:space="preserve">
     <value>{0} {1}</value>
+  </data>
+  <data name="Route_View_Error_Message" xml:space="preserve">
+    <value>Error occured while trying to show route {0}.</value>
   </data>
   <data name="Schema" xml:space="preserve">
     <value>Schema</value>

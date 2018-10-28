@@ -50,10 +50,10 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.User {
       }
 
       private async Task Signup() {
-         try {
-            await NavigationService.NavigateAsync(NavigationService.GetShellNavigationUri(nameof(Views.User.SignupView)));
-         } catch (System.Exception ex) {
-            GetService<IErrorService>().LogException(ex);
+         var navigationResult = await NavigationService.NavigateAsync(NavigationService.GetShellNavigationUri(nameof(Views.User.SignupView)));
+         if (!navigationResult.Result) {
+            await GetService<IErrorService>().HandleExceptionAsync(navigationResult.Exception,
+               Resources.Strings.Main.Shell_Navigation_Error_Message, SignupViewModel.VmTitle);
          }
       }
    }

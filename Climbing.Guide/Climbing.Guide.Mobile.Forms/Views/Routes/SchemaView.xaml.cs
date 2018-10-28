@@ -9,20 +9,20 @@ using Xamarin.Forms.Xaml;
 
 namespace Climbing.Guide.Mobile.Forms.Views.Routes {
    [XamlCompilation(XamlCompilationOptions.Compile)]
-   public partial class RouteSchemaVeiw : SKCanvasView {
+   public partial class SchemaView : SKCanvasView {
 
       public static readonly BindableProperty SchemaLocalPathProperty =
          BindableProperty.Create(nameof(SchemaLocalPath), typeof(string), typeof(string), null, propertyChanged: OnSchemaLocalPathPropertyChanged);
 
       private static void OnSchemaLocalPathPropertyChanged(BindableObject bindable, object oldValue, object newValue) {
-         (bindable as RouteSchemaVeiw).InvalidateSurface();
+         (bindable as SchemaView).InvalidateSurface();
       }
 
       public static readonly BindableProperty SchemaRouteProperty =
          BindableProperty.Create(nameof(SchemaRoute), typeof(IEnumerable<Point>), typeof(IEnumerable<Point>), null, propertyChanged: OnSchemaRoutePropertyChanged);
 
       private static void OnSchemaRoutePropertyChanged(BindableObject bindable, object oldValue, object newValue) {
-         (bindable as RouteSchemaVeiw).InvalidateSurface();
+         (bindable as SchemaView).InvalidateSurface();
       }
 
       public string SchemaLocalPath {
@@ -37,7 +37,7 @@ namespace Climbing.Guide.Mobile.Forms.Views.Routes {
 
       private SKPaint PathPaint { get; } = new SKPaint() { Color = SKColors.Red, StrokeWidth = 20 };
 
-      public RouteSchemaVeiw() {
+      public SchemaView() {
          InitializeComponent();
       }
 

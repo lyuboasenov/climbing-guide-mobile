@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:routes="clr-namespace:Climbing.Guide.Mobile.Forms.Views.Routes"
+             x:Class="Climbing.Guide.Mobile.Forms.Views.Routes.SchemaEditorView">
+   <ContentView.Content>
+      <Grid>
+         <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+         </Grid.RowDefinitions>
+         <AbsoluteLayout x:Name="schemaViewContainer">
+            <routes:SchemaView x:Name="schemaView"
+                                 WidthRequest="100"
+                                 SchemaLocalPath="{Binding LocalSchemaThumbPath}"
+                                 SchemaRoute="{Binding SchemaRoute}"/>
+         </AbsoluteLayout>
+         <StackLayout Grid.Row="1" Orientation="Horizontal">
+            
+         </StackLayout>
+      </Grid>
+   </ContentView.Content>
+</ContentView>

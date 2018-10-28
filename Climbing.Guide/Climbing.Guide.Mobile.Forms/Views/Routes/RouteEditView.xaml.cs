@@ -9,12 +9,12 @@ using Xamarin.Forms.Xaml;
 
 namespace Climbing.Guide.Mobile.Forms.Views.Routes
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class RouteSchemaEditorView : ContentView
-	{
-		public RouteSchemaEditorView ()
-		{
-			InitializeComponent ();
-		}
-	}
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class RouteEditView : TabbedPage
+    {
+        public RouteEditView ()
+        {
+            InitializeComponent();
+        }
+    }
 }

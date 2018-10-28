@@ -34,13 +34,20 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
                } else if (SelectedMenuItem.NavigationUri == TestUri) {
                   await TestAsync();
                } else {
-                  await GetService<INavigationService>().NavigateAsync(SelectedMenuItem.NavigationUri);
+                  var result = await GetService<INavigationService>().NavigateAsync(SelectedMenuItem.NavigationUri);
+                  if (!result.Result) {
+                     await GetService<IErrorService>().HandleExceptionAsync(result.Exception,
+                        Resources.Strings.Main.Shell_Navigation_Error_Message,
+                        SelectedMenuItem.Title);
+                  }
                }
             } else if (MenuItems.Count > 0) {
                SelectedMenuItem = MenuItems[0];
             }
          }catch (Exception ex) {
-            GetService<IErrorService>().LogException(ex);
+            await GetService<IErrorService>().HandleExceptionAsync(ex,
+               Resources.Strings.Main.Shell_Navigation_Error_Message,
+               SelectedMenuItem.Title);
          }
       }
 
@@ -86,7 +93,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
                LogoutUri));
          }
 #if DEBUG
-         MenuItems.Add(GetMenuItem(Resources.Strings.User.Logout_Title,
+         MenuItems.Add(GetMenuItem("Test initiation",
             TestUri));
 #endif
       }

@@ -142,6 +142,141 @@ namespace Climbing.Guide.Mobile.Forms.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Area.
+        /// </summary>
+        public static string Route_Edit_Area {
+            get {
+                return ResourceManager.GetString("Route_Edit_Area", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Difficulty.
+        /// </summary>
+        public static string Route_Edit_Difficulty {
+            get {
+                return ResourceManager.GetString("Route_Edit_Difficulty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FA.
+        /// </summary>
+        public static string Route_Edit_FA {
+            get {
+                return ResourceManager.GetString("Route_Edit_FA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Information about the route.
+        /// </summary>
+        public static string Route_Edit_Info {
+            get {
+                return ResourceManager.GetString("Route_Edit_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        public static string Route_Edit_Into_Title {
+            get {
+                return ResourceManager.GetString("Route_Edit_Into_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Length in meters.
+        /// </summary>
+        public static string Route_Edit_Length {
+            get {
+                return ResourceManager.GetString("Route_Edit_Length", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map.
+        /// </summary>
+        public static string Route_Edit_Map_Title {
+            get {
+                return ResourceManager.GetString("Route_Edit_Map_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Route name.
+        /// </summary>
+        public static string Route_Edit_Name {
+            get {
+                return ResourceManager.GetString("Route_Edit_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Region.
+        /// </summary>
+        public static string Route_Edit_Region {
+            get {
+                return ResourceManager.GetString("Route_Edit_Region", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Route type.
+        /// </summary>
+        public static string Route_Edit_Route_Type {
+            get {
+                return ResourceManager.GetString("Route_Edit_Route_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alpine route.
+        /// </summary>
+        public static string Route_Edit_Route_Type_Alpine {
+            get {
+                return ResourceManager.GetString("Route_Edit_Route_Type_Alpine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boulder.
+        /// </summary>
+        public static string Route_Edit_Route_Type_Boulder {
+            get {
+                return ResourceManager.GetString("Route_Edit_Route_Type_Boulder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sport route.
+        /// </summary>
+        public static string Route_Edit_Route_Type_Sport {
+            get {
+                return ResourceManager.GetString("Route_Edit_Route_Type_Sport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schema.
+        /// </summary>
+        public static string Route_Edit_Schema_Title {
+            get {
+                return ResourceManager.GetString("Route_Edit_Schema_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sector.
+        /// </summary>
+        public static string Route_Edit_Sector {
+            get {
+                return ResourceManager.GetString("Route_Edit_Sector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Route.
         /// </summary>
         public static string Route_Title {
@@ -156,6 +291,15 @@ namespace Climbing.Guide.Mobile.Forms.Resources.Strings {
         public static string Route_Title_Format {
             get {
                 return ResourceManager.GetString("Route_Title_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error occured while trying to show route {0}..
+        /// </summary>
+        public static string Route_View_Error_Message {
+            get {
+                return ResourceManager.GetString("Route_View_Error_Message", resourceCulture);
             }
         }
         
