@@ -1,36 +1,40 @@
-﻿using System;
+﻿using Climbing.Guide.Mobile.Forms.Logging;
+using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Mobile.Forms.Services {
    public class ErrorService : IErrorService {
 
-      private IAlertService alertService;
-      // Cross servivce dependencies should be lazy loaded in order to overcome
-      // initialization sequencing.
-      private IAlertService AlertService {
-         get {
-            if (null == alertService) {
-               alertService = IoC.Container.Get<IAlertService>();
-            }
+      private IAlertService AlertService { get; set; }
+      private ILoggingService LoggingService { get; set; }
 
-            return alertService;
-         }
+      public ErrorService(IAlertService alertService, ILoggingService loggingService) {
+         AlertService = alertService;
+         LoggingService = loggingService;
       }
 
-      public void LogException(Exception ex) {
+      private string FormatException(Exception ex) {
+         StringBuilder sb = new StringBuilder();
+
          string indent = string.Empty;
-         Console.WriteLine($"====================================================== ERROR: ======================================================");
+         sb.AppendLine($"====================================================== ERROR: ======================================================");
          while(ex != null) {
-            Console.WriteLine($"{indent}Type: {ex.GetType()}");
-            Console.WriteLine($"{indent}Message: {ex.Message}");
-            Console.WriteLine($"{indent}Message: {ex.StackTrace.Replace(Environment.NewLine, Environment.NewLine + indent)}");
-            Console.WriteLine($"--------------------------------------------------------------------------------------------------------------------");
+            sb.AppendLine($"{indent}Type: {ex.GetType()}");
+            sb.AppendLine($"{indent}Message: {ex.Message}");
+            sb.AppendLine($"{indent}Message: {ex.StackTrace.Replace(Environment.NewLine, Environment.NewLine + indent)}");
+            sb.AppendLine($"--------------------------------------------------------------------------------------------------------------------");
 
             indent += "   ";
             ex = ex.InnerException;
          }
-         Console.WriteLine($"Error occured while initializing the application: {ex.Message}");
-         Console.WriteLine($"=====================================================================================================================");
+         sb.AppendLine($"=====================================================================================================================");
+
+         return sb.ToString();
+      }
+
+      private void LogException(Exception ex) {
+         LoggingService.Log(FormatException(ex), Category.Exception, Priority.High);
       }
 
       /// <summary>
@@ -59,7 +63,7 @@ namespace Climbing.Guide.Mobile.Forms.Services {
       /// <param name="ex">The communication exception to handle</param>
       /// <param name="errorMessage">Error message to be displayed in a alert window.</param>
       /// <param name="detailedErrorMessageFormat">Format string to be used in detailed message forming, to be displayed in detailed alert window.</param>
-      public async Task HandleExceptionAsync(Exception ex,
+      public async Task HandleExceptionDetailedAsync(Exception ex,
          string errorMessage,
          string detailedErrorMessageFormat,
          params object[] detailedErrorMessageParams) {
@@ -88,7 +92,7 @@ namespace Climbing.Guide.Mobile.Forms.Services {
       public async Task HandleRestApiCallExceptionAsync(Core.API.Schemas.RestApiCallException ex,
          string errorMessage,
          string detailedErrorMessageFormat) {
-         await HandleExceptionAsync(ex, errorMessage, detailedErrorMessageFormat, Environment.NewLine, ex.StatusCode, ex.Response);
+         await HandleExceptionDetailedAsync(ex, errorMessage, detailedErrorMessageFormat, Environment.NewLine, ex.StatusCode, ex.Response);
       }
 
       /// <summary>
