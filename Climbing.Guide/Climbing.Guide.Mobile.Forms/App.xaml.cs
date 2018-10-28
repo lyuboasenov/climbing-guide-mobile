@@ -54,18 +54,7 @@ namespace Climbing.Guide.Mobile.Forms {
       protected override void RegisterTypes(IContainerRegistry containerRegistry) {
          RegisterNavigation(containerRegistry);
 
-         containerRegistry.Register<IEventService, EventService>();
-         containerRegistry.Register<IErrorService, ErrorService>();
-         containerRegistry.Register<IAlertService, AlertService>();
-         containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
-         containerRegistry.Register<INavigationService, NavigationService>();
-
-#if DEBUG
-         containerRegistry.RegisterInstance<IRestApiClient>(new RestApiClient("http://10.0.2.2:8000"));
-#elif RELEASE
-         containerRegistry.RegisterInstance<IRestApiClient>(new RestApiClient("https://api.climbingguide.org"));
-#endif
-         containerRegistry.RegisterInstance<IProgressService>(DependencyService.Get<IProgressService>());
+         RegisterServices(containerRegistry);
       }
 
       private void RegisterNavigation(IContainerRegistry containerRegistry) {
@@ -75,6 +64,23 @@ namespace Climbing.Guide.Mobile.Forms {
                containerRegistry.RegisterForNavigation(type, type.Name);
             }
          }
+      }
+
+      private void RegisterServices(IContainerRegistry containerRegistry) {
+         containerRegistry.Register<IEventService, EventService>();
+         containerRegistry.Register<IErrorService, ErrorService>();
+         containerRegistry.Register<IAlertService, AlertService>();
+         containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
+         containerRegistry.Register<INavigationService, NavigationService>();
+
+#if DEBUG
+         containerRegistry.RegisterInstance<IRestApiClient>(new RestApiClient("http://10.0.2.2:8000"));
+         containerRegistry.Register<Logging.ILoggingService, Logging.DebugLoggingService>();
+#elif RELEASE
+         containerRegistry.RegisterInstance<IRestApiClient>(new RestApiClient("https://api.climbingguide.org"));
+         containerRegistry.Register<Logging.ILoggingService, Logging.VoidLoggingService>();
+#endif
+         containerRegistry.RegisterInstance<IProgressService>(DependencyService.Get<IProgressService>());
       }
    }
 }
