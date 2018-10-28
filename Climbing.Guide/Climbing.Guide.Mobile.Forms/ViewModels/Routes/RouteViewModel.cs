@@ -1,5 +1,4 @@
 ﻿using Climbing.Guide.Core.API.Schemas;
-using Prism.Navigation;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -22,9 +21,9 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Routes {
          ViewSchemaCommand = new Command(async () => await ViewSchema());
       }
 
-      public override void OnNavigatedTo(INavigationParameters parameters) {
+      public override void OnNavigatedTo(params object[] parameters) {
          base.OnNavigatedTo(parameters);
-         Route = parameters[nameof(Core.API.Schemas.Route)] as Route;
+         Route = parameters[0] as Route;
          if (null != Route) {
             Title = string.Format("{0}   {1}", Route.Name, Converters.GradeConverter.Convert(Route));
 

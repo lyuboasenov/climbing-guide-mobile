@@ -3,12 +3,11 @@ using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Climbing.Guide.Mobile.Forms.Views.CustomViews {
+namespace Climbing.Guide.Mobile.Forms.Views.Routes {
    [XamlCompilation(XamlCompilationOptions.Compile)]
    public partial class RouteSchemaVeiw : SKCanvasView {
 

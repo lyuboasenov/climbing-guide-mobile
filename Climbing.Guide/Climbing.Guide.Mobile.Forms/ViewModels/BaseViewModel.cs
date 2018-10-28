@@ -1,6 +1,7 @@
 ﻿using Climbing.Guide.Mobile.Forms.Services;
 using Prism.Mvvm;
 using Prism.Navigation;
+using System.Linq;
 
 namespace Climbing.Guide.Mobile.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -25,15 +26,27 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
          return IoC.Container.Get<T>();
       }
 
-      public virtual void OnNavigatedFrom(INavigationParameters parameters) {
+      public void OnNavigatedFrom(INavigationParameters parameters) {
+         OnNavigatedFrom(parameters.Select(p => p.Value));
+      }
+
+      public void OnNavigatedTo(INavigationParameters parameters) {
+         OnNavigatedTo(parameters.Select(p => p.Value).ToArray());
+      }
+
+      public void OnNavigatingTo(INavigationParameters parameters) {
+         OnNavigatingTo(parameters.Select(p => p.Value));
+      }
+
+      public virtual void OnNavigatedFrom(params object[] parameters) {
 
       }
 
-      public virtual void OnNavigatedTo(INavigationParameters parameters) {
+      public virtual void OnNavigatedTo(params object[] parameters) {
 
       }
 
-      public virtual void OnNavigatingTo(INavigationParameters parameters) {
+      public virtual void OnNavigatingTo(params object[] parameters) {
 
       }
 

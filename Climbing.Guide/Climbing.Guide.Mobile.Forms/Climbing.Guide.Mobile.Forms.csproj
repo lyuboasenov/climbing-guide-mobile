@@ -52,7 +52,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>User.resx</DependentUpon>
     </Compile>
-    <Compile Update="Views\CustomViews\RouteSchemaVeiw.xaml.cs">
+    <Compile Update="Views\Routes\RouteSchemaVeiw.xaml.cs">
       <DependentUpon>RouteSchemaVeiw.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\ShellMenu.xaml.cs">
@@ -117,7 +117,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>User.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\CustomViews\RouteSchemaVeiw.xaml">
+    <EmbeddedResource Update="Views\Routes\RouteSchemaEditorView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Routes\RouteSchemaVeiw.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\LoadingIndicatorView.xaml">
@@ -132,5 +135,9 @@
     <EmbeddedResource Update="Views\Shell.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\CustomViews\" />
   </ItemGroup>
 </Project>
