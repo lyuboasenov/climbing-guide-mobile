@@ -72,6 +72,7 @@ namespace Climbing.Guide.Mobile.Forms {
          containerRegistry.Register<IAlertService, AlertService>();
          containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
          containerRegistry.Register<INavigationService, NavigationService>();
+         containerRegistry.Register<IMediaService, MediaService>();
 
 #if DEBUG
          containerRegistry.RegisterInstance<IRestApiClient>(new RestApiClient("http://10.0.2.2:8000"));
@@ -80,7 +81,8 @@ namespace Climbing.Guide.Mobile.Forms {
          containerRegistry.RegisterInstance<IRestApiClient>(new RestApiClient("https://api.climbingguide.org"));
          containerRegistry.Register<Logging.ILoggingService, Logging.VoidLoggingService>();
 #endif
-         containerRegistry.RegisterInstance<IProgressService>(DependencyService.Get<IProgressService>());
+         containerRegistry.RegisterInstance(DependencyService.Get<IProgressService>());
+         containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
       }
    }
 }
