@@ -1,5 +1,7 @@
 ﻿using Climbing.Guide.Core.API.Schemas;
 using Climbing.Guide.Mobile.Forms.Services;
+using Plugin.Media;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -8,18 +10,8 @@ using Xamarin.Forms;
 
 namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class GuideViewModel : BaseViewModel {
+   public class GuideViewModel : BaseGuideViewModel {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
-
-      public ObservableCollection<Core.API.Schemas.Region> Regions { get; set; }
-      public ObservableCollection<Area> Areas { get; set; }
-      public ObservableCollection<Sector> Sectors { get; set; }
-      public ObservableCollection<Route> Routes { get; set; }
-
-      public Core.API.Schemas.Region SelectedRegion { get; set; }
-      public Area SelectedArea { get; set; }
-      public Sector SelectedSector { get; set; }
-      public Route SelectedRoute { get; set; }
 
       public ICommand ClearFilterCommand { get; private set; }
       public ICommand RouteTappedCommand { get; private set; }
@@ -46,15 +38,25 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
          RouteTappedCommand = new Command<Route>(async (route) => { await RouteTapped(route); });
 
          AddRouteCommand = new Command(async () => {
+            var options = new List<string>() {
+               Resources.Strings.Routes.Add_Region_Selection_Item,
+               Resources.Strings.Routes.Add_Area_Selection_Item,
+               Resources.Strings.Routes.Add_Sector_Selection_Item
+            };
+
+            var mediaService = GetService<IMediaService>();
+            if (mediaService.IsTakePhotoSupported) {
+               options.Add(Resources.Strings.Routes.Add_Route_From_Image_Selection_Item);
+            }
+            if (mediaService.IsPickPhotoSupported) {
+               options.Add(Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item);
+            }
+
             var result = await GetService<IAlertService>().DisplayActionSheetAsync(
                Resources.Strings.Routes.Add_Title,
                Resources.Strings.Main.Cancel,
                null,
-               Resources.Strings.Routes.Add_Region_Selection_Item,
-               Resources.Strings.Routes.Add_Area_Selection_Item,
-               Resources.Strings.Routes.Add_Sector_Selection_Item,
-               Resources.Strings.Routes.Add_Route_From_Image_Selection_Item,
-               Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item);
+               options.ToArray());
 
             if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Region_Selection_Item) == 0) {
                // show add region
@@ -64,97 +66,40 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
                // show add sector
             } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Route_From_Image_Selection_Item) == 0) {
                // take picture and add route
+               var navigationResult = await NavigationService.NavigateAsync(
+                  NavigationService.GetShellNavigationUri(nameof(Views.Routes.RouteEditView)),
+                  SelectedRegion, SelectedArea, SelectedSector);
             } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item) == 0) {
-               // pick image and add route
+               var path = await mediaService.PickPhotoAsync();
+               if (System.IO.File.Exists(path)) {
+                  // pick image and add route
+                  var navigationResult = await NavigationService.NavigateAsync(
+                     NavigationService.GetShellNavigationUri(nameof(Views.Routes.RouteEditView)),
+                     SelectedRegion, SelectedArea, SelectedSector, path);
+               }
             }
          });
       }
 
-      protected virtual void InitializeRegions() {
-         try {
-            Regions = Client.RegionsClient.ListAsync().GetAwaiter().GetResult();
-         } catch (RestApiCallException ex) {
-            GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
-         }
-
-         // Selects first of the received regions
-         if (Regions.Count > 0) {
-            SelectedRegion = Regions[0];
-         }
-      }
-
-      public virtual void OnSelectedRegionChanged() {
-         Areas = null;
-         SelectedArea = null;
-         Sectors = null;
-         SelectedSector = null;
-         Routes = null;
-         SelectedRoute = null;
+      public override void OnSelectedRegionChanged() {
+         base.OnSelectedRegionChanged();
          (ClearFilterCommand as Command).ChangeCanExecute();
-
-         if (null != SelectedRegion) {
-            try {
-               Areas = Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString()).GetAwaiter().GetResult();
-            } catch (RestApiCallException ex) {
-               GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex).Wait();
-               return;
-            }
-
-            // Selects first of the received areas
-            if (Areas.Count > 0) {
-               SelectedArea = Areas[0];
-            }
-         }
       }
 
-      public virtual void OnSelectedAreaChanged() {
-         Sectors = null;
-         SelectedSector = null;
-         Routes = null;
-         SelectedRoute = null;
+      public override void OnSelectedAreaChanged() {
+         base.OnSelectedAreaChanged();
          (ClearFilterCommand as Command).ChangeCanExecute();
-
-         if (null != SelectedArea) {
-            try {
-               Sectors = Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString()).GetAwaiter().GetResult();
-            } catch (RestApiCallException ex) {
-               GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex).Wait();
-               return;
-            }
-
-            // Selects first of the received sectors
-            if (Sectors.Count > 0) {
-               SelectedSector = Sectors[0];
-            }
-         }
       }
 
-      public virtual void OnSelectedSectorChanged() {
-         Routes = null;
-         SelectedRoute = null;
+      public override void OnSelectedSectorChanged() {
+         base.OnSelectedSectorChanged();
          (ClearFilterCommand as Command).ChangeCanExecute();
-
-         if (null != SelectedSector) {
-            try {
-               Routes = Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString()).GetAwaiter().GetResult();
-            } catch (RestApiCallException ex) {
-               GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex).Wait();
-            }
-         }
-      }
-
-      public virtual void OnSelectedRouteChanged() {
-
       }
 
       private async Task RouteTapped(Route route) {
          var navigationResult = await NavigationService.NavigateAsync(
-            NavigationService.GetShellNavigationUri(nameof(Views.Routes.RouteEditView)),
+            NavigationService.GetShellNavigationUri(nameof(Views.Routes.RouteView)),
             route);
-         //TODO: Initiate Route view instead of route edit
-         //await NavigationService.NavigateAsync(
-         //   NavigationService.GetShellNavigationUri(nameof(Views.Routes.RouteView)),
-         //   route);
          if (!navigationResult.Result) {
             await GetService<IErrorService>().HandleExceptionAsync(navigationResult.Exception,
                Resources.Strings.Routes.Route_View_Error_Message, route.Name);

@@ -9,7 +9,7 @@ using Climbing.Guide.Mobile.Forms.Services;
 
 namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class ExploreViewModel : GuideViewModel {
+   public class ExploreViewModel : BaseGuideViewModel {
       public static string VmTitle { get; } = Resources.Strings.Guide.Explore_Title;
 
       public ObservableCollection<Pin> Pins { get; set; }
