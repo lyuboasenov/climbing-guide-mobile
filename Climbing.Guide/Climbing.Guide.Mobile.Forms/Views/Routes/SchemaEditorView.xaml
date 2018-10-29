@@ -2,21 +2,41 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:routes="clr-namespace:Climbing.Guide.Mobile.Forms.Views.Routes"
+             xmlns:resources="clr-namespace:Climbing.Guide.Mobile.Forms.Resources"
              x:Class="Climbing.Guide.Mobile.Forms.Views.Routes.SchemaEditorView">
    <ContentView.Content>
       <Grid>
-         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-         </Grid.RowDefinitions>
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+         </Grid.ColumnDefinitions>
          <AbsoluteLayout x:Name="schemaViewContainer">
             <routes:SchemaView x:Name="schemaView"
-                                 WidthRequest="100"
-                                 SchemaLocalPath="{Binding LocalSchemaThumbPath}"
-                                 SchemaRoute="{Binding SchemaRoute}"/>
+                               SchemaLocalPath="{Binding LocalSchemaThumbPath}"
+                               SchemaRoute="{Binding SchemaRoute}"
+                               AbsoluteLayout.LayoutFlags="SizeProportional"
+                               AbsoluteLayout.LayoutBounds="0, 0, 1, 1"/>
          </AbsoluteLayout>
-         <StackLayout Grid.Row="1" Orientation="Horizontal">
-            
+         <StackLayout Grid.Column="1"
+                      Orientation="Vertical">
+            <Button x:Name="undoButton"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="Start"
+                    WidthRequest="30"
+                    HeightRequest="30"
+                    BorderRadius="15"
+                    Padding="0"
+                    FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+                    Text="{x:Static resources:GlyphNames.UndoAlt}"/>
+            <Button x:Name="redoButton"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="Start"
+                    WidthRequest="30"
+                    HeightRequest="30"
+                    BorderRadius="15"
+                    Padding="0"
+                    FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+                    Text="{x:Static resources:GlyphNames.RedoAlt}"/>
          </StackLayout>
       </Grid>
    </ContentView.Content>

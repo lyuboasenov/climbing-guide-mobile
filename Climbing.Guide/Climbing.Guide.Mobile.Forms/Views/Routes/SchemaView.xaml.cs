@@ -37,6 +37,8 @@ namespace Climbing.Guide.Mobile.Forms.Views.Routes {
 
       private SKPaint PathPaint { get; } = new SKPaint() { Color = SKColors.Red, StrokeWidth = 20 };
 
+      internal Size ImageSize { get; set; }
+
       public SchemaView() {
          InitializeComponent();
       }
@@ -44,7 +46,7 @@ namespace Climbing.Guide.Mobile.Forms.Views.Routes {
       protected override void OnPaintSurface(SKPaintSurfaceEventArgs e) {
          base.OnPaintSurface(e);
 
-         Size imageSize = Size.Zero;
+         ImageSize = Size.Zero;
 
          if (!string.IsNullOrEmpty(SchemaLocalPath)) {
             using (var bitmap = SkiaSharpHelper.LoadBitmap(SchemaLocalPath, Math.Max(CanvasSize.Height, CanvasSize.Width)))
@@ -52,14 +54,14 @@ namespace Climbing.Guide.Mobile.Forms.Views.Routes {
                FilterQuality = SKFilterQuality.High, // high quality scaling
                IsAntialias = true
             }) {
-               imageSize = new Size(bitmap.Width, bitmap.Height);
+               ImageSize = new Size(bitmap.Width, bitmap.Height);
                e.Surface.Canvas.DrawBitmap(bitmap, 0, 0, paint);
             }
          }
 
          if (null != SchemaRoute) {
             SkiaSharpHelper.DrawPath(e.Surface.Canvas,
-               SchemaRoute.Select(p => new Point(p.X * imageSize.Width, p.Y * imageSize.Height)),
+               SchemaRoute.Select(p => new Point(p.X * ImageSize.Width, p.Y * ImageSize.Height)),
                Color.Red);
          }
       }
