@@ -22,7 +22,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
 
       }
 
-      protected T GetService<T>() where T : class {
+      protected static T GetService<T>() where T : class {
          return IoC.Container.Get<T>();
       }
 
