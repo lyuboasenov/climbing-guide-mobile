@@ -63,8 +63,8 @@ namespace Climbing.Guide.Mobile.Forms.Helpers {
          return bitmap;
       }
 
-      public static SKBitmap LoadBitmap(string location, double maxSize) {
-         using (var input = File.OpenRead(location))                   // load the file
+      public static SKBitmap LoadBitmap(string bitmapPath, double width, double height) {
+         using (var input = File.OpenRead(bitmapPath))                   // load the file
          using (var inputStream = new SKManagedStream(input))          // create a sream SkiaSharp uses
          using (var codec = SKCodec.Create(inputStream)) {             // get the decoder
 
@@ -72,7 +72,7 @@ namespace Climbing.Guide.Mobile.Forms.Helpers {
 
             // Determine scaling factor
             var bitmapAspectRatio = (double)bitmap.Width / bitmap.Height;
-            double factor = bitmapAspectRatio > 1 ? maxSize / bitmap.Width : maxSize / bitmap.Height;
+            double factor = bitmapAspectRatio > 1 ? width / bitmap.Width : height / bitmap.Height;
 
             SKImageInfo info = new SKImageInfo((int)(bitmap.Width * factor), (int)(bitmap.Height * factor));
             bitmap = bitmap.Resize(info, SKBitmapResizeMethod.Triangle);

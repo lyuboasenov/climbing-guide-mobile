@@ -49,7 +49,7 @@ namespace Climbing.Guide.Mobile.Forms.Views.Routes {
          ImageSize = Size.Zero;
 
          if (!string.IsNullOrEmpty(SchemaLocalPath)) {
-            using (var bitmap = SkiaSharpHelper.LoadBitmap(SchemaLocalPath, Math.Max(CanvasSize.Height, CanvasSize.Width)))
+            using (var bitmap = SkiaSharpHelper.LoadBitmap(SchemaLocalPath, CanvasSize.Width, CanvasSize.Height))
             using (var paint = new SKPaint {
                FilterQuality = SKFilterQuality.High, // high quality scaling
                IsAntialias = true

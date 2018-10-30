@@ -82,6 +82,7 @@ namespace Climbing.Guide.Mobile.Forms.Views.Routes {
          point.X = Math.Min(point.X / schemaView.ImageSize.Width, 1);
          point.Y = Math.Min(point.Y / schemaView.ImageSize.Height, 1);
 
+         //AddPointPlaceholder(LastTouchLocation.ToPoint());
          AddPoint(point);
       }
 
@@ -119,6 +120,11 @@ namespace Climbing.Guide.Mobile.Forms.Views.Routes {
          RefreshSchemaRoute();
       }
 
+      //private void AddPointPlaceholder(Point point) {
+      //   var placeholder = GetPointPlaceholder();
+      //   schemaViewContainer.Children.Add(placeholder, point);
+      //}
+
       private void RefreshSchemaRoute() {
          var route = RouteStack.ToArray();
          schemaView.SchemaRoute = route;
@@ -152,5 +158,22 @@ namespace Climbing.Guide.Mobile.Forms.Views.Routes {
 
          RefreshSchemaRoute();
       }
+
+      //private View GetPointPlaceholder() {
+      //   var panGesture = new PanGestureRecognizer();
+      //   panGesture.PanUpdated += OnPointPlaceholderPanUpdate;
+
+      //   Label placeholder = new Label() {
+      //      FontFamily = Forms.Resources.FontFileResources.FontAwesomeSolid,
+      //      Text = Forms.Resources.GlyphNames.ArrowsAlt
+      //   };
+      //   placeholder.GestureRecognizers.Add(panGesture);
+
+      //   return placeholder;
+      //}
+
+      //private void OnPointPlaceholderPanUpdate(object sender, PanUpdatedEventArgs e) {
+      //   throw new NotImplementedException();
+      //}
    }
 }
