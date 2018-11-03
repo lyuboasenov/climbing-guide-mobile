@@ -83,6 +83,19 @@ namespace Climbing.Guide.Api.Schemas
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
+    public partial interface IGradesClient
+    {
+        /// <exception cref="ApiCallException">A server side error occurred.</exception>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<GradeSystemList>> ListAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+    
+        /// <exception cref="ApiCallException">A server side error occurred.</exception>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        System.Threading.Tasks.Task<Grade> ReadAsync(string system, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
     public partial interface ILanguagesClient
     {
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
@@ -683,6 +696,188 @@ namespace Climbing.Guide.Api.Schemas
         public static Area FromJson(string data)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<Area>(data);
+        }
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class GradeSystem : System.ComponentModel.INotifyPropertyChanged
+    {
+        private int? _id;
+        private string _name;
+    
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Id
+        {
+            get { return _id; }
+            set 
+            {
+                if (_id != value)
+                {
+                    _id = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(int.MaxValue, MinimumLength = 1)]
+        public string Name
+        {
+            get { return _name; }
+            set 
+            {
+                if (_name != value)
+                {
+                    _name = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+        
+        public static GradeSystem FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<GradeSystem>(data);
+        }
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class GradeSystemList : System.ComponentModel.INotifyPropertyChanged
+    {
+        private int? _routeType;
+        private System.Collections.ObjectModel.ObservableCollection<GradeSystem> _gradeSystems;
+    
+        [Newtonsoft.Json.JsonProperty("routeType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? RouteType
+        {
+            get { return _routeType; }
+            set 
+            {
+                if (_routeType != value)
+                {
+                    _routeType = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("gradeSystems", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.ObjectModel.ObservableCollection<GradeSystem> GradeSystems
+        {
+            get { return _gradeSystems; }
+            set 
+            {
+                if (_gradeSystems != value)
+                {
+                    _gradeSystems = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+        
+        public static GradeSystemList FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<GradeSystemList>(data);
+        }
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class Grade : System.ComponentModel.INotifyPropertyChanged
+    {
+        private int? _type;
+        private int? _value;
+        private string _name;
+    
+        [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Type
+        {
+            get { return _type; }
+            set 
+            {
+                if (_type != value)
+                {
+                    _type = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Value
+        {
+            get { return _value; }
+            set 
+            {
+                if (_value != value)
+                {
+                    _value = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(int.MaxValue, MinimumLength = 1)]
+        public string Name
+        {
+            get { return _name; }
+            set 
+            {
+                if (_name != value)
+                {
+                    _name = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+        
+        public static Grade FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Grade>(data);
         }
     
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;

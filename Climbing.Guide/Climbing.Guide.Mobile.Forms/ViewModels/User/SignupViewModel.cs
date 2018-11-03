@@ -68,7 +68,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.User {
 
             await Login();
          } catch(Api.Schemas.ApiCallException ex) {
-            await Errors.HandleRestApiCallExceptionAsync(ex);
+            await Errors.HandleApiCallExceptionAsync(ex);
          }
       }
 

@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Climbing.Guide.Mobile.Forms.Services {
    public class ErrorService : IErrorService {
@@ -50,10 +51,12 @@ namespace Climbing.Guide.Mobile.Forms.Services {
          LogException(ex);
 
          if (null != AlertService) {
-            await AlertService.DisplayAlertAsync(
+            Device.BeginInvokeOnMainThread(async () => {
+               await AlertService.DisplayAlertAsync(
                Resources.Strings.Main.Error_Title,
                string.Format(errorMessageFormat, errorMessageParams),
                Resources.Strings.Main.Ok);
+            });
          }
       }
 
@@ -71,15 +74,17 @@ namespace Climbing.Guide.Mobile.Forms.Services {
          LogException(ex);
 
          if (null != AlertService) {
-            if (await AlertService.DisplayAlertAsync(
+            Device.BeginInvokeOnMainThread(async () => {
+               if (await AlertService.DisplayAlertAsync(
                Resources.Strings.Main.Error_Title,
                errorMessage,
                Resources.Strings.Main.Details_Button, Resources.Strings.Main.Ok)) {
-               await AlertService.DisplayAlertAsync(
-                  Resources.Strings.Main.Error_Title,
-                  string.Format(detailedErrorMessageFormat, detailedErrorMessageParams),
-                  Resources.Strings.Main.Ok);
-            }
+                  await AlertService.DisplayAlertAsync(
+                     Resources.Strings.Main.Error_Title,
+                     string.Format(detailedErrorMessageFormat, detailedErrorMessageParams),
+                     Resources.Strings.Main.Ok);
+               }
+            });
          }
       }
 
@@ -89,7 +94,7 @@ namespace Climbing.Guide.Mobile.Forms.Services {
       /// <param name="ex">The communication exception to handle</param>
       /// <param name="errorMessage">Error message to be displayed in a alert window.</param>
       /// <param name="detailedErrorMessageFormat">Format string to be used in detailed message forming, to be displayed in detailed alert window.</param>
-      public async Task HandleRestApiCallExceptionAsync(Api.Schemas.ApiCallException ex,
+      public async Task HandleApiCallExceptionAsync(Api.Schemas.ApiCallException ex,
          string errorMessage,
          string detailedErrorMessageFormat) {
          await HandleExceptionDetailedAsync(ex, errorMessage, detailedErrorMessageFormat, Environment.NewLine, ex.StatusCode, ex.Response);
@@ -99,8 +104,8 @@ namespace Climbing.Guide.Mobile.Forms.Services {
       /// Displays error message and detailed error message if selected.
       /// </summary>
       /// <param name="ex">The communication exception to handle</param>
-      public async Task HandleRestApiCallExceptionAsync(Api.Schemas.ApiCallException ex) {
-         await HandleRestApiCallExceptionAsync(ex,
+      public async Task HandleApiCallExceptionAsync(Api.Schemas.ApiCallException ex) {
+         await HandleApiCallExceptionAsync(ex,
             Resources.Strings.Main.Communication_Error_Message,
             Resources.Strings.Main.Communication_Error_Message_Detailed_Format);
       }

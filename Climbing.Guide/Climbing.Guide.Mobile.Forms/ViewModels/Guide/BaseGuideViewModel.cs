@@ -28,7 +28,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
          try {
             Regions = Client.RegionsClient.ListAsync().GetAwaiter().GetResult();
          } catch (ApiCallException ex) {
-            Errors.HandleRestApiCallExceptionAsync(ex);
+            Errors.HandleApiCallExceptionAsync(ex);
          }
 
          // Selects first of the received regions
@@ -49,7 +49,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
             try {
                Areas = Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString()).GetAwaiter().GetResult();
             } catch (ApiCallException ex) {
-               Errors.HandleRestApiCallExceptionAsync(ex).Wait();
+               Errors.HandleApiCallExceptionAsync(ex).Wait();
                return;
             }
 
@@ -70,7 +70,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
             try {
                Sectors = Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString()).GetAwaiter().GetResult();
             } catch (ApiCallException ex) {
-               Errors.HandleRestApiCallExceptionAsync(ex).Wait();
+               Errors.HandleApiCallExceptionAsync(ex).Wait();
                return;
             }
 
@@ -89,7 +89,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
             try {
                Routes = Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString()).GetAwaiter().GetResult();
             } catch (ApiCallException ex) {
-               Errors.HandleRestApiCallExceptionAsync(ex).Wait();
+               Errors.HandleApiCallExceptionAsync(ex).Wait();
             }
 
             if (AutoSelectRoutes && Routes.Count > 0) {

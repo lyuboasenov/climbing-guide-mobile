@@ -27,6 +27,8 @@ namespace Climbing.Guide.Core.Api {
       private SectorsClient sectorsClient;
       private RoutesClient routesClient;
       private UsersClient usersClient;
+      private GradesClient gradesClient;
+      private LanguagesClient languagesClient;
 
       public ApiClient() {
 
@@ -64,6 +66,18 @@ namespace Climbing.Guide.Core.Api {
       public IUsersClient UsersClient {
          get {
             return GetGenericClient(ref usersClient, (client) => new UsersClient(client));
+         }
+      }
+
+      public IGradesClient GradesClient {
+         get {
+            return GetGenericClient(ref gradesClient, (client) => new GradesClient(client));
+         }
+      }
+
+      public ILanguagesClient LanguagesClient {
+         get {
+            return GetGenericClient(ref languagesClient, (client) => new LanguagesClient(client));
          }
       }
 

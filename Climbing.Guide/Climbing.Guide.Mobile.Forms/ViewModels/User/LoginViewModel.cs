@@ -30,7 +30,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.User {
          try {
             success = await Client.LoginAsync(Username, Password);
          } catch (ApiCallException ex) {
-            await Errors.HandleRestApiCallExceptionAsync(ex);
+            await Errors.HandleApiCallExceptionAsync(ex);
          }
 
          if (!success) {

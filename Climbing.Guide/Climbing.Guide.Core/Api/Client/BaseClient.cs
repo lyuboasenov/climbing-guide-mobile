@@ -1,5 +1,4 @@
-﻿using Climbing.Guide.Api.Schemas;
-using System.Text;
+﻿using System.Text;
 
 namespace Climbing.Guide.Api.Client {
    public class BaseClient {

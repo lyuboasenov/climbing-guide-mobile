@@ -115,7 +115,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
          try {
             success = await Client.LogoutAsync();
          } catch (ApiCallException ex) {
-            await Errors.HandleRestApiCallExceptionAsync(ex);
+            await Errors.HandleApiCallExceptionAsync(ex);
          }
 
          InitializeMenuItems();

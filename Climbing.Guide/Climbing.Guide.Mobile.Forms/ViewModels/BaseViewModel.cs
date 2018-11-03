@@ -3,6 +3,7 @@ using Prism.Mvvm;
 using Prism.Navigation;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Climbing.Guide.Mobile.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]

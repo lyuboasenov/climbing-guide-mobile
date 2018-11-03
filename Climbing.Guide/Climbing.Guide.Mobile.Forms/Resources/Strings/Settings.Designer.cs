@@ -61,11 +61,65 @@ namespace Climbing.Guide.Mobile.Forms.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boulders.
+        /// </summary>
+        public static string Bouldering_Grade_System {
+            get {
+                return ResourceManager.GetString("Bouldering_Grade_System", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generic.
+        /// </summary>
+        public static string Generic_Settings_Title {
+            get {
+                return ResourceManager.GetString("Generic_Settings_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grades.
+        /// </summary>
+        public static string Grades_Page_Title {
+            get {
+                return ResourceManager.GetString("Grades_Page_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string Settings_Title {
             get {
                 return ResourceManager.GetString("Settings_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sport Routes.
+        /// </summary>
+        public static string Sport_Route_Grade_System {
+            get {
+                return ResourceManager.GetString("Sport_Route_Grade_System", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trad Routes.
+        /// </summary>
+        public static string Trad_Route_Grade_System {
+            get {
+                return ResourceManager.GetString("Trad_Route_Grade_System", resourceCulture);
             }
         }
     }

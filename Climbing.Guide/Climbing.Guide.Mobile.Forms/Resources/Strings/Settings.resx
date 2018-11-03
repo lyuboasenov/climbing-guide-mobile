@@ -117,7 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Bouldering_Grade_System" xml:space="preserve">
+    <value>Boulders</value>
+  </data>
+  <data name="Generic_Settings_Title" xml:space="preserve">
+    <value>Generic</value>
+  </data>
+  <data name="Grades_Page_Title" xml:space="preserve">
+    <value>Grades</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
   <data name="Settings_Title" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="Sport_Route_Grade_System" xml:space="preserve">
+    <value>Sport Routes</value>
+  </data>
+  <data name="Trad_Route_Grade_System" xml:space="preserve">
+    <value>Trad Routes</value>
   </data>
 </root>

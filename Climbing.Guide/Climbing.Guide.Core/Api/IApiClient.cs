@@ -14,6 +14,8 @@ namespace Climbing.Guide.Core.Api {
       IRoutesClient RoutesClient { get; }
       ISectorsClient SectorsClient { get; }
       IUsersClient UsersClient { get; }
+      IGradesClient GradesClient { get; }
+      ILanguagesClient LanguagesClient { get; }
 
       Task DownloadAsync(Uri uri, string localPath, bool overwrite = false);
       Task<bool> LoginAsync(string username, string password);
