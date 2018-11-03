@@ -1,4 +1,4 @@
-﻿using Climbing.Guide.Core.API.Schemas;
+﻿using Climbing.Guide.Api.Schemas;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;

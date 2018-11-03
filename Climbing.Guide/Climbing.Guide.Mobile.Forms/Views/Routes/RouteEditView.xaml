@@ -7,7 +7,7 @@
             x:Class="Climbing.Guide.Mobile.Forms.Views.Routes.RouteEditView">
    <TabbedPage.ToolbarItems>
       <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
-      <ToolbarItem Text="Save" Command="{Binding CancelCommand}"/>
+      <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}"/>
    </TabbedPage.ToolbarItems>
    
    <!--Pages can be added as references or inline-->
@@ -35,7 +35,7 @@
                        SelectedItem="{Binding SelectedArea}"
                        ItemDisplayBinding="{Binding Name}"
                        Title="{x:Static strings:Routes.Route_Edit_Area}"/>
-               <Picker ItemsSource="{Binding Regions}"
+               <Picker ItemsSource="{Binding Sectors}"
                        SelectedItem="{Binding SelectedSector}"
                        ItemDisplayBinding="{Binding Name}"
                        Title="{x:Static strings:Routes.Route_Edit_Sector}"/>

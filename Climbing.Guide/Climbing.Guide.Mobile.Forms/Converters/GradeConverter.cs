@@ -1,4 +1,4 @@
-﻿using Climbing.Guide.Core.API.Schemas;
+﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Core.Models.Routes;
 using System;
 using System.Globalization;

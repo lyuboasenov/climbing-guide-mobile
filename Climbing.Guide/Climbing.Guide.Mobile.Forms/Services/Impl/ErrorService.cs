@@ -74,7 +74,7 @@ namespace Climbing.Guide.Mobile.Forms.Services {
             if (await AlertService.DisplayAlertAsync(
                Resources.Strings.Main.Error_Title,
                errorMessage,
-               Resources.Strings.Main.Ok, Resources.Strings.Main.Details_Button)) {
+               Resources.Strings.Main.Details_Button, Resources.Strings.Main.Ok)) {
                await AlertService.DisplayAlertAsync(
                   Resources.Strings.Main.Error_Title,
                   string.Format(detailedErrorMessageFormat, detailedErrorMessageParams),
@@ -89,7 +89,7 @@ namespace Climbing.Guide.Mobile.Forms.Services {
       /// <param name="ex">The communication exception to handle</param>
       /// <param name="errorMessage">Error message to be displayed in a alert window.</param>
       /// <param name="detailedErrorMessageFormat">Format string to be used in detailed message forming, to be displayed in detailed alert window.</param>
-      public async Task HandleRestApiCallExceptionAsync(Core.API.Schemas.RestApiCallException ex,
+      public async Task HandleRestApiCallExceptionAsync(Api.Schemas.ApiCallException ex,
          string errorMessage,
          string detailedErrorMessageFormat) {
          await HandleExceptionDetailedAsync(ex, errorMessage, detailedErrorMessageFormat, Environment.NewLine, ex.StatusCode, ex.Response);
@@ -99,7 +99,7 @@ namespace Climbing.Guide.Mobile.Forms.Services {
       /// Displays error message and detailed error message if selected.
       /// </summary>
       /// <param name="ex">The communication exception to handle</param>
-      public async Task HandleRestApiCallExceptionAsync(Core.API.Schemas.RestApiCallException ex) {
+      public async Task HandleRestApiCallExceptionAsync(Api.Schemas.ApiCallException ex) {
          await HandleRestApiCallExceptionAsync(ex,
             Resources.Strings.Main.Communication_Error_Message,
             Resources.Strings.Main.Communication_Error_Message_Detailed_Format);

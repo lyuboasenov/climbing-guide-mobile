@@ -1,4 +1,4 @@
-﻿using Climbing.Guide.Core.API.Schemas;
+﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Mobile.Forms.Helpers;
 using Climbing.Guide.Mobile.Forms.Models;
 using Climbing.Guide.Mobile.Forms.Services;
@@ -34,9 +34,9 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
                } else if (SelectedMenuItem.NavigationUri == TestUri) {
                   await TestAsync();
                } else {
-                  var result = await GetService<INavigationService>().NavigateAsync(SelectedMenuItem.NavigationUri);
+                  var result = await Navigation.NavigateAsync(SelectedMenuItem.NavigationUri);
                   if (!result.Result) {
-                     await GetService<IErrorService>().HandleExceptionAsync(result.Exception,
+                     await Errors.HandleExceptionAsync(result.Exception,
                         Resources.Strings.Main.Shell_Navigation_Error_Message,
                         SelectedMenuItem.Title);
                   }
@@ -45,7 +45,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
                SelectedMenuItem = MenuItems[0];
             }
          }catch (Exception ex) {
-            await GetService<IErrorService>().HandleExceptionAsync(ex,
+            await Errors.HandleExceptionAsync(ex,
                Resources.Strings.Main.Shell_Navigation_Error_Message,
                SelectedMenuItem.Title);
          }
@@ -54,39 +54,39 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
       public void InitializeMenuItems() {
          MenuItems = new ObservableCollection<MenuItemModel>();
 
-         var userLoggedIn = IoC.Container.Get<IRestApiClient>().IsLoggedIn;
+         var userLoggedIn = Client.IsLoggedIn;
 
          MenuItems.Add(GetMenuItem(HomeViewModel.VmTitle,
-            NavigationService.GetShellNavigationUri(nameof(Views.HomeView))));
+            Navigation.GetShellNavigationUri(nameof(Views.HomeView))));
 
          MenuItems.Add(GetMenuItem(Guide.GuideViewModel.VmTitle,
-            NavigationService.GetShellNavigationUri(nameof(Views.Guide.GuideView)),
+            Navigation.GetShellNavigationUri(nameof(Views.Guide.GuideView)),
             Resources.Strings.Guide.Section_Title));
 
          MenuItems.Add(GetMenuItem(Guide.ExploreViewModel.VmTitle,
-            NavigationService.GetShellNavigationUri(nameof(Views.Guide.ExploreView)),
+            Navigation.GetShellNavigationUri(nameof(Views.Guide.ExploreView)),
             Resources.Strings.Guide.Section_Title));
 
          MenuItems.Add(GetMenuItem(Guide.SearchViewModel.VmTitle,
-            NavigationService.GetShellNavigationUri(nameof(Views.Guide.SearchView)),
+            Navigation.GetShellNavigationUri(nameof(Views.Guide.SearchView)),
             Resources.Strings.Guide.Section_Title));
 
          if (userLoggedIn) {
             MenuItems.Add(GetMenuItem(User.ProfileViewModel.VmTitle,
-               NavigationService.GetShellNavigationUri(nameof(Views.User.ProfileView)),
+               Navigation.GetShellNavigationUri(nameof(Views.User.ProfileView)),
                Resources.Strings.User.Section_Title));
          } else {
             MenuItems.Add(GetMenuItem(User.LoginViewModel.VmTitle,
-               NavigationService.GetShellNavigationUri(nameof(Views.User.LoginView)),
+               Navigation.GetShellNavigationUri(nameof(Views.User.LoginView)),
                Resources.Strings.User.Section_Title));
          }
 
          MenuItems.Add(GetMenuItem(Settings.SettingsViewModel.VmTitle,
-            NavigationService.GetShellNavigationUri(nameof(Views.Settings.SettingsView)),
+            Navigation.GetShellNavigationUri(nameof(Views.Settings.SettingsView)),
             Resources.Strings.User.Section_Title));
 
          MenuItems.Add(GetMenuItem(AboutViewModel.VmTitle,
-            NavigationService.GetShellNavigationUri(nameof(Views.AboutView))));
+            Navigation.GetShellNavigationUri(nameof(Views.AboutView))));
 
          if (userLoggedIn) {
             MenuItems.Add(GetMenuItem(Resources.Strings.User.Logout_Title,
@@ -114,8 +114,8 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels {
          bool success = false;
          try {
             success = await Client.LogoutAsync();
-         } catch (RestApiCallException ex) {
-            await GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
+         } catch (ApiCallException ex) {
+            await Errors.HandleRestApiCallExceptionAsync(ex);
          }
 
          InitializeMenuItems();

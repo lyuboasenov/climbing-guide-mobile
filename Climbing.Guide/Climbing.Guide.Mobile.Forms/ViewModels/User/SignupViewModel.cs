@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Xamarin.Forms;
@@ -22,28 +24,56 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.User {
       protected override void InitializeCommands() {
          base.InitializeCommands();
 
-         SignupCommand = new Command(SignUp, CanSignUp);
-         LoginCommand = new Command(Login);
+         SignupCommand = new Command(async () => await SignUp(), CanSignUp);
+         LoginCommand = new Command(async () => await Login());
       }
 
       public void OnPropertyChanged(string propertyName, object before, object after) {
          ((Command)SignupCommand).ChangeCanExecute();
       }
 
-      private bool CanSignUp(object arg) {
-         // TODO: Add email validation
-         return !string.IsNullOrEmpty(Username) &&
-            !string.IsNullOrEmpty(Password) &&
+      private static System.ComponentModel.DataAnnotations.EmailAddressAttribute EmailAddressAttribute { get; } = new System.ComponentModel.DataAnnotations.EmailAddressAttribute();
+      private bool CanSignUp() {
+         var isEmailValid = !string.IsNullOrEmpty(Username) && EmailAddressAttribute.IsValid(Username);
+         var isPasswordValid = !string.IsNullOrEmpty(Password) &&
+            Password.Trim().Length > 8 &&
+            Password.Any(char.IsDigit) &&
+            Password.Any(char.IsLetter);
+         var isPasswordsMatch = !string.IsNullOrEmpty(Password) &&
             !string.IsNullOrEmpty(ConfirmPassword) &&
-            string.CompareOrdinal(Password, ConfirmPassword) == 0;
+            string.CompareOrdinal(Password.Trim(), ConfirmPassword) == 0;
+
+         var validationErrors = new List<string>();
+         if (!string.IsNullOrEmpty(Username) && !isEmailValid) {
+            validationErrors.Add(Resources.Strings.User.Username_Validation_Error);
+         }
+         if (!string.IsNullOrEmpty(Password) && !isPasswordValid) {
+            validationErrors.Add(Resources.Strings.User.Password_Validation_Error);
+         }
+         if (!string.IsNullOrEmpty(ConfirmPassword) && !isPasswordsMatch) {
+            validationErrors.Add(Resources.Strings.User.Confirm_Password_Validation_Error);
+         }
+         ValidationErrors = validationErrors;
+
+         return isEmailValid && isPasswordValid && isPasswordsMatch;
       }
 
-      private void SignUp(object obj) {
-         throw new NotImplementedException();
+      private async Task SignUp() {
+         try {
+            await Client.UsersClient.CreateAsync(new Api.Schemas.User() {
+               Username = Username,
+               Email = Username,
+               Password = Password
+            });
+
+            await Login();
+         } catch(Api.Schemas.ApiCallException ex) {
+            await Errors.HandleRestApiCallExceptionAsync(ex);
+         }
       }
 
-      private void Login() {
-         NavigationService.NavigateAsync(NavigationService.GetShellNavigationUri(nameof(Views.User.LoginView)));
+      private async Task Login() {
+         await Navigation.NavigateAsync(Navigation.GetShellNavigationUri(nameof(Views.User.LoginView)));
       }
    }
 }

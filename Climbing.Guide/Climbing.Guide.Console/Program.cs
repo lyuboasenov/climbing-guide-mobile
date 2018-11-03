@@ -1,4 +1,4 @@
-﻿using Climbing.Guide.Core.API;
+﻿using Climbing.Guide.Core.Api;
 using System;
 
 namespace Climbing.Guide.Console {
@@ -60,8 +60,8 @@ namespace Climbing.Guide.Console {
          System.Console.ReadLine();
       }
 
-      private static IRestApiClient GetRestApiClient() {
-         return new RestApiClient();
+      private static IApiClient GetRestApiClient() {
+         return new ApiClient();
       }
    }
 }

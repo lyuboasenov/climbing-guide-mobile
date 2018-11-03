@@ -70,6 +70,15 @@ namespace Climbing.Guide.Mobile.Forms.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Passwords do not match..
+        /// </summary>
+        public static string Confirm_Password_Validation_Error {
+            get {
+                return ResourceManager.GetString("Confirm_Password_Validation_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid username or password.
         /// </summary>
         public static string Login_Invalid_Message {
@@ -115,6 +124,15 @@ namespace Climbing.Guide.Mobile.Forms.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter password longer than 8 chars containing letters and digits.
+        /// </summary>
+        public static string Password_Validation_Error {
+            get {
+                return ResourceManager.GetString("Password_Validation_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Profile.
         /// </summary>
         public static string Profile_Title {
@@ -142,11 +160,20 @@ namespace Climbing.Guide.Mobile.Forms.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email.
+        ///   Looks up a localized string similar to example@climbingguide.org.
         /// </summary>
         public static string Username_Hint {
             get {
                 return ResourceManager.GetString("Username_Hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter valid email.
+        /// </summary>
+        public static string Username_Validation_Error {
+            get {
+                return ResourceManager.GetString("Username_Validation_Error", resourceCulture);
             }
         }
     }

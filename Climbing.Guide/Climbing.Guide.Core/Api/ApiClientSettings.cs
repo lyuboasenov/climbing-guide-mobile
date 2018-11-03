@@ -1,5 +1,5 @@
-﻿namespace Climbing.Guide.Core.API {
-   public class RestApiClientSettings : IRestApiClientSettings {
+﻿namespace Climbing.Guide.Core.Api {
+   public class ApiClientSettings : IApiClientSettings {
       public string BaseUrl { get; set; }
 
       public string Token { get; set; }

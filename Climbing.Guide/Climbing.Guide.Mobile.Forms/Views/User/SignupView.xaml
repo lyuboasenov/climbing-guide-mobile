@@ -41,6 +41,15 @@
                        Text="{x:Static resources:GlyphNames.UserPlus}"/>
 
             </Grid>
+            <ListView ItemsSource="{Binding ValidationErrors}">
+               <ListView.ItemTemplate>
+                  <DataTemplate>
+                     <ViewCell>
+                        <Label Text="{Binding}" TextColor="{StaticResource Error}" />
+                     </ViewCell>
+                  </DataTemplate>
+               </ListView.ItemTemplate>
+            </ListView>
          </StackLayout>
       </ScrollView>
    </Grid>

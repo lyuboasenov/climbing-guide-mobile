@@ -1,20 +1,24 @@
-﻿using Climbing.Guide.Core.API.Schemas;
-using Climbing.Guide.Mobile.Forms.Services;
+﻿using Climbing.Guide.Api.Schemas;
 using System.Collections.ObjectModel;
 
 namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class BaseGuideViewModel : BaseViewModel {
 
-      public ObservableCollection<Core.API.Schemas.Region> Regions { get; set; }
+      public ObservableCollection<Region> Regions { get; set; }
       public ObservableCollection<Area> Areas { get; set; }
       public ObservableCollection<Sector> Sectors { get; set; }
       public ObservableCollection<Route> Routes { get; set; }
 
-      public Core.API.Schemas.Region SelectedRegion { get; set; }
+      public Region SelectedRegion { get; set; }
       public Area SelectedArea { get; set; }
       public Sector SelectedSector { get; set; }
       public Route SelectedRoute { get; set; }
+
+      public virtual bool AutoSelectRegions { get; } = true;
+      public virtual bool AutoSelectAreas { get; } = true;
+      public virtual bool AutoSelectSectors { get; } = true;
+      public virtual bool AutoSelectRoutes { get; } = false;
 
       public BaseGuideViewModel() {
          InitializeRegions();
@@ -23,12 +27,12 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
       protected virtual void InitializeRegions() {
          try {
             Regions = Client.RegionsClient.ListAsync().GetAwaiter().GetResult();
-         } catch (RestApiCallException ex) {
-            GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
+         } catch (ApiCallException ex) {
+            Errors.HandleRestApiCallExceptionAsync(ex);
          }
 
          // Selects first of the received regions
-         if (Regions.Count > 0) {
+         if (AutoSelectRegions && Regions.Count > 0) {
             SelectedRegion = Regions[0];
          }
       }
@@ -44,13 +48,13 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
          if (null != SelectedRegion) {
             try {
                Areas = Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString()).GetAwaiter().GetResult();
-            } catch (RestApiCallException ex) {
-               GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex).Wait();
+            } catch (ApiCallException ex) {
+               Errors.HandleRestApiCallExceptionAsync(ex).Wait();
                return;
             }
 
             // Selects first of the received areas
-            if (Areas.Count > 0) {
+            if (AutoSelectAreas && Areas.Count > 0) {
                SelectedArea = Areas[0];
             }
          }
@@ -65,13 +69,13 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
          if (null != SelectedArea) {
             try {
                Sectors = Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString()).GetAwaiter().GetResult();
-            } catch (RestApiCallException ex) {
-               GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex).Wait();
+            } catch (ApiCallException ex) {
+               Errors.HandleRestApiCallExceptionAsync(ex).Wait();
                return;
             }
 
             // Selects first of the received sectors
-            if (Sectors.Count > 0) {
+            if (AutoSelectSectors && Sectors.Count > 0) {
                SelectedSector = Sectors[0];
             }
          }
@@ -84,8 +88,12 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
          if (null != SelectedSector) {
             try {
                Routes = Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString()).GetAwaiter().GetResult();
-            } catch (RestApiCallException ex) {
-               GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex).Wait();
+            } catch (ApiCallException ex) {
+               Errors.HandleRestApiCallExceptionAsync(ex).Wait();
+            }
+
+            if (AutoSelectRoutes && Routes.Count > 0) {
+               SelectedRoute = Routes[0];
             }
          }
       }

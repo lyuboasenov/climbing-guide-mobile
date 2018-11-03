@@ -17,6 +17,7 @@
          <Color x:Key="BackgroundPrimary">#37464f</Color>
          <Color x:Key="NavigationPrimary">#2196F3</Color>
          <Color x:Key="RedButtonColor">#A52826</Color>
+         <Color x:Key="Error">#A52826</Color>
 
          <Style TargetType="Button" ApplyToDerivedTypes="true">
             <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />

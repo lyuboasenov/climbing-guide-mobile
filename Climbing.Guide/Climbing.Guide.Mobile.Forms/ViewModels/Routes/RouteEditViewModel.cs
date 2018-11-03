@@ -1,5 +1,6 @@
-﻿using Climbing.Guide.Core.API.Schemas;
+﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Core.Models.Routes;
+using Climbing.Guide.Mobile.Forms.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,6 +29,11 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Routes {
       public double Length { get; set; }
       public string FA { get; set; }
 
+      public override bool AutoSelectRegions { get; } = false;
+      public override bool AutoSelectAreas { get; } = false;
+      public override bool AutoSelectSectors { get; } = false;
+      public override bool AutoSelectRoutes { get; } = false;
+
       public ObservableCollection<Point> SchemaRoute { get; set; } = new ObservableCollection<Point>();
 
       public MapSpan VisibleRegion { get; set; }
@@ -46,7 +52,7 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Routes {
       }
 
       private async Task GoBack() {
-         await NavigationService.GoBackAsync();
+         await Navigation.GoBackAsync();
       }
 
       private bool CanSave() {
@@ -58,11 +64,27 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Routes {
       }
 
       public override void OnNavigatedTo(params object[] parameters) {
-         base.OnNavigatedTo(parameters);
-         SelectedRegion = parameters[0] as Core.API.Schemas.Region;
-         SelectedArea = parameters[1] as Area;
-         SelectedSector = parameters[2] as Sector;
-         LocalSchemaThumbPath = parameters[3] as string;
+         Task.Run(() => InitializeData(parameters));
+      }
+
+      private async Task InitializeData(params object[] parameters) {
+         try {
+            base.OnNavigatedTo(parameters);
+            SelectedRegion = parameters[0] as Api.Schemas.Region;
+            SelectedArea = parameters[1] as Area;
+            SelectedSector = parameters[2] as Sector;
+            LocalSchemaThumbPath = parameters[3] as string;
+
+            using (var exifReader = new ExifLib.ExifReader(LocalSchemaThumbPath)) {
+               double latitude, longitude;
+               exifReader.GetTagValue<double>(ExifLib.ExifTags.GPSLatitude, out latitude);
+               exifReader.GetTagValue<double>(ExifLib.ExifTags.GPSLongitude, out longitude);
+
+               VisibleRegion = MapSpan.FromCenterAndRadius(new Position(latitude, longitude), new Distance(170));
+            }
+         }catch(Exception ex) {
+            await Errors.HandleExceptionAsync(ex, string.Empty);
+         }
       }
 
       public override void OnSelectedSectorChanged() {

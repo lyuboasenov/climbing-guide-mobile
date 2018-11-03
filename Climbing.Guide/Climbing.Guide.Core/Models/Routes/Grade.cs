@@ -1,4 +1,4 @@
-﻿using Climbing.Guide.Core.API.Schemas;
+﻿using Climbing.Guide.Api.Schemas;
 
 namespace Climbing.Guide.Core.Models.Routes {
    public class Grade : IGrade {

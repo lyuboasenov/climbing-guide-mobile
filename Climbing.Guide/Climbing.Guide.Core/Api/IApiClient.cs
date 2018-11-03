@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Climbing.Guide.Api.Schemas;
+using System;
 using System.Threading.Tasks;
-using Climbing.Guide.Core.API.Schemas;
 
-namespace Climbing.Guide.Core.API {
-   public interface IRestApiClient {
+namespace Climbing.Guide.Core.Api {
+   public interface IApiClient {
       bool IsLoggedIn { get; }
       string RefreshToken { get; }
       string Token { get; }
@@ -18,6 +18,6 @@ namespace Climbing.Guide.Core.API {
       Task DownloadAsync(Uri uri, string localPath, bool overwrite = false);
       Task<bool> LoginAsync(string username, string password);
       Task<bool> LogoutAsync();
-      void UpdateRestApiClientSettings(IRestApiClientSettings settings);
+      void UpdateRestApiClientSettings(IApiClientSettings settings);
    }
 }

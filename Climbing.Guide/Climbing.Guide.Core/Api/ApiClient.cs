@@ -4,13 +4,14 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Climbing.Guide.Core.API.Schemas;
+using Climbing.Guide.Api.Client;
+using Climbing.Guide.Api.Schemas;
 using Newtonsoft.Json;
 
-namespace Climbing.Guide.Core.API {
-   public class RestApiClient : IRestApiClient {
+namespace Climbing.Guide.Core.Api {
+   public class ApiClient : IApiClient {
 
-      private IRestApiClientSettings Settings { get; set; }
+      private IApiClientSettings Settings { get; set; }
 
       private const string clientId = "KoZwAMrSN4XjWC2m0Lkp3gjN9t1h9Vano5avgBWI";
       private const string clientSecret = "FT0YD3LyTr4sZgBKRNUk0vEv8gIinHFbVOIqyd11xQ3zT4GG10NjcffaoPUm3Fw4zfTrCMV0xFxOVtabWWzPYDECFoBhr0ezsLwfl75C6kQC5YMeejEJfbAMr0ZetVKz";
@@ -21,48 +22,48 @@ namespace Climbing.Guide.Core.API {
       public string RefreshToken { get; private set; }
       public string Username { get; private set; }
 
-      private IRegionsClient regionsClient;
-      private IAreasClient areasClient;
-      private ISectorsClient sectorsClient;
-      private IRoutesClient routesClient;
-      private IUsersClient usersClient;
+      private RegionsClient regionsClient;
+      private AreasClient areasClient;
+      private SectorsClient sectorsClient;
+      private RoutesClient routesClient;
+      private UsersClient usersClient;
 
-      public RestApiClient() {
+      public ApiClient() {
 
       }
 
-      public RestApiClient(IRestApiClientSettings settings) {
+      public ApiClient(IApiClientSettings settings) {
          UpdateRestApiClientSettings(settings);
       }
 
       // Singleton property
       public IRegionsClient RegionsClient {
          get {
-            return GetGenericClient(ref regionsClient, (client) => new Client.RegionsClient(client));
+            return GetGenericClient(ref regionsClient, (client) => new RegionsClient(client));
          }
       }
 
       public IAreasClient AreasClient {
          get {
-            return GetGenericClient(ref areasClient, (client) => new Client.AreasClient(client));
+            return GetGenericClient(ref areasClient, (client) => new AreasClient(client));
          }
       }
 
       public ISectorsClient SectorsClient {
          get {
-            return GetGenericClient(ref sectorsClient, (client) => new Client.SectorsClient(client));
+            return GetGenericClient(ref sectorsClient, (client) => new SectorsClient(client));
          }
       }
 
       public IRoutesClient RoutesClient {
          get {
-            return GetGenericClient(ref routesClient, (client) => new Client.RoutesClient(client));
+            return GetGenericClient(ref routesClient, (client) => new RoutesClient(client));
          }
       }
 
       public IUsersClient UsersClient {
          get {
-            return GetGenericClient(ref usersClient, (client) => new Client.UsersClient(client));
+            return GetGenericClient(ref usersClient, (client) => new UsersClient(client));
          }
       }
 
@@ -71,10 +72,10 @@ namespace Climbing.Guide.Core.API {
             return !string.IsNullOrEmpty(Token);
          }
       }
-
+      
       #region Public
 
-      public void UpdateRestApiClientSettings(IRestApiClientSettings settings) {
+      public void UpdateRestApiClientSettings(IApiClientSettings settings) {
          Settings = settings;
          Username = settings.Username;
          Token = settings.Token;

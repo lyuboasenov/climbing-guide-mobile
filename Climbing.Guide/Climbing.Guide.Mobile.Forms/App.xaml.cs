@@ -75,10 +75,10 @@ namespace Climbing.Guide.Mobile.Forms {
          containerRegistry.Register<IMediaService, MediaService>();
 
 #if DEBUG
-         containerRegistry.RegisterInstance<IRestApiClient>(new RestApiClient("http://10.0.2.2:8000"));
+         containerRegistry.RegisterInstance<IApiClient>(new RestApiClient("http://10.0.2.2:8000"));
          containerRegistry.Register<Logging.ILoggingService, Logging.DebugLoggingService>();
 #elif RELEASE
-         containerRegistry.RegisterInstance<IRestApiClient>(new RestApiClient("https://api.climbingguide.org"));
+         containerRegistry.RegisterInstance<IApiClient>(new RestApiClient("https://api.climbingguide.org"));
          containerRegistry.Register<Logging.ILoggingService, Logging.VoidLoggingService>();
 #endif
          containerRegistry.RegisterInstance(DependencyService.Get<IProgressService>());

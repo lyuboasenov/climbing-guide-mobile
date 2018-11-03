@@ -120,6 +120,9 @@
   <data name="Confirm_Password_Hint" xml:space="preserve">
     <value>Confirm password</value>
   </data>
+  <data name="Confirm_Password_Validation_Error" xml:space="preserve">
+    <value>Passwords do not match.</value>
+  </data>
   <data name="Login_Invalid_Message" xml:space="preserve">
     <value>Invalid username or password</value>
   </data>
@@ -135,6 +138,9 @@
   <data name="Password_Hint" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="Password_Validation_Error" xml:space="preserve">
+    <value>Please enter password longer than 8 chars containing letters and digits</value>
+  </data>
   <data name="Profile_Title" xml:space="preserve">
     <value>Profile</value>
   </data>
@@ -145,6 +151,9 @@
     <value>Sign Up</value>
   </data>
   <data name="Username_Hint" xml:space="preserve">
-    <value>Email</value>
+    <value>example@climbingguide.org</value>
+  </data>
+  <data name="Username_Validation_Error" xml:space="preserve">
+    <value>Please enter valid email</value>
   </data>
 </root>

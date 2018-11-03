@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Xamarin.Essentials;
 
 namespace Climbing.Guide.Mobile.Forms.Services {
-   public class RestApiClient : Core.API.RestApiClient, IRestApiClient {
+   public class RestApiClient : Core.Api.ApiClient, IApiClient {
 
       public RestApiClient() {
 
@@ -24,7 +24,7 @@ namespace Climbing.Guide.Mobile.Forms.Services {
             Console.WriteLine($"Error: {ex.Message}");
          }
 
-         UpdateRestApiClientSettings(new Core.API.RestApiClientSettings() {
+         UpdateRestApiClientSettings(new Core.Api.ApiClientSettings() {
             BaseUrl = baseUrl,
             Username = username,
             Token = token,

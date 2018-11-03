@@ -1,4 +1,4 @@
-﻿using Climbing.Guide.Core.API.Schemas;
+﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Mobile.Forms.Services;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -29,15 +29,15 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.User {
          bool success = false;
          try {
             success = await Client.LoginAsync(Username, Password);
-         } catch (RestApiCallException ex) {
-            await GetService<IErrorService>().HandleRestApiCallExceptionAsync(ex);
+         } catch (ApiCallException ex) {
+            await Errors.HandleRestApiCallExceptionAsync(ex);
          }
 
          if (!success) {
             await GetService<IAlertService>().DisplayAlertAsync(Resources.Strings.User.Login_Invalid_Title, Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
          } else {
             GetService<IEventService>().GetEvent<Events.ShellMenuInalidated>().Publish();
-            await NavigationService.NavigateAsync(NavigationService.GetShellNavigationUri(nameof(Views.HomeView)));
+            await Navigation.NavigateAsync(Navigation.GetShellNavigationUri(nameof(Views.HomeView)));
          }
       }
 
@@ -50,9 +50,9 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.User {
       }
 
       private async Task Signup() {
-         var navigationResult = await NavigationService.NavigateAsync(NavigationService.GetShellNavigationUri(nameof(Views.User.SignupView)));
+         var navigationResult = await Navigation.NavigateAsync(Navigation.GetShellNavigationUri(nameof(Views.User.SignupView)));
          if (!navigationResult.Result) {
-            await GetService<IErrorService>().HandleExceptionAsync(navigationResult.Exception,
+            await Errors.HandleExceptionAsync(navigationResult.Exception,
                Resources.Strings.Main.Shell_Navigation_Error_Message, SignupViewModel.VmTitle);
          }
       }

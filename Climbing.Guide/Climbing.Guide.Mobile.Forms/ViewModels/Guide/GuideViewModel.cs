@@ -1,8 +1,6 @@
-﻿using Climbing.Guide.Core.API.Schemas;
+﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Mobile.Forms.Services;
-using Plugin.Media;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -66,15 +64,15 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
                // show add sector
             } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Route_From_Image_Selection_Item) == 0) {
                // take picture and add route
-               var navigationResult = await NavigationService.NavigateAsync(
-                  NavigationService.GetShellNavigationUri(nameof(Views.Routes.RouteEditView)),
+               var navigationResult = await Navigation.NavigateAsync(
+                  Navigation.GetShellNavigationUri(nameof(Views.Routes.RouteEditView)),
                   SelectedRegion, SelectedArea, SelectedSector);
             } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item) == 0) {
                var path = await mediaService.PickPhotoAsync();
                if (System.IO.File.Exists(path)) {
                   // pick image and add route
-                  var navigationResult = await NavigationService.NavigateAsync(
-                     NavigationService.GetShellNavigationUri(nameof(Views.Routes.RouteEditView)),
+                  var navigationResult = await Navigation.NavigateAsync(
+                     Navigation.GetShellNavigationUri(nameof(Views.Routes.RouteEditView)),
                      SelectedRegion, SelectedArea, SelectedSector, path);
                }
             }
@@ -97,11 +95,11 @@ namespace Climbing.Guide.Mobile.Forms.ViewModels.Guide {
       }
 
       private async Task RouteTapped(Route route) {
-         var navigationResult = await NavigationService.NavigateAsync(
-            NavigationService.GetShellNavigationUri(nameof(Views.Routes.RouteView)),
+         var navigationResult = await Navigation.NavigateAsync(
+            Navigation.GetShellNavigationUri(nameof(Views.Routes.RouteView)),
             route);
          if (!navigationResult.Result) {
-            await GetService<IErrorService>().HandleExceptionAsync(navigationResult.Exception,
+            await Errors.HandleExceptionAsync(navigationResult.Exception,
                Resources.Strings.Routes.Route_View_Error_Message, route.Name);
          }
       }
