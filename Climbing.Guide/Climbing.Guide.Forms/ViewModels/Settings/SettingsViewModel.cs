@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Climbing.Guide.Forms.ViewModels.Settings {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -12,6 +13,7 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
 
       private IResourceService ResourceService { get; set; }
       private IPreferenceService PreferenceService { get; set; }
+      private Caching.ICache Cache { get; set; }
 
       public Language SelectedLanguage { get; set; }
       public ObservableCollection<Language> Languages { get; set; }
@@ -25,11 +27,20 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
       public GradeSystem SelectedTradRouteGradingSystem { get; set; }
       public ObservableCollection<GradeSystem> TradRouteGradingSystems { get; set; }
 
-      public SettingsViewModel(IResourceService resourceService, IPreferenceService preferenceService) {
+      public ICommand ClearCacheCommand { get; private set; }
+
+      public SettingsViewModel(IResourceService resourceService, IPreferenceService preferenceService, Caching.ICache cache) {
          Title = VmTitle;
 
          ResourceService = resourceService;
          PreferenceService = preferenceService;
+         Cache = cache;
+      }
+
+      protected override void InitializeCommands() {
+         base.InitializeCommands();
+
+         ClearCacheCommand = new Xamarin.Forms.Command(ClearCache);
       }
 
       public void OnSelectedLanguageChanged() {
@@ -54,6 +65,10 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
          Task.Run(async () => await InitializeViewModel());
       }
 
+      private void ClearCache() {
+         Cache.Invalidate();
+      }
+
       private async Task InitializeViewModel() {
          try {
             Languages = await ResourceService.GetLanguagesAsync();
@@ -73,6 +88,8 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
                TradRouteGradingSystems.First(gs => gs.Id.Value == PreferenceService.TradRouteGradeSystem);
          } catch (ApiCallException ex) {
             await Errors.HandleApiCallExceptionAsync(ex);
+         } catch (Exception ex) {
+
          }
       }
    }

@@ -57,7 +57,7 @@ namespace Climbing.Guide.Caching.Sqlite {
       public ICacheItem Get(string key) {
          SqliteCacheItem item;
          lock (dblock) {
-            item = DB.Get<SqliteCacheItem>(key);
+            item = DB.Find<SqliteCacheItem>(key);
          }
 
          return item;

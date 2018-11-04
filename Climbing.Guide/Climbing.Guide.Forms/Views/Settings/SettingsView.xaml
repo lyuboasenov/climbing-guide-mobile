@@ -16,6 +16,7 @@
                </Grid.ColumnDefinitions>
                <Grid.RowDefinitions>
                   <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
                </Grid.RowDefinitions>
 
                <Label Grid.Row="0" Grid.Column="0"
@@ -25,6 +26,10 @@
                        ItemsSource="{Binding Languages}"
                        SelectedItem="{Binding SelectedLanguage}"
                        ItemDisplayBinding="{Binding Name}"/>
+
+               <Button Grid.Row="1" Grid.ColumnSpan="2"
+                       Text="{Static strings:Settings.Clear_Cache_Button_Title}"
+                       Command="{Binding ClearCacheCommand}" />
 
             </Grid>
          </ScrollView>

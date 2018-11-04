@@ -19,7 +19,7 @@ namespace Climbing.Guide.Forms.Services {
          ObservableCollection<Grade> result = null;
          if (force || !Cache.Exists(GRADE_SYSTEM_CACHE_KEY)) {
             result = await ApiClient.GradesClient.ReadAsync(gradeSystemId.ToString());
-            Cache.Add(GRADE_SYSTEMS_CACHE_KEY, result, TimeSpan.MaxValue);
+            Cache.Add(GRADE_SYSTEM_CACHE_KEY, result, TimeSpan.MaxValue);
          }
          if (null == result) {
             result = Cache.Get<ObservableCollection<Grade>>(GRADE_SYSTEM_CACHE_KEY);

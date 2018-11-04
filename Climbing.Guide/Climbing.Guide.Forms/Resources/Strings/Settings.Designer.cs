@@ -70,6 +70,15 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear cache.
+        /// </summary>
+        public static string Clear_Cache_Button_Title {
+            get {
+                return ResourceManager.GetString("Clear_Cache_Button_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generic.
         /// </summary>
         public static string Generic_Settings_Title {

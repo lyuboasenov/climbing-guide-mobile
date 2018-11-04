@@ -123,7 +123,11 @@ namespace Climbing.Guide.Caching {
       }
 
       private static DateTime GetExpiration(TimeSpan timeSpan) {
-         return DateTime.UtcNow.Add(timeSpan);
+         var result = DateTime.MaxValue;
+         if (timeSpan != TimeSpan.MaxValue) {
+            result = DateTime.UtcNow.Add(timeSpan);
+         }
+         return result;
       }
 
       private void Clean(object state) {

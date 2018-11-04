@@ -26,7 +26,7 @@ namespace Climbing.Guide.Forms.Services {
 
       public T Get<T>(string key, T defaultValue = default(T)) {
          object value = Preferences.Get(key, defaultValue.ToString());
-         return (T)value;
+         return (T)System.Convert.ChangeType(value, typeof(T));
       }
 
       private string GetSettingKey(string key) {
