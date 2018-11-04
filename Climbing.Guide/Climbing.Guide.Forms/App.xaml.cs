@@ -70,6 +70,7 @@ namespace Climbing.Guide.Forms {
       private void RegisterServices(IContainerRegistry containerRegistry) {
          // Register services
          containerRegistry.Register<IEventService, EventService>();
+         containerRegistry.Register<IPreferenceService, PreferenceService>();
          containerRegistry.Register<IErrorService, ErrorService>();
          containerRegistry.Register<IAlertService, AlertService>();
          containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
@@ -77,6 +78,7 @@ namespace Climbing.Guide.Forms {
          containerRegistry.Register<IMediaService, MediaService>();
          containerRegistry.Register<ICache, Cache>();
          containerRegistry.Register<ICacheRepository, Caching.Sqlite.SqliteCacheRepository>();
+         containerRegistry.Register<IResourceService, ResourceService>();
 
 #if DEBUG
          containerRegistry.RegisterInstance<IApiClient>(new RestApiClient("http://10.0.2.2:8000"));
@@ -88,7 +90,9 @@ namespace Climbing.Guide.Forms {
          // Register instances
          containerRegistry.RegisterInstance(DependencyService.Get<IProgressService>());
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
-         containerRegistry.RegisterInstance(new CacheSettings("cache/sqlite/"));
+
+         var cacheLocation = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "cache/sqlite/");
+         containerRegistry.RegisterInstance<ICacheSettings>(new CacheSettings(cacheLocation));
       }
    }
 }
