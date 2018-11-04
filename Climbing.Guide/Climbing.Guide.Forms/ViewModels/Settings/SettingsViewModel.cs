@@ -1,4 +1,5 @@
 ﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Forms.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -8,6 +9,9 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class SettingsViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Settings.Settings_Title;
+
+      private IResourceService ResourceService { get; set; }
+      private IPreferenceService PreferenceService { get; set; }
 
       public Language SelectedLanguage { get; set; }
       public ObservableCollection<Language> Languages { get; set; }
@@ -21,24 +25,27 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
       public GradeSystem SelectedTradRouteGradingSystem { get; set; }
       public ObservableCollection<GradeSystem> TradRouteGradingSystems { get; set; }
 
-      public SettingsViewModel() {
+      public SettingsViewModel(IResourceService resourceService, IPreferenceService preferenceService) {
          Title = VmTitle;
+
+         ResourceService = resourceService;
+         PreferenceService = preferenceService;
       }
 
       public void OnSelectedLanguageChanged() {
-
+         PreferenceService.LanguageCode = SelectedLanguage.Code;
       }
 
       public void OnSelectedBoulderingGradingSystemChanged() {
-
+         PreferenceService.BoulderingGradeSystem = SelectedBoulderingGradingSystem.Id.Value;
       }
 
       public void OnSelectedSportRouteGradingSystemChanged() {
-
+         PreferenceService.SportRouteGradeSystem = SelectedSportRouteGradingSystem.Id.Value;
       }
 
       public void OnSelectedTradRouteGradingSystemChanged() {
-
+         PreferenceService.TradRouteGradeSystem = SelectedTradRouteGradingSystem.Id.Value;
       }
 
       public override void OnNavigatedTo(params object[] parameters) {
@@ -49,12 +56,21 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
 
       private async Task InitializeViewModel() {
          try {
-            Languages = await Client.LanguagesClient.ListAsync();
+            Languages = await ResourceService.GetLanguagesAsync();
 
-            var gradeSystems = await Client.GradesClient.ListAsync();
+            SelectedLanguage = Languages.First(l => l.Code.Equals(PreferenceService.LanguageCode, StringComparison.Ordinal));
+
+            var gradeSystems = await ResourceService.GetGradeSystemsAsync();
             BoulderingGradingSystems = gradeSystems.First(gs => gs.RouteType == 1).GradeSystems;
             SportRouteGradingSystems = gradeSystems.First(gs => gs.RouteType == 2).GradeSystems;
             TradRouteGradingSystems = gradeSystems.First(gs => gs.RouteType == 4).GradeSystems;
+
+            SelectedBoulderingGradingSystem = 
+               BoulderingGradingSystems.First(gs => gs.Id.Value == PreferenceService.BoulderingGradeSystem);
+            SelectedSportRouteGradingSystem =
+               SportRouteGradingSystems.First(gs => gs.Id.Value == PreferenceService.SportRouteGradeSystem);
+            SelectedTradRouteGradingSystem =
+               TradRouteGradingSystems.First(gs => gs.Id.Value == PreferenceService.TradRouteGradeSystem);
          } catch (ApiCallException ex) {
             await Errors.HandleApiCallExceptionAsync(ex);
          }
