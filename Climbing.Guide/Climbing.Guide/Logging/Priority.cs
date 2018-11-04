@@ -1,4 +1,4 @@
-﻿namespace Climbing.Guide.Forms.Logging {
+﻿namespace Climbing.Guide.Logging {
    public enum Priority {
       /// <summary>
       /// No priority specified.

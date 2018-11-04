@@ -1,4 +1,4 @@
-﻿namespace Climbing.Guide.Forms.Logging {
+﻿namespace Climbing.Guide.Logging {
    /// <summary>
    /// Implementation of <see cref="ILoggingService"/> that does nothing. This
    /// implementation is useful when the application does not need logging
