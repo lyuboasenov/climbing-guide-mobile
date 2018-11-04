@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Climbing.Guide.Forms.Themes.Colors">
+
+   <Color x:Key="Primary50">#eceff1</Color>
+   <Color x:Key="Primary50Foreground">#DD000000</Color>
+   <Color x:Key="Primary100">#cfd8dc</Color>
+   <Color x:Key="Primary100Foreground">#DD000000</Color>
+   <Color x:Key="Primary200">#b0bec5</Color>
+   <Color x:Key="Primary200Foreground">#DD000000</Color>
+   <Color x:Key="Primary300">#90a4ae</Color>
+   <Color x:Key="Primary300Foreground">#DD000000</Color>
+   <Color x:Key="Primary400">#78909c</Color>
+   <Color x:Key="Primary400Foreground">#FFFFFFFF</Color>
+   <Color x:Key="Primary500">#607d8b</Color>
+   <Color x:Key="Primary500Foreground">#DDFFFFFF</Color>
+   <Color x:Key="Primary600">#546e7a</Color>
+   <Color x:Key="Primary600Foreground">#DDFFFFFF</Color>
+   <Color x:Key="Primary700">#455a64</Color>
+   <Color x:Key="Primary700Foreground">#DDFFFFFF</Color>
+   <Color x:Key="Primary800">#37474f</Color>
+   <Color x:Key="Primary800Foreground">#DDFFFFFF</Color>
+   <Color x:Key="Primary900">#263238</Color>
+   <Color x:Key="Primary900Foreground">#DDFFFFFF</Color>
+
+   <Color x:Key="Secondary50">#fffde7</Color>
+   <Color x:Key="Secondary50Foreground">#DD000000</Color>
+   <Color x:Key="Secondary100">#fff9c4</Color>
+   <Color x:Key="Secondary100Foreground">#DD000000</Color>
+   <Color x:Key="Secondary200">#fff59d</Color>
+   <Color x:Key="Secondary200Foreground">#DD000000</Color>
+   <Color x:Key="Secondary300">#fff176</Color>
+   <Color x:Key="Secondary300Foreground">#DD000000</Color>
+   <Color x:Key="Secondary400">#ffee58</Color>
+   <Color x:Key="Secondary400Foreground">#DD000000</Color>
+   <Color x:Key="Secondary500">#ffeb3b</Color>
+   <Color x:Key="Secondary500Foreground">#DD000000</Color>
+   <Color x:Key="Secondary600">#fdd835</Color>
+   <Color x:Key="Secondary600Foreground">#DD000000</Color>
+   <Color x:Key="Secondary700">#fbc02d</Color>
+   <Color x:Key="Secondary700Foreground">#DD000000</Color>
+   <Color x:Key="Secondary800">#f9a825</Color>
+   <Color x:Key="Secondary800Foreground">#DD000000</Color>
+   <Color x:Key="Secondary900">#f57f17</Color>
+   <Color x:Key="Secondary900Foreground">#DD000000</Color>
+   <Color x:Key="Accent100">#ffff8d</Color>
+   <Color x:Key="Accent100Foreground">#DD000000</Color>
+   <Color x:Key="Accent200">#ffff00</Color>
+   <Color x:Key="Accent200Foreground">#DD000000</Color>
+   <Color x:Key="Accent400">#ffea00</Color>
+   <Color x:Key="Accent400Foreground">#DD000000</Color>
+   <Color x:Key="Accent700">#ffd600</Color>
+   <Color x:Key="Accent700Foreground">#DD000000</Color>
+
+</ResourceDictionary>

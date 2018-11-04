@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Climbing.Guide.Forms;
+﻿using Climbing.Guide.Forms;
 using Foundation;
-using SuaveControls.FloatingActionButton.iOS.Renderers;
 using UIKit;
 
 namespace Climbing.Guide.iOS {
@@ -24,7 +20,6 @@ namespace Climbing.Guide.iOS {
 
          // Initialize maps
          Xamarin.FormsMaps.Init();
-         FloatingActionButtonRenderer.InitRenderer();
          LoadApplication(new App());
 
          return base.FinishedLaunching(app, options);

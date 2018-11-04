@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms" 
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    x:Class="Climbing.Guide.Forms.Themes.Base">
+   
+   <Color x:Key="RedButtonColor">#A52826</Color>
+   <Color x:Key="Error">#A52826</Color>
+
+   <Color x:Key="LightTextColor">#FFFFFF</Color>
+   <Color x:Key="TextColor">#999999</Color>
+
+   <Color x:Key="Primary">#37474f</Color>
+   <Color x:Key="PrimaryDark">#263238</Color>
+   <Color x:Key="Accent">#546e7a</Color>
+
+   <Style TargetType="NavigationPage">
+      <Setter Property="BarBackgroundColor" Value="{DynamicResource Primary800}" />
+      <Setter Property="BarTextColor" Value="{DynamicResource Primary800Foreground}" />
+   </Style>
+
+   <Style TargetType="Button" ApplyToDerivedTypes="true">
+      <Setter Property="BackgroundColor" Value="{DynamicResource Secondary700}" />
+      <Setter Property="TextColor" Value="{DynamicResource Secondary700Foreground}" />
+      <Setter Property="Margin" Value="5" />
+   </Style>
+
+   <Style TargetType="Page" ApplyToDerivedTypes="true">
+      <Setter Property="BackgroundColor" Value="{DynamicResource Primary100}" />
+   </Style>
+
+</ResourceDictionary>
