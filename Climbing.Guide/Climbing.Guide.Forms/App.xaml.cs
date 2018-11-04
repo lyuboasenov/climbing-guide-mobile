@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Climbing.Guide.Forms.Services;
 using System;
+using Climbing.Guide.Caching;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Forms {
@@ -67,12 +68,15 @@ namespace Climbing.Guide.Forms {
       }
 
       private void RegisterServices(IContainerRegistry containerRegistry) {
+         // Register services
          containerRegistry.Register<IEventService, EventService>();
          containerRegistry.Register<IErrorService, ErrorService>();
          containerRegistry.Register<IAlertService, AlertService>();
          containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
          containerRegistry.Register<INavigationService, NavigationService>();
          containerRegistry.Register<IMediaService, MediaService>();
+         containerRegistry.Register<ICache, Cache>();
+         containerRegistry.Register<ICacheRepository, Caching.Sqlite.SqliteCacheRepository>();
 
 #if DEBUG
          containerRegistry.RegisterInstance<IApiClient>(new RestApiClient("http://10.0.2.2:8000"));
@@ -81,8 +85,10 @@ namespace Climbing.Guide.Forms {
          containerRegistry.RegisterInstance<IApiClient>(new RestApiClient("https://api.climbingguide.org"));
          containerRegistry.Register<Logging.ILoggingService, Logging.VoidLoggingService>();
 #endif
+         // Register instances
          containerRegistry.RegisterInstance(DependencyService.Get<IProgressService>());
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
+         containerRegistry.RegisterInstance(new CacheSettings("cache/sqlite/"));
       }
    }
 }
