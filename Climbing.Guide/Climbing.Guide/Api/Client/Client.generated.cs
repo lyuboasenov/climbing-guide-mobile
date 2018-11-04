@@ -1126,7 +1126,7 @@ namespace Climbing.Guide.Api.Client
     
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<Grade> ReadAsync(string system, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Grade>> ReadAsync(string system, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (system == null)
                 throw new System.ArgumentNullException("system");
@@ -1164,10 +1164,10 @@ namespace Climbing.Guide.Api.Client
                         if (status_ == "200") 
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(Grade); 
+                            var result_ = default(System.Collections.ObjectModel.ObservableCollection<Grade>); 
                             try
                             {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<Grade>(responseData_, _settings.Value);
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.ObjectModel.ObservableCollection<Grade>>(responseData_, _settings.Value);
                                 return result_; 
                             } 
                             catch (System.Exception exception_) 
@@ -1182,7 +1182,7 @@ namespace Climbing.Guide.Api.Client
                             throw new ApiCallException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
             
-                        return default(Grade);
+                        return default(System.Collections.ObjectModel.ObservableCollection<Grade>);
                     }
                     finally
                     {

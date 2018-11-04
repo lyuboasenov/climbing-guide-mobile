@@ -91,7 +91,7 @@ namespace Climbing.Guide.Api.Schemas
     
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        System.Threading.Tasks.Task<Grade> ReadAsync(string system, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Grade>> ReadAsync(string system, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     
     }
     
