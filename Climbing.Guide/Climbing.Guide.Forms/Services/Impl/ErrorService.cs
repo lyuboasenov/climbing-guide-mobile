@@ -1,4 +1,4 @@
-﻿using Climbing.Guide.Forms.Logging;
+﻿using Climbing.Guide.Logging;
 using System;
 using System.Text;
 using System.Threading.Tasks;
