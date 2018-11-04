@@ -5,7 +5,9 @@ namespace Climbing.Guide.Forms.Helpers {
       public enum Schema {
          nav,
          act,
-         type
+         type,
+         cache,
+         set
       }
 
       public static Uri Get(Schema schema, string path) {
