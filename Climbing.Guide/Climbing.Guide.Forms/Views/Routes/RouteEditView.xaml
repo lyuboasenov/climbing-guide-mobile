@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:strings="clr-namespace:Climbing.Guide.Forms.Resources.Strings"
+            xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
+            xmlns:routes="clr-namespace:Climbing.Guide.Forms.Views.Routes"
+            x:Class="Climbing.Guide.Forms.Views.Routes.RouteEditView">
+   <TabbedPage.ToolbarItems>
+      <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
+      <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}"/>
+   </TabbedPage.ToolbarItems>
+   
+   <!--Pages can be added as references or inline-->
+   <ContentPage Title="{x:Static strings:Routes.Route_Edit_Into_Title}">
+      <ContentPage.Content>
+         <ScrollView>
+            <StackLayout>
+               <Entry Text="{Binding Name}" Placeholder="{x:Static strings:Routes.Route_Edit_Name}"/>
+               <Editor Text="{Binding Info}" Placeholder="{x:Static strings:Routes.Route_Edit_Info}"/>
+               <Picker ItemsSource="{Binding Difficulty}"
+                       SelectedItem="{Binding SelectedDifficulty}"
+                       ItemDisplayBinding="{Binding Name}"
+                       Title="{x:Static strings:Routes.Route_Edit_Difficulty}"/>
+               <Picker SelectedItem="{Binding RouteType}"
+                       ItemsSource="{Binding RouteTypes}"
+                       Title="{x:Static strings:Routes.Route_Edit_Route_Type}"
+                       IsVisible="False"/>
+               <Entry Text="{Binding Length}" Placeholder="{x:Static strings:Routes.Route_Edit_Length}"/>
+               <Entry Text="{Binding FA}" Placeholder="{x:Static strings:Routes.Route_Edit_FA}"/>
+               <Picker ItemsSource="{Binding Regions}"
+                       SelectedItem="{Binding SelectedRegion}"
+                       ItemDisplayBinding="{Binding Name}"
+                       Title="{x:Static strings:Routes.Route_Edit_Region}"/>
+               <Picker ItemsSource="{Binding Areas}"
+                       SelectedItem="{Binding SelectedArea}"
+                       ItemDisplayBinding="{Binding Name}"
+                       Title="{x:Static strings:Routes.Route_Edit_Area}"/>
+               <Picker ItemsSource="{Binding Sectors}"
+                       SelectedItem="{Binding SelectedSector}"
+                       ItemDisplayBinding="{Binding Name}"
+                       Title="{x:Static strings:Routes.Route_Edit_Sector}"/>
+            </StackLayout>
+         </ScrollView>
+      </ContentPage.Content>
+   </ContentPage>
+   <ContentPage Title="{x:Static strings:Routes.Route_Edit_Schema_Title}">
+      <ContentPage.Content>
+         <routes:SchemaEditorView Route="{Binding SchemaRoute, Mode=TwoWay}"/>
+      </ContentPage.Content>
+   </ContentPage>
+   <ContentPage Title="{x:Static strings:Routes.Route_Edit_Map_Title}">
+      <ContentPage.Content>
+         <views:BindableMap MapType="Hybrid"
+                            IsShowingUser="False"
+                            ShowSelectedLocation="True"
+                            BindableVisibleRegion="{Binding VisibleRegion, Mode=TwoWay}"/>
+      </ContentPage.Content>
+   </ContentPage>
+</TabbedPage>

@@ -3,10 +3,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Authors>Lyuboslav Asenov</Authors>
+    <Company>Lyuboslav Asenov</Company>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Climbing.Guide.Core\Climbing.Guide.Core.csproj" />
+    <ProjectReference Include="..\Climbing.Guide\Climbing.Guide.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage
+   xmlns="http://xamarin.com/schemas/2014/forms"
+   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+   xmlns:strings="clr-namespace:Climbing.Guide.Forms.Resources.Strings"
+   x:Class="Climbing.Guide.Forms.Views.Settings.SettingsView"
+   Title="{Binding Title}">
+
+   <ContentPage Title="{Static strings:Settings.Generic_Settings_Title}">
+      <ContentPage.Content>
+         <ScrollView>
+            <Grid>
+               <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+               </Grid.ColumnDefinitions>
+               <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto"/>
+               </Grid.RowDefinitions>
+
+               <Label Grid.Row="0" Grid.Column="0"
+                      VerticalOptions="CenterAndExpand"
+                      Text="{Static strings:Settings.Language}" />
+               <Picker Grid.Row="0" Grid.Column="1"
+                       ItemsSource="{Binding Languages}"
+                       SelectedItem="{Binding SelectedLanguage}"
+                       ItemDisplayBinding="{Binding Name}"/>
+
+            </Grid>
+         </ScrollView>
+      </ContentPage.Content>
+   </ContentPage>
+
+   <ContentPage Title="{Static strings:Settings.Grades_Page_Title}">
+      <ContentPage.Content>
+         <ScrollView>
+            <Grid>
+               <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+               </Grid.ColumnDefinitions>
+               <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+               </Grid.RowDefinitions>
+
+               <Label Grid.Row="0" Grid.Column="0"
+                      VerticalOptions="CenterAndExpand"
+                      Text="{Static strings:Settings.Bouldering_Grade_System}" />
+               <Picker Grid.Row="0" Grid.Column="1"
+                       ItemsSource="{Binding BoulderingGradingSystems}"
+                       SelectedItem="{Binding SelectedBoulderingGradingSystem}"
+                       ItemDisplayBinding="{Binding Name}"/>
+
+               <Label Grid.Row="1" Grid.Column="0"
+                      VerticalOptions="CenterAndExpand"
+                      Text="{Static strings:Settings.Sport_Route_Grade_System}" />
+               <Picker Grid.Row="1" Grid.Column="1"
+                       ItemsSource="{Binding SportRouteGradingSystems}"
+                       SelectedItem="{Binding SelectedSportRouteGradingSystem}"
+                       ItemDisplayBinding="{Binding Name}"/>
+
+               <Label Grid.Row="2" Grid.Column="0"
+                      VerticalOptions="CenterAndExpand"
+                      Text="{Static strings:Settings.Trad_Route_Grade_System}" />
+               <Picker Grid.Row="2" Grid.Column="1"
+                       ItemsSource="{Binding TradRouteGradingSystems}"
+                       SelectedItem="{Binding SelectedTradRouteGradingSystem}"
+                       ItemDisplayBinding="{Binding Name}"/>
+
+            </Grid>
+         </ScrollView>
+      </ContentPage.Content>
+   </ContentPage>
+ 
+   <ContentPage IsVisible="False">
+      <ContentPage.Content>
+         <ScrollView>
+            <Grid>
+               <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+               </Grid.ColumnDefinitions>
+               <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto"/>
+               </Grid.RowDefinitions>
+
+            </Grid>
+         </ScrollView>
+      </ContentPage.Content>
+   </ContentPage>
+</TabbedPage>

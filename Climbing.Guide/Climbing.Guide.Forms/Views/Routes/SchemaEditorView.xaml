@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:routes="clr-namespace:Climbing.Guide.Forms.Views.Routes"
+             xmlns:resources="clr-namespace:Climbing.Guide.Forms.Resources"
+             x:Class="Climbing.Guide.Forms.Views.Routes.SchemaEditorView">
+   <ContentView.Content>
+      <Grid>
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+         </Grid.ColumnDefinitions>
+         <AbsoluteLayout x:Name="schemaViewContainer">
+            <routes:SchemaView x:Name="schemaView"
+                               SchemaLocalPath="{Binding LocalSchemaThumbPath}"
+                               SchemaRoute="{Binding SchemaRoute}"
+                               AbsoluteLayout.LayoutFlags="SizeProportional"
+                               AbsoluteLayout.LayoutBounds="0, 0, 1, 1"/>
+         </AbsoluteLayout>
+         <StackLayout Grid.Column="1"
+                      Orientation="Vertical">
+            <Button x:Name="undoButton"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="Start"
+                    WidthRequest="30"
+                    HeightRequest="30"
+                    BorderRadius="15"
+                    Padding="0"
+                    FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+                    Text="{x:Static resources:GlyphNames.UndoAlt}"/>
+            <Button x:Name="redoButton"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="Start"
+                    WidthRequest="30"
+                    HeightRequest="30"
+                    BorderRadius="15"
+                    Padding="0"
+                    FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+                    Text="{x:Static resources:GlyphNames.RedoAlt}"/>
+         </StackLayout>
+      </Grid>
+   </ContentView.Content>
+</ContentView>

@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+   xmlns:resources="clr-namespace:Climbing.Guide.Forms.Resources"
+   xmlns="http://xamarin.com/schemas/2014/forms"
+   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+   xmlns:behaviors="clr-namespace:Climbing.Guide.Forms.Behaviors"
+   xmlns:converters="clr-namespace:Climbing.Guide.Forms.Converters"
+   x:Class="Climbing.Guide.Forms.Views.Guide.GuideView"
+   x:Name="Page"
+   Title="{Binding Title}">
+
+   <ContentPage.Resources>
+      <ResourceDictionary>
+         <converters:ItemTappedEventArgsToItemConverter x:Key="ItemTappedConverter" />
+         <converters:GradeConverter x:Key="GradeConverter" />
+      </ResourceDictionary>
+   </ContentPage.Resources>
+
+   <Grid>
+      <Grid.RowDefinitions>
+         <RowDefinition Height="Auto" />
+         <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+         <ColumnDefinition Width="*" />
+         <ColumnDefinition Width="*" />
+         <ColumnDefinition Width="*" />
+         <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+
+      <Picker Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Regions}" SelectedItem="{Binding SelectedRegion}" ItemDisplayBinding="{Binding Name}" />
+      <Picker Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Areas}" SelectedItem="{Binding SelectedArea}" ItemDisplayBinding="{Binding Name}" />
+      <Picker Grid.Column="2" Grid.Row="0" ItemsSource="{Binding Sectors}" SelectedItem="{Binding SelectedSector}" ItemDisplayBinding="{Binding Name}" />
+
+      <Button Grid.Column="3" Grid.Row="0"
+              BackgroundColor="{x:StaticResource RedButtonColor}"
+              HorizontalOptions="EndAndExpand"
+              VerticalOptions="EndAndExpand"
+              WidthRequest="40"
+              HeightRequest="40"
+              BorderRadius="20"
+              FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+              Text="{x:Static resources:GlyphNames.Times}"
+              Command="{Binding ClearFilterCommand}" />
+
+      <ScrollView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
+         <ListView ItemsSource="{Binding Routes}"
+                   SelectionMode="None">
+            <ListView.Behaviors>
+               <behaviors:EventToCommandBehavior EventName="ItemTapped"
+                                              Command="{Binding RouteTappedCommand}"
+                                              Converter="{StaticResource ItemTappedConverter}" />
+            </ListView.Behaviors>
+            <ListView.ItemTemplate>
+               <DataTemplate>
+                  <ViewCell>
+                     <Grid>
+                        <Grid.ColumnDefinitions>
+                           <ColumnDefinition Width="*" />
+                           <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                           <RowDefinition Height="*" />
+                           <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0" Grid.Row="0" Text="{Binding Name}" />
+                        <Label Grid.Column="0" Grid.Row="1" Text="{Binding Info}" />
+
+                        <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding ., Converter={StaticResource GradeConverter}}" />
+                     </Grid>
+                  </ViewCell>
+               </DataTemplate>
+            </ListView.ItemTemplate>
+         </ListView>
+      </ScrollView>
+
+      <Button Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1"
+              HorizontalOptions="CenterAndExpand"
+              VerticalOptions="EndAndExpand"
+              WidthRequest="40"
+              HeightRequest="40"
+              BorderRadius="20"
+              Margin="15"
+              IsVisible="{Binding Client.IsLoggedIn}"
+              FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+              Text="{x:Static resources:GlyphNames.Plus}"
+              Command="{Binding AddRouteCommand}"/>
+   </Grid>
+</ContentPage>

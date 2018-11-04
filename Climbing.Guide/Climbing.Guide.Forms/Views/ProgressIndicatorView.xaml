@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Climbing.Guide.Forms.Views.ProgressIndicatorView"
+             BackgroundColor="#80000000">
+   <ContentPage.Content>
+      <StackLayout
+            Padding="30"
+            BackgroundColor="Black"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+         <ProgressBar x:Name="progressBar" />
+         <Label x:Name="message"
+                FontAttributes="Bold"
+                TextColor="White" />
+      </StackLayout>
+   </ContentPage.Content>
+</ContentPage>
