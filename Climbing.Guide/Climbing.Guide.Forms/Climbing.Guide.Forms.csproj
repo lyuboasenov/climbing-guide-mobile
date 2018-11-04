@@ -52,8 +52,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>User.resx</DependentUpon>
     </Compile>
-    <Compile Update="Themes\MaterialDesignColor.Yellow.xaml.cs">
-      <DependentUpon>MaterialDesignColor.Yellow.xaml</DependentUpon>
+    <Compile Update="Themes\Colors.xaml.cs">
+      <DependentUpon>Colors.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\Routes\SchemaEditorView.xaml.cs">
       <DependentUpon>SchemaEditorView.xaml</DependentUpon>
@@ -126,10 +126,7 @@
     <EmbeddedResource Update="Themes\Base.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Themes\MaterialDesignColor.BlueGrey.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Themes\MaterialDesignColor.DeepOrange.xaml">
+    <EmbeddedResource Update="Themes\Colors.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Routes\RouteEditView.xaml">
