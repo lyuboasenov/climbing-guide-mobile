@@ -28,11 +28,9 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          try {
             position = Geolocation.GetLastKnownLocationAsync().GetAwaiter().GetResult();
          } catch (PermissionException pEx) {
-            Task.Run(async () => 
-               await Errors.HandleExceptionAsync(pEx,
-                  Resources.Strings.Main.Permission_Exception_Format,
-                  Resources.Strings.Main.Location_Permissino)
-            );
+            Errors.HandleExceptionAsync(pEx,
+               Resources.Strings.Main.Permission_Exception_Format,
+               Resources.Strings.Main.Location_Permissino);
          }
          
          if (null != position) {

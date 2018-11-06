@@ -1,4 +1,5 @@
 ﻿using Climbing.Guide.Logging;
+using Climbing.Guide.Services;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,34 +9,11 @@ namespace Climbing.Guide.Forms.Services {
    public class ErrorService : IErrorService {
 
       private IAlertService AlertService { get; set; }
-      private ILoggingService LoggingService { get; set; }
+      private ILogger LoggingService { get; set; }
 
-      public ErrorService(IAlertService alertService, ILoggingService loggingService) {
+      public ErrorService(IAlertService alertService, ILogger loggingService) {
          AlertService = alertService;
          LoggingService = loggingService;
-      }
-
-      private string FormatException(Exception ex) {
-         StringBuilder sb = new StringBuilder();
-
-         string indent = string.Empty;
-         sb.AppendLine($"====================================================== ERROR: ======================================================");
-         while (ex != null) {
-            sb.AppendLine($"{indent}Type: {ex.GetType()}");
-            sb.AppendLine($"{indent}Message: {ex.Message}");
-            sb.AppendLine($"{indent}Message: {ex.StackTrace.Replace(Environment.NewLine, Environment.NewLine + indent)}");
-            sb.AppendLine($"--------------------------------------------------------------------------------------------------------------------");
-
-            indent += "   ";
-            ex = ex.InnerException;
-         }
-         sb.AppendLine($"=====================================================================================================================");
-
-         return sb.ToString();
-      }
-
-      private void LogException(Exception ex) {
-         LoggingService.Log(FormatException(ex), Category.Exception, Priority.High);
       }
 
       /// <summary>
@@ -48,7 +26,7 @@ namespace Climbing.Guide.Forms.Services {
          string errorMessageFormat,
          params object[] errorMessageParams) {
 
-         LogException(ex);
+         LoggingService.Log(ex);
 
          if (null != AlertService) {
             Device.BeginInvokeOnMainThread(async () => {
@@ -71,7 +49,7 @@ namespace Climbing.Guide.Forms.Services {
          string detailedErrorMessageFormat,
          params object[] detailedErrorMessageParams) {
 
-         LogException(ex);
+         LoggingService.Log(ex);
 
          if (null != AlertService) {
             Device.BeginInvokeOnMainThread(async () => {

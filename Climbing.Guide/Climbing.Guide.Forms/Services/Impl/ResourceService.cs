@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Caching;
+using Climbing.Guide.Core.Api;
 
 namespace Climbing.Guide.Forms.Services {
    public class ResourceService : IResourceService {

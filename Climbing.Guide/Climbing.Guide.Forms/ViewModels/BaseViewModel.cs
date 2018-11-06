@@ -1,16 +1,16 @@
-﻿using Climbing.Guide.Forms.Services;
+﻿using Climbing.Guide.Core.Api;
+using Climbing.Guide.Services;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class BaseViewModel : BindableBase, INavigationAware, IDestructible {
       public IApiClient Client => GetService<IApiClient>();
       protected Services.INavigationService Navigation => GetService<Services.INavigationService>();
-      protected Services.IErrorService Errors => GetService<IErrorService>();
+      protected IErrorService Errors => GetService<IErrorService>();
 
       public BaseViewModel Parent { get; set; }
       public bool IsBusy { get; set; }

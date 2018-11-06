@@ -2,6 +2,7 @@
 using Climbing.Guide.Forms.Helpers;
 using Climbing.Guide.Forms.Models;
 using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Tasks;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace Climbing.Guide.Forms.ViewModels {
       }
 
       public void OnSelectedMenuItemChanged() {
-         Task.Run(() => OnSelectedMenuItemChangedAsync());
+         GetService<ITaskRunner>().Run(() => OnSelectedMenuItemChangedAsync());
       }
 
       public async Task OnSelectedMenuItemChangedAsync() {

@@ -1,4 +1,5 @@
 ﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Tasks;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -27,9 +28,10 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
          if (null != Route) {
             Title = string.Format("{0}   {1}", Route.Name, Converters.GradeConverter.Convert(Route));
 
-            Task.Run(() => Client.DownloadRouteSchemaAsync(Route.Id.Value, Route.Schema)).ContinueWith((task) => {
-               LocalSchemaThumbPath = task.Result;
-            });
+            GetService<ITaskRunner>().Run(() => Client.DownloadRouteSchemaAsync(Route.Id.Value, Route.Schema))
+               .ContinueWith((task) => {
+                  LocalSchemaThumbPath = task.Result;
+               });
 
             SchemaRoute = new ObservableCollection<Point>() {
             new Point(0, 0), new Point(0.7, 0), new Point(0.7, 0.7), new Point(1, 1)

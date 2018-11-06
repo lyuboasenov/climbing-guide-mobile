@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using Climbing.Guide.Forms.Services;
 using System.Linq;
 using System.Threading.Tasks;
+using Climbing.Guide.Tasks;
 
 namespace Climbing.Guide.Forms.Converters {
    public class GradeConverter : IValueConverter {
@@ -27,13 +28,16 @@ namespace Climbing.Guide.Forms.Converters {
             else if (routeType == RouteType._2) { gradingSystemId = prefService.SportRouteGradeSystem; }
             else if (routeType == RouteType._4) { gradingSystemId = prefService.TradRouteGradeSystem; }
             Grade grade = null;
-            Task.Run(async () => {
+
+            var taskRunner = IoC.Container.Get<ITaskRunner>();
+            taskRunner.Run(async () => {
                var task = await IoC.Container.Get<IResourceService>().GetGradeSystemAsync(gradingSystemId);
                grade = task.Where(g => g.Value <= route.Difficulty).OrderByDescending(g => g.Value).First();
-
             }).Wait();
-            
-            result = grade.Name;
+
+            if (null != grade) {
+               result = grade.Name;
+            }
          }
          return result;
       }

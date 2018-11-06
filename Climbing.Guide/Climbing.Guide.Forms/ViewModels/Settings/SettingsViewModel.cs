@@ -1,5 +1,6 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Tasks;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -64,7 +65,7 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
       public override void OnNavigatedTo(params object[] parameters) {
          base.OnNavigatedTo(parameters);
 
-         Task.Run(async () => await InitializeViewModel());
+         GetService<ITaskRunner>().Run(async () => await InitializeViewModel());
       }
 
       private void ClearCache() {

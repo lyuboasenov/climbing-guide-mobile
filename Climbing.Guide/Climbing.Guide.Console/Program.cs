@@ -10,7 +10,6 @@ namespace Climbing.Guide.Console {
             System.Console.WriteLine("Climbing guide tester:");
             System.Console.WriteLine("   1. TestRestApiCalls");
             System.Console.WriteLine("   2. TestRestApiLogin");
-            
 
 
             choice = System.Console.ReadLine().Trim();
@@ -61,7 +60,7 @@ namespace Climbing.Guide.Console {
       }
 
       private static IApiClient GetRestApiClient() {
-         return new ApiClient();
+         throw new NotImplementedException();
       }
    }
 }

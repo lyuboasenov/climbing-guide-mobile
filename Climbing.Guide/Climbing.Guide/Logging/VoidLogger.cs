@@ -1,12 +1,14 @@
-﻿namespace Climbing.Guide.Logging {
+﻿using System;
+
+namespace Climbing.Guide.Logging {
    /// <summary>
-   /// Implementation of <see cref="ILoggingService"/> that does nothing. This
+   /// Implementation of <see cref="ILogger"/> that does nothing. This
    /// implementation is useful when the application does not need logging
    /// but there are infrastructure pieces that assume there is a logger.
    /// </summary>
-   public class VoidLoggingService : ILoggingService {
+   public class VoidLogger : ILogger {
 
-      public VoidLoggingService() {
+      public VoidLogger() {
       }
       /// <summary>
       /// Write a new log entry with the specified category and priority.
@@ -16,6 +18,9 @@
       /// <param name="priority">The priority of the entry.</param>
       public void Log(string message, Category category = Category.Info, Priority priority = Priority.None) {
 
+      }
+
+      public void Log(Exception ex) {
       }
    }
 }

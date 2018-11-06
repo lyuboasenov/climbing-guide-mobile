@@ -143,7 +143,8 @@ namespace Climbing.Guide.Caching {
 
       private void StartAutoClean() {
          if (CacheRepository.Count() > 0) {
-            Timer.Change(CleanInterval.Milliseconds, -1);
+            int dueTime = CleanInterval.Milliseconds == 0 ? Timeout.Infinite : CleanInterval.Milliseconds;
+            Timer.Change(dueTime, Timeout.Infinite);
          }
       }
 

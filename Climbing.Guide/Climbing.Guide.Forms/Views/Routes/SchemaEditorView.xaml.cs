@@ -17,7 +17,7 @@ namespace Climbing.Guide.Forms.Views.Routes {
       private double StartScale;
 
       private SkiaSharp.SKPoint LastTouchLocation { get; set; }
-      private Logging.ILoggingService LoggingService { get; set; }
+      private Logging.ILogger LoggingService { get; set; }
 
       private Command UndoCommand { get; set; }
       private Command RedoCommand { get; set; }
@@ -35,7 +35,7 @@ namespace Climbing.Guide.Forms.Views.Routes {
 
       public SchemaEditorView() {
          InitializeComponent();
-         LoggingService = IoC.Container.Get<Logging.ILoggingService>();
+         LoggingService = IoC.Container.Get<Logging.ILogger>();
 
          // Attach gestures
          schemaView.EnableTouchEvents = true;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Climbing.Guide.Core.Api;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -54,13 +55,13 @@ namespace Climbing.Guide.Forms.Services {
          return await base.LogoutAsync();
       }
 
-      public async Task<string> DownloadRouteSchemaThumbAsync(int routeId, Uri schemaThumbUri) {
+      public override async Task<string> DownloadRouteSchemaThumbAsync(int routeId, Uri schemaThumbUri) {
          var localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), $"climbing-guide/routes/schema/thumb/{routeId}.jpeg");
          await DownloadAsync(schemaThumbUri, localPath);
          return localPath;
       }
 
-      public async Task<string> DownloadRouteSchemaAsync(int routeId, Uri schemaUri) {
+      public override async Task<string> DownloadRouteSchemaAsync(int routeId, Uri schemaUri) {
          var localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), $"climbing-guide/routes/schema/full/{routeId}.jpeg");
          await DownloadAsync(schemaUri, localPath);
          return localPath;

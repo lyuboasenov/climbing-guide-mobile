@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Climbing.Guide.Extensions;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 
 namespace Climbing.Guide.Logging {
-   public class DebugLoggingService : ILoggingService {
-      public DebugLoggingService() {
+   public class DebugLogger : ILogger {
+      public DebugLogger() {
       }
       /// <summary>
       /// Write a new log entry with the specified category and priority.
@@ -19,6 +20,10 @@ namespace Climbing.Guide.Logging {
             category.ToString().ToUpper(), message, priority);
 
          Debug.WriteLine(messageToLog);
+      }
+
+      public void Log(Exception ex) {
+         this.Log(ex.ToLogMessage(), Category.Exception, Priority.None);
       }
    }
 }

@@ -1,4 +1,5 @@
-﻿using Prism.Navigation;
+﻿using Climbing.Guide.Tasks;
+using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

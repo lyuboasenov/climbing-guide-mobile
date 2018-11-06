@@ -5,6 +5,8 @@ using Xamarin.Forms.Xaml;
 using Climbing.Guide.Forms.Services;
 using System;
 using Climbing.Guide.Caching;
+using Climbing.Guide.Services;
+using Climbing.Guide.Tasks;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Forms {
@@ -76,16 +78,17 @@ namespace Climbing.Guide.Forms {
          containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
          containerRegistry.Register<INavigationService, NavigationService>();
          containerRegistry.Register<IMediaService, MediaService>();
+         containerRegistry.Register<ITaskRunner, TaskRunner>();
          containerRegistry.Register<ICache, Cache>();
          containerRegistry.Register<ICacheRepository, Caching.Sqlite.SqliteCacheRepository>();
          containerRegistry.Register<IResourceService, ResourceService>();
          containerRegistry.Register<Serialization.ISerializer, Serialization.JsonSerializer>();
 
 #if DEBUG
-         containerRegistry.RegisterInstance<IApiClient>(new RestApiClient("http://10.0.2.2:8000"));
-         containerRegistry.Register<Logging.ILoggingService, Logging.DebugLoggingService>();
+         containerRegistry.RegisterInstance<Core.Api.IApiClient>(new RestApiClient("http://10.0.2.2:8000"));
+         containerRegistry.Register<Logging.ILogger, Logging.DebugLogger>();
 #elif RELEASE
-         containerRegistry.RegisterInstance<IApiClient>(new RestApiClient("https://api.climbingguide.org"));
+         containerRegistry.RegisterInstance<Core.Api.IApiClient>(new RestApiClient("https://api.climbingguide.org"));
          containerRegistry.Register<Logging.ILoggingService, Logging.VoidLoggingService>();
 #endif
          // Register instances
