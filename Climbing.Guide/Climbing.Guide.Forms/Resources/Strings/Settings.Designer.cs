@@ -70,6 +70,15 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cache size:.
+        /// </summary>
+        public static string Cache_Size {
+            get {
+                return ResourceManager.GetString("Cache_Size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear cache.
         /// </summary>
         public static string Clear_Cache_Button_Title {

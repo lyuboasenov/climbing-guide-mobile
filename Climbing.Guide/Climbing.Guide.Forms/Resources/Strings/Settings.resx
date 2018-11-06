@@ -120,6 +120,9 @@
   <data name="Bouldering_Grade_System" xml:space="preserve">
     <value>Boulders</value>
   </data>
+  <data name="Cache_Size" xml:space="preserve">
+    <value>Cache size:</value>
+  </data>
   <data name="Clear_Cache_Button_Title" xml:space="preserve">
     <value>Clear cache</value>
   </data>

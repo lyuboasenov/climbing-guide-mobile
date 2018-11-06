@@ -29,6 +29,8 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
 
       public ICommand ClearCacheCommand { get; private set; }
 
+      public long CacheSize { get; set; }
+
       public SettingsViewModel(IResourceService resourceService, IPreferenceService preferenceService, Caching.ICache cache) {
          Title = VmTitle;
 
@@ -67,6 +69,7 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
 
       private void ClearCache() {
          Cache.Invalidate();
+         CacheSize = Cache.GetCacheSize();
       }
 
       private async Task InitializeViewModel() {
@@ -86,6 +89,8 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
                SportRouteGradingSystems.First(gs => gs.Id.Value == PreferenceService.SportRouteGradeSystem);
             SelectedTradRouteGradingSystem =
                TradRouteGradingSystems.First(gs => gs.Id.Value == PreferenceService.TradRouteGradeSystem);
+
+            CacheSize = Cache.GetCacheSize();
          } catch (ApiCallException ex) {
             await Errors.HandleApiCallExceptionAsync(ex);
          } catch (Exception ex) {
