@@ -15,7 +15,7 @@ namespace Climbing.Guide.Logging {
       public void Log(string message, Category category = Category.Info, Priority priority = Priority.None) {
          
          string messageToLog = string.Format(
-            CultureInfo.InvariantCulture, @"\{{0:u}\} {1}: {2}. Priority: {3}.", DateTime.Now,
+            CultureInfo.InvariantCulture, @"{{{0:u}}} {1}: {2}. Priority: {3}.", DateTime.Now,
             category.ToString().ToUpper(), message, priority);
 
          Debug.WriteLine(messageToLog);

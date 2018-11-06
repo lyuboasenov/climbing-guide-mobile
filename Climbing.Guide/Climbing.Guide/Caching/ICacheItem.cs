@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Climbing.Guide.Caching {
    public interface ICacheItem {
@@ -12,7 +13,7 @@ namespace Climbing.Guide.Caching {
       /// <summary>
       /// Main Content.
       /// </summary>
-      string Content { get; set; }
+      Stream Content { get; set; }
 
       /// <summary>
       /// Expiration data of the object, stored in UTC

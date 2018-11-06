@@ -1,37 +1,45 @@
-﻿using SQLite;
+﻿using Climbing.Guide.Serialization;
+using SQLite;
 using System;
 using System.IO;
 
 namespace Climbing.Guide.Caching.Sqlite {
    public class SqliteCacheRepository : ICacheRepository {
 
+      private ISerializer Serializer { get; set; }
       private readonly object dblock = new object();
       private SQLiteConnection DB { get; set; }
+      private string DbFilePath { get; set; }
       private ICacheSettings CacheSettings { get; set; }
 
-      public SqliteCacheRepository(ICacheSettings settings) {
+      public SqliteCacheRepository(ICacheSettings settings, ISerializer serializer) {
          CacheSettings = settings;
+         Serializer = serializer;
 
-         var path = Path.Combine(CacheSettings.Location, "climbing.guide.cache.db");
+         DbFilePath = Path.Combine(CacheSettings.Location, "climbing.guide.cache.db");
          if (!Directory.Exists(CacheSettings.Location)) {
             Directory.CreateDirectory(CacheSettings.Location);
          }
 
-         DB = new SQLiteConnection(path);
+         DB = new SQLiteConnection(DbFilePath);
          DB.CreateTable<SqliteCacheItem>();
       }
 
-      public void Add(string key, string jsonData, string tag, DateTime expireAt) {
-         var ent = new SqliteCacheItem {
-            Key = key,
-            ExpirationDate = expireAt,
-            Tag = tag,
-            Content = jsonData
-         };
+      public void Add(string key, Stream content, string tag, DateTime expireAt) {
+         using (MemoryStream memoryStream = new MemoryStream()) {
+            content.CopyTo(memoryStream);
+            var ent = new SqliteCacheItem {
+               Key = key,
+               ExpirationDate = expireAt,
+               Tag = tag,
+               RawContent = memoryStream.ToArray()
+            };
 
-         lock (dblock) {
-            DB.InsertOrReplace(ent);
+            lock (dblock) {
+               DB.InsertOrReplace(ent);
+            }
          }
+         
       }
 
       public void Clean() {
@@ -45,7 +53,7 @@ namespace Climbing.Guide.Caching.Sqlite {
       }
 
       public bool Contains(string key) {
-         return Get(key) != null;
+         return DB.Find<SqliteCacheItem>(key) != null;
       }
 
       public long Count() {
@@ -58,6 +66,11 @@ namespace Climbing.Guide.Caching.Sqlite {
          SqliteCacheItem item;
          lock (dblock) {
             item = DB.Find<SqliteCacheItem>(key);
+         }
+         if (null != item) {
+            item.Content = new MemoryStream(item.RawContent);
+            item.Content.Seek(0, SeekOrigin.Begin);
+            item.RawContent = null;
          }
 
          return item;
@@ -88,6 +101,10 @@ namespace Climbing.Guide.Caching.Sqlite {
          lock (dblock) {
             DB.DeleteAll<SqliteCacheItem>();
          }
+      }
+
+      public long GetSize() {
+         return new FileInfo(DbFilePath).Length;
       }
    }
 }

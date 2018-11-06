@@ -79,6 +79,7 @@ namespace Climbing.Guide.Forms {
          containerRegistry.Register<ICache, Cache>();
          containerRegistry.Register<ICacheRepository, Caching.Sqlite.SqliteCacheRepository>();
          containerRegistry.Register<IResourceService, ResourceService>();
+         containerRegistry.Register<Serialization.ISerializer, Serialization.JsonSerializer>();
 
 #if DEBUG
          containerRegistry.RegisterInstance<IApiClient>(new RestApiClient("http://10.0.2.2:8000"));

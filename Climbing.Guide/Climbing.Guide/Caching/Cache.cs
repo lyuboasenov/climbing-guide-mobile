@@ -1,45 +1,50 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Threading;
-using Newtonsoft.Json;
+using Climbing.Guide.Serialization;
 
 namespace Climbing.Guide.Caching {
    public class Cache : ICache {
-
-      private JsonSerializerSettings JsonSettings { get; } = new JsonSerializerSettings {
-         ObjectCreationHandling = ObjectCreationHandling.Replace,
-         ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-         TypeNameHandling = TypeNameHandling.All,
-      };
+      private ISerializer Serializer { get; set; }
       private ICacheRepository CacheRepository { get; set; }
       private Timer Timer { get; set; }
       public TimeSpan CleanInterval { get; set; }
 
-      public Cache(ICacheRepository cacheRepository) {
+      public Cache(ICacheRepository cacheRepository, ISerializer serializer) {
          CacheRepository = cacheRepository;
+         Serializer = serializer;
          Timer = new Timer(Clean);
          StartAutoClean();
       }
 
-      public void Add<T>(string key, T data, TimeSpan expireIn, string tag = null, JsonSerializerSettings jsonSerializationSettings = null) {
+      public void Add<T>(string key, T data, TimeSpan expireIn, string tag = null) {
          if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentException("Key can not be null or empty.", nameof(key));
 
          if (data == null)
             throw new ArgumentNullException("Data can not be null.", nameof(data));
 
-         var jsonData = string.Empty;
-         if (IsString(data)) {
-            jsonData = data as string;
-         } else {
-            jsonData = JsonConvert.SerializeObject(data, jsonSerializationSettings ?? JsonSettings);
+         Stream objectStream = data as Stream;
+         try {
+            if (null == objectStream) {
+               objectStream = new MemoryStream();
+               Serializer.Serialize(objectStream, data);
+               objectStream.Seek(0, SeekOrigin.Begin);
+            }
+
+            CacheRepository.Add(key, objectStream, tag, GetExpiration(expireIn));
+
+            StartAutoClean();
+         } finally {
+            if (null != objectStream) {
+               objectStream.Close();
+               objectStream.Dispose();
+            }
          }
-
-         CacheRepository.Add(key, jsonData, tag, GetExpiration(expireIn));
-
-         StartAutoClean();
       }
 
-      public bool Exists(string key) {
+      public bool Contains(string key) {
          if (string.IsNullOrWhiteSpace(key)) {
             throw new ArgumentException("Key can not be null or empty.", nameof(key));
          }
@@ -47,20 +52,21 @@ namespace Climbing.Guide.Caching {
          return CacheRepository.Contains(key);
       }
 
-      public T Get<T>(string key, JsonSerializerSettings jsonSerializationSettings = null) {
+      public T Get<T>(string key) {
          if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentException("Key can not be null or empty.", nameof(key));
 
-         var cacheItem = CacheRepository.Get(key);
+         ICacheItem item = CacheRepository.Get(key);
+
          T result = default(T);
-
-         if (cacheItem == null) {
-
-         } else if (IsString(result)) {
-            object final = cacheItem.Content;
-            result = (T)final;
-         } else {
-            result = JsonConvert.DeserializeObject<T>(cacheItem.Content, jsonSerializationSettings ?? JsonSettings);
+         if(item != null) {
+            if (typeof(Stream).GetTypeInfo().IsAssignableFrom(typeof(T).Ge‌​tTypeInfo())) {
+               object boxed = item.Content;
+               result = (T)boxed;
+            } else {
+               result = Serializer.Deserialize<T>(item.Content);
+            }
+            
          }
 
          return result;
@@ -139,6 +145,10 @@ namespace Climbing.Guide.Caching {
          if (CacheRepository.Count() > 0) {
             Timer.Change(CleanInterval.Milliseconds, -1);
          }
+      }
+
+      public long GetCacheSize() {
+         return CacheRepository.GetSize();
       }
    }
 }

@@ -20,7 +20,7 @@ namespace Climbing.Guide.Forms.Services {
 
          string indent = string.Empty;
          sb.AppendLine($"====================================================== ERROR: ======================================================");
-         while(ex != null) {
+         while (ex != null) {
             sb.AppendLine($"{indent}Type: {ex.GetType()}");
             sb.AppendLine($"{indent}Message: {ex.Message}");
             sb.AppendLine($"{indent}Message: {ex.StackTrace.Replace(Environment.NewLine, Environment.NewLine + indent)}");
