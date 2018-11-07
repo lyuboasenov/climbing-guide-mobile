@@ -112,9 +112,8 @@ namespace Climbing.Guide.Forms.ViewModels {
       }
 
       private async Task LogoutAsync() {
-         bool success = false;
          try {
-            success = await Client.LogoutAsync();
+            await Client.LogoutAsync();
          } catch (ApiCallException ex) {
             await Errors.HandleApiCallExceptionAsync(ex);
          }
