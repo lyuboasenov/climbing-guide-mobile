@@ -1,7 +1,6 @@
 ﻿using Climbing.Guide.Logging;
 using Climbing.Guide.Services;
 using System;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -75,7 +74,7 @@ namespace Climbing.Guide.Forms.Services {
       public async Task HandleApiCallExceptionAsync(Api.Schemas.ApiCallException ex,
          string errorMessage,
          string detailedErrorMessageFormat) {
-         await HandleExceptionDetailedAsync(ex, errorMessage, detailedErrorMessageFormat, Environment.NewLine, ex.StatusCode, ex.Response);
+         await HandleExceptionDetailedAsync(ex, errorMessage, detailedErrorMessageFormat, System.Environment.NewLine, ex.StatusCode, ex.Response);
       }
 
       /// <summary>
