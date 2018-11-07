@@ -7,7 +7,8 @@ using System.Linq;
 
 namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class BaseViewModel : BindableBase, INavigationAware, IDestructible {
+   public class BaseViewModel : BindableBase, INavigationAware {
+
       public IApiClient Client => GetService<IApiClient>();
       protected Services.INavigationService Navigation => GetService<Services.INavigationService>();
       protected IErrorService Errors => GetService<IErrorService>();
@@ -50,10 +51,6 @@ namespace Climbing.Guide.Forms.ViewModels {
       }
 
       public virtual void OnNavigatingTo(params object[] parameters) {
-
-      }
-
-      public virtual void Destroy() {
 
       }
    }
