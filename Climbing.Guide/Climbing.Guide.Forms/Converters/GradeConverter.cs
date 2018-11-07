@@ -30,10 +30,15 @@ namespace Climbing.Guide.Forms.Converters {
             Grade grade = null;
 
             var taskRunner = IoC.Container.Get<ITaskRunner>();
-            taskRunner.Run(async () => {
-               var task = await IoC.Container.Get<IResourceService>().GetGradeSystemAsync(gradingSystemId);
-               grade = task.Where(g => g.Value <= route.Difficulty).OrderByDescending(g => g.Value).First();
-            }).Wait();
+            grade = taskRunner.RunSync(() => IoC.Container.Get<IResourceService>().GetGradeSystemAsync(gradingSystemId))
+               .Where(g => g.Value <= route.Difficulty).OrderByDescending(g => g.Value).First();
+            
+
+            //var task = IoC.Container.Get<IResourceService>().GetGradeSystemAsync(gradingSystemId);
+            //task.ConfigureAwait(true);
+            //task.Wait();
+
+            //grade = task.Result.Where(g => g.Value <= route.Difficulty).OrderByDescending(g => g.Value).First();
 
             if (null != grade) {
                result = grade.Name;
