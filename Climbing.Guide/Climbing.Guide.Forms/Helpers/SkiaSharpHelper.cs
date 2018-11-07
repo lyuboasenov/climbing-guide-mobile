@@ -81,37 +81,9 @@ namespace Climbing.Guide.Forms.Helpers {
          }
       }
 
-      //public static SKBitmap Export(this RouteTemplate route) {
-      //   var bitmap = LoadBitmap(route.ImageLocation, RouteTemplate.MAX_SIZE);
-      //   SKCanvas canvas = new SKCanvas(bitmap);
-
-      //   //DrawHolds
-      //   foreach (var hold in route.Holds) {
-      //      DrawHold(canvas, hold);
-      //   }
-
-      //   //DrawPaths
-      //   foreach (Path path in route.Paths) {
-      //      DrawPath(canvas, path);
-      //   }
-
-      //   return bitmap;
-      //}
-
       public static void DrawPath(SKCanvas canvas, IEnumerable<Point> path, Color color, Point? originPoint = null, double scaleFactor = 1) {
          canvas.DrawPath(path.ConvertToSKPath(originPoint, scaleFactor), GetPaint(color.ToSkColor()));
       }
-
-      //public static void DrawHold(SKCanvas canvas, Hold hold, Point? originPoint = null, double scaleFactor = 1) {
-      //   double offsetX = originPoint?.X ?? 0;
-      //   double offsetY = originPoint?.Y ?? 0;
-
-      //   canvas.DrawCircle(
-      //      (float)((hold.Center.X - offsetX) * scaleFactor),
-      //      (float)((hold.Center.Y - offsetY) * scaleFactor),
-      //      (float)(hold.Radius * scaleFactor),
-      //      GetPaint(hold.Color.ToSkColor()));
-      //}
 
       /// <summary>
       /// Calculates distance between two skpoints.
