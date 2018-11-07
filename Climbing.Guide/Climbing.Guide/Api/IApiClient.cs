@@ -21,8 +21,5 @@ namespace Climbing.Guide.Core.Api {
       Task<bool> LoginAsync(string username, string password);
       Task<bool> LogoutAsync();
       void UpdateRestApiClientSettings(IApiClientSettings settings);
-
-      Task<string> DownloadRouteSchemaAsync(int routeId, Uri schemaUri);
-      Task<string> DownloadRouteSchemaThumbAsync(int routeId, Uri schemaThumbUri);
    }
 }
