@@ -26,7 +26,7 @@ namespace Climbing.Guide.Serialization {
       }
 
       public void Serialize<T>(Stream stream, T obj) {
-         using (StreamWriter streamWriter = new StreamWriter(stream))
+         using (StreamWriter streamWriter = new StreamWriter(stream, Encoding.UTF8, 1024, true))
          using (JsonWriter jsonWriter = new JsonTextWriter(streamWriter)) {
             Serializer.Serialize(jsonWriter, obj);
 
