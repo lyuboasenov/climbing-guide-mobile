@@ -9,7 +9,7 @@ using Climbing.Guide.Api.Schemas;
 using Newtonsoft.Json;
 
 namespace Climbing.Guide.Core.Api {
-   public abstract class ApiClient : IApiClient {
+   public class ApiClient : IApiClient {
 
       private IApiClientSettings Settings { get; set; }
 
@@ -94,7 +94,7 @@ namespace Climbing.Guide.Core.Api {
          Username = settings.Username;
          Token = settings.Token;
          RefreshToken = settings.RefreshToken;
-         HttpClient = new HttpClient() { BaseAddress = new Uri(settings.BaseUrl) };
+         HttpClient = settings.HttpClient;
       }
 
       public virtual async Task<bool> LoginAsync(string username, string password) {
@@ -209,9 +209,5 @@ namespace Climbing.Guide.Core.Api {
 
          return HttpClient;
       }
-
-      public abstract Task<string> DownloadRouteSchemaAsync(int routeId, Uri schemaUri);
-
-      public abstract Task<string> DownloadRouteSchemaThumbAsync(int routeId, Uri schemaThumbUri);
    }
 }
