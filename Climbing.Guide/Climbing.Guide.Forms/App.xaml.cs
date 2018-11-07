@@ -83,20 +83,40 @@ namespace Climbing.Guide.Forms {
          containerRegistry.Register<ICacheRepository, Caching.Sqlite.SqliteCacheRepository>();
          containerRegistry.Register<IResourceService, ResourceService>();
          containerRegistry.Register<Serialization.ISerializer, Serialization.JsonSerializer>();
+         containerRegistry.Register<Core.Api.IApiClient, ApiClient>();
+         containerRegistry.Register<IEnvironment, Services.Environment>();
 
 #if DEBUG
-         containerRegistry.RegisterInstance<Core.Api.IApiClient>(new RestApiClient("http://10.0.2.2:8000"));
          containerRegistry.Register<Logging.ILogger, Logging.DebugLogger>();
 #elif RELEASE
-         containerRegistry.RegisterInstance<Core.Api.IApiClient>(new RestApiClient("https://api.climbingguide.org"));
          containerRegistry.Register<Logging.ILoggingService, Logging.VoidLoggingService>();
 #endif
+
          // Register instances
          containerRegistry.RegisterInstance(DependencyService.Get<IProgressService>());
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
 
-         var cacheLocation = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "cache/sqlite/");
-         containerRegistry.RegisterInstance<ICacheSettings>(new CacheSettings(cacheLocation));
+         containerRegistry.RegisterInstance(GetApiClientSettings());
+         containerRegistry.RegisterInstance(GetCacheSettings());
+      }
+
+      private Core.Api.IApiClientSettings GetApiClientSettings() {
+         var baseUrl = "https://api.climbingguide.org";
+#if DEBUG
+         baseUrl = "http://10.0.2.2:8000";
+#endif
+         return new Core.Api.ApiClientSettings() {
+            HttpClient = new System.Net.Http.HttpClient() {
+               BaseAddress = new Uri(baseUrl)
+            }
+         };
+      }
+
+      private ICacheSettings GetCacheSettings() {
+         var environment = IoC.Container.Get<IEnvironment>();
+
+         var cacheLocation = System.IO.Path.Combine(environment.CachePath, "sqlite/");
+         return new CacheSettings(cacheLocation);
       }
    }
 }
