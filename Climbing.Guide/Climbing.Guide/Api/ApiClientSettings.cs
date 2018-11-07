@@ -1,6 +1,6 @@
 ﻿namespace Climbing.Guide.Core.Api {
    public class ApiClientSettings : IApiClientSettings {
-      public string BaseUrl { get; set; }
+      public System.Net.Http.HttpClient HttpClient { get; set; }
 
       public string Token { get; set; }
       public string RefreshToken { get; set; }
