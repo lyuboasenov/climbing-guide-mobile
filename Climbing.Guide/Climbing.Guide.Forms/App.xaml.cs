@@ -7,6 +7,8 @@ using System;
 using Climbing.Guide.Caching;
 using Climbing.Guide.Services;
 using Climbing.Guide.Tasks;
+using Climbing.Guide.Serialization;
+using Climbing.Guide.Caching.FileSystem;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Forms {
@@ -89,24 +91,32 @@ namespace Climbing.Guide.Forms {
 #if DEBUG
          containerRegistry.Register<Logging.ILogger, Logging.DebugLogger>();
 #elif RELEASE
-         containerRegistry.Register<Logging.ILoggingService, Logging.VoidLoggingService>();
+         containerRegistry.Register<Logging.ILogger, Logging.VoidLoggingService>();
 #endif
 
          // Register instances
          containerRegistry.RegisterInstance(DependencyService.Get<IProgressService>());
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
 
-         containerRegistry.RegisterInstance(GetApiClientSettings());
          containerRegistry.RegisterInstance(GetCacheSettings());
+         containerRegistry.RegisterInstance(GetApiClientSettings());
       }
 
       private Core.Api.IApiClientSettings GetApiClientSettings() {
+         ICache responseCache = this.Container.Resolve<ICache>();
+         ICache largeResponseCache = new Cache(new FileSystemCacheRepository(GetLargeCacheSettings()), new JsonSerializer());
+
          var baseUrl = "https://api.climbingguide.org";
 #if DEBUG
          baseUrl = "http://10.0.2.2:8000";
 #endif
+
+         var httpClientHandler = new Http.CachingHttpClientHandler(responseCache, largeResponseCache) {
+            CachePeriod = TimeSpan.FromMinutes(1)
+         };
+
          return new Core.Api.ApiClientSettings() {
-            HttpClient = new System.Net.Http.HttpClient() {
+            HttpClient = new System.Net.Http.HttpClient(httpClientHandler) {
                BaseAddress = new Uri(baseUrl)
             }
          };
@@ -116,6 +126,13 @@ namespace Climbing.Guide.Forms {
          var environment = IoC.Container.Get<IEnvironment>();
 
          var cacheLocation = System.IO.Path.Combine(environment.CachePath, "sqlite/");
+         return new CacheSettings(cacheLocation);
+      }
+
+      private ICacheSettings GetLargeCacheSettings() {
+         var environment = IoC.Container.Get<IEnvironment>();
+
+         var cacheLocation = System.IO.Path.Combine(environment.CachePath, "files/");
          return new CacheSettings(cacheLocation);
       }
    }
