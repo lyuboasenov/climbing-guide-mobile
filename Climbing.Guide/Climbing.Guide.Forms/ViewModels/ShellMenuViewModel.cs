@@ -6,6 +6,7 @@ using Climbing.Guide.Tasks;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -35,12 +36,18 @@ namespace Climbing.Guide.Forms.ViewModels {
                } else if (SelectedMenuItem.NavigationUri == TestUri) {
                   await TestAsync();
                } else {
-                  var result = await Navigation.NavigateAsync(SelectedMenuItem.NavigationUri);
-                  if (!result.Result) {
-                     await Errors.HandleExceptionAsync(result.Exception,
-                        Resources.Strings.Main.Shell_Navigation_Error_Message,
-                        SelectedMenuItem.Title);
-                  }
+                  // This is called on the UI thread becase it takes care of destroying 
+                  // the not used views and the are created and can only be destroyed by
+                  // by UI tread
+                  Device.BeginInvokeOnMainThread(() => {
+                     var result = Navigation.NavigateAsync(SelectedMenuItem.NavigationUri);
+                     result.Wait();
+                     if (!result.Result.Result) {
+                        Errors.HandleExceptionAsync(result.Exception,
+                           Resources.Strings.Main.Shell_Navigation_Error_Message,
+                           SelectedMenuItem.Title);
+                     }
+                  });
                }
             } else if (MenuItems.Count > 0) {
                SelectedMenuItem = MenuItems[0];
