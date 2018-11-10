@@ -11,13 +11,13 @@ namespace Climbing.Guide.Forms.Converters
          long bytes = (long)value;
          string result = $"{bytes} B";
          if (parameter.Equals("KB")) {
-            result = $"{bytes / Math.Pow(2, 10):.2} KB";
+            result = $"{bytes / Math.Pow(2, 10):0.00} KB";
          } else if (parameter.Equals("MB")) {
-            result = $"{bytes / Math.Pow(2, 20):.2} MB";
+            result = $"{bytes / Math.Pow(2, 20):0.00} MB";
          } else if (parameter.Equals("GB")) {
-            result = $"{bytes / Math.Pow(2, 40):.2} MB";
+            result = $"{bytes / Math.Pow(2, 40):0.00} MB";
          } else if (parameter.Equals("TB")) {
-            result = $"{bytes / Math.Pow(2, 80):.2} MB";
+            result = $"{bytes / Math.Pow(2, 80):0.00} MB";
          }
          return result;
       }
