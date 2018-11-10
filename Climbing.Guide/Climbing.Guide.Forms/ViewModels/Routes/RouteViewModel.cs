@@ -1,5 +1,6 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Tasks;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -28,16 +29,25 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
          base.OnNavigatedTo(parameters);
          Route = parameters[0] as Route;
          if (null != Route) {
-            Title = string.Format("{0}   {1}", Route.Name, Converters.GradeConverter.Convert(Route));
+            GetService<ITaskRunner>().Run(() => Initialize(Route));
+         }
+      }
 
-            var tempFile = GetService<IEnvironment>().GetTempFileName();
-            var downloadTask = Client.DownloadAsync(Route.Schema, tempFile, true);
-            downloadTask.ContinueWith((task) => { LocalSchemaThumbPath = tempFile; });
+      private async Task Initialize(Route route) {
+         if (route == null) {
+            throw new ArgumentNullException(nameof(route));
+         }
 
-            SchemaRoute = new ObservableCollection<Point>() {
+         Title = string.Format("{0}   {1}", Route.Name, Converters.GradeConverter.Convert(Route));
+
+         var tempFile = GetService<IEnvironment>().GetTempFileName();
+         await Client.DownloadAsync(Route.Schema, tempFile, true).ContinueWith((task) => {
+            LocalSchemaThumbPath = tempFile;
+         });
+
+         SchemaRoute = new ObservableCollection<Point>() {
             new Point(0, 0), new Point(0.7, 0), new Point(0.7, 0.7), new Point(1, 1)
          };
-         }
       }
       
       private async Task ViewSchema() {
