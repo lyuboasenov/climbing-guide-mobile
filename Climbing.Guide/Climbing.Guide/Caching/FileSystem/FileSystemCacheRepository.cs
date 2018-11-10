@@ -9,7 +9,7 @@ namespace Climbing.Guide.Caching.FileSystem {
       private readonly object lockObj = new object();
       private ICacheSettings CacheSettings { get; set; }
       private string IndexFilePath { get; set; }
-      private IList<ICacheItem> Items { get; set; } = new List<ICacheItem>();
+      private IList<FileSystemCacheItem> Items { get; set; } = new List<FileSystemCacheItem>();
 
       public FileSystemCacheRepository(ICacheSettings settings) {
          CacheSettings = settings;
@@ -25,13 +25,13 @@ namespace Climbing.Guide.Caching.FileSystem {
             new System.Xml.Serialization.XmlSerializer(typeof(IList<ICacheItem>));
 
          using (var indexFile = File.Open(IndexFilePath, FileMode.Open, FileAccess.Read)) {
-            Items = (IList<ICacheItem>)reader.Deserialize(indexFile);
+            Items = (IList<FileSystemCacheItem>)reader.Deserialize(indexFile);
          }
       }
 
       private void SaveIndex() {
          System.Xml.Serialization.XmlSerializer writer =
-            new System.Xml.Serialization.XmlSerializer(typeof(IList<ICacheItem>));
+            new System.Xml.Serialization.XmlSerializer(typeof(List<FileSystemCacheItem>));
 
          using (var indexFile = File.Open(IndexFilePath, FileMode.Create, FileAccess.Write)) {
             writer.Serialize(indexFile, Items);
@@ -46,11 +46,17 @@ namespace Climbing.Guide.Caching.FileSystem {
                Tag = tag
             };
 
-            content.Seek(0, SeekOrigin.Begin);
+            var filePath = Path.Combine(CacheSettings.Location,
+                  ITEMS_DIRECTORY,
+                  key.GetHashCode().ToString());
+
+            var fileInfo = new FileInfo(filePath);
+            if (!fileInfo.Directory.Exists) {
+               fileInfo.Directory.Create();
+            }
+
             using (var file = 
-               File.Open(Path.Combine(CacheSettings.Location,
-                  ITEMS_DIRECTORY, 
-                  key.GetHashCode().ToString()), FileMode.Create)) {
+               File.Open(filePath, FileMode.Create)) {
                content.CopyTo(file);
             }
 
