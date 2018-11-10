@@ -35,7 +35,7 @@ namespace Climbing.Guide.Core.Api {
       }
 
       public ApiClient(IApiClientSettings settings) {
-         UpdateRestApiClientSettings(settings);
+         UpdateApiClientSettings(settings);
       }
 
       // Singleton property
@@ -89,7 +89,7 @@ namespace Climbing.Guide.Core.Api {
       
       #region Public
 
-      public void UpdateRestApiClientSettings(IApiClientSettings settings) {
+      public void UpdateApiClientSettings(IApiClientSettings settings) {
          Settings = settings;
          Username = settings.Username;
          Token = settings.Token;

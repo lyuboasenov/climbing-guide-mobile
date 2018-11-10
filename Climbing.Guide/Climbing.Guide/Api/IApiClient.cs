@@ -20,6 +20,6 @@ namespace Climbing.Guide.Core.Api {
       Task DownloadAsync(Uri uri, string localPath, bool overwrite = false);
       Task<bool> LoginAsync(string username, string password);
       Task<bool> LogoutAsync();
-      void UpdateRestApiClientSettings(IApiClientSettings settings);
+      void UpdateApiClientSettings(IApiClientSettings settings);
    }
 }

@@ -15,7 +15,7 @@ namespace Climbing.Guide.Forms.Services {
             Console.WriteLine($"Error: {ex.Message}");
          }
 
-         UpdateRestApiClientSettings(settings);
+         UpdateApiClientSettings(settings);
       }
 
       public override async Task<bool> LoginAsync(string username, string password) {

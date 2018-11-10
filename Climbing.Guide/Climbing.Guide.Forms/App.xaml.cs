@@ -84,7 +84,7 @@ namespace Climbing.Guide.Forms {
          containerRegistry.Register<ICache, Cache>();
          containerRegistry.Register<ICacheRepository, Caching.Sqlite.SqliteCacheRepository>();
          containerRegistry.Register<IResourceService, ResourceService>();
-         containerRegistry.Register<Serialization.ISerializer, Serialization.JsonSerializer>();
+         containerRegistry.Register<ISerializer, JsonSerializer>();
          containerRegistry.Register<Core.Api.IApiClient, ApiClient>();
          containerRegistry.Register<IEnvironment, Services.Environment>();
 
