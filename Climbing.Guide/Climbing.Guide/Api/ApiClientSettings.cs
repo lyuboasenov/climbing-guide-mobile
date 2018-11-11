@@ -16,6 +16,8 @@ namespace Climbing.Guide.Core.Api {
          RefreshToken = refreshToken;
 
          BaseUrl = baseUrl;
+
+         CreateHttpClient();
       }
 
       protected virtual void CreateHttpClient() {

@@ -20,6 +20,8 @@ namespace Climbing.Guide.Core.Api {
          CachingHttpClientManager = cachingHttpClientManager;
          ResponseCache = responseCache;
          LargeResponseCache = largeResponseCache;
+
+         CreateHttpClient();
       }
 
       protected override void CreateHttpClient() {
