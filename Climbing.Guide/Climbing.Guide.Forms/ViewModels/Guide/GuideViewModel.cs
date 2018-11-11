@@ -17,8 +17,6 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       public GuideViewModel() {
          Title = VmTitle;
-
-         InitializeRegions();
       }
 
       protected override void InitializeCommands() {
