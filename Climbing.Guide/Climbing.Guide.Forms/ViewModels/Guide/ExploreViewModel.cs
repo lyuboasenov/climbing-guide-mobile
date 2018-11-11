@@ -4,8 +4,6 @@ using System.Collections.ObjectModel;
 using Climbing.Guide.Forms.Helpers;
 using Xamarin.Forms.Maps;
 using Xamarin.Essentials;
-using System.Threading.Tasks;
-using Climbing.Guide.Forms.Services;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
