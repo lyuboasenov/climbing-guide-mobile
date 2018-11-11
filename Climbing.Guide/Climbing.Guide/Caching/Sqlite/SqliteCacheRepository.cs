@@ -23,6 +23,8 @@ namespace Climbing.Guide.Caching.Sqlite {
 
          DB = new SQLiteConnection(DbFilePath);
          DB.CreateTable<SqliteCacheItem>();
+
+         Clean();
       }
 
       public void Add(string key, Stream content, string tag, DateTime expireAt) {

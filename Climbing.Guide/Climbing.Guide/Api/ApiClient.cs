@@ -22,13 +22,8 @@ namespace Climbing.Guide.Core.Api {
       public string RefreshToken { get; private set; }
       public string Username { get; private set; }
 
-      private RegionsClient regionsClient;
-      private AreasClient areasClient;
-      private SectorsClient sectorsClient;
-      private RoutesClient routesClient;
-      private UsersClient usersClient;
-      private GradesClient gradesClient;
-      private LanguagesClient languagesClient;
+      private object apiClientsLock = new object();
+      private IDictionary<Type, BaseClient> ApiClients { get; } = new Dictionary<Type, BaseClient>();
 
       public ApiClient() {
 
@@ -41,43 +36,43 @@ namespace Climbing.Guide.Core.Api {
       // Singleton property
       public IRegionsClient RegionsClient {
          get {
-            return GetGenericClient(ref regionsClient, (client) => new RegionsClient(client));
+            return GetGenericClient((client) => new RegionsClient(client));
          }
       }
 
       public IAreasClient AreasClient {
          get {
-            return GetGenericClient(ref areasClient, (client) => new AreasClient(client));
+            return GetGenericClient((client) => new AreasClient(client));
          }
       }
 
       public ISectorsClient SectorsClient {
          get {
-            return GetGenericClient(ref sectorsClient, (client) => new SectorsClient(client));
+            return GetGenericClient((client) => new SectorsClient(client));
          }
       }
 
       public IRoutesClient RoutesClient {
          get {
-            return GetGenericClient(ref routesClient, (client) => new RoutesClient(client));
+            return GetGenericClient((client) => new RoutesClient(client));
          }
       }
 
       public IUsersClient UsersClient {
          get {
-            return GetGenericClient(ref usersClient, (client) => new UsersClient(client));
+            return GetGenericClient((client) => new UsersClient(client));
          }
       }
 
       public IGradesClient GradesClient {
          get {
-            return GetGenericClient(ref gradesClient, (client) => new GradesClient(client));
+            return GetGenericClient((client) => new GradesClient(client));
          }
       }
 
       public ILanguagesClient LanguagesClient {
          get {
-            return GetGenericClient(ref languagesClient, (client) => new LanguagesClient(client));
+            return GetGenericClient((client) => new LanguagesClient(client));
          }
       }
 
@@ -95,6 +90,7 @@ namespace Climbing.Guide.Core.Api {
          Token = settings.Token;
          RefreshToken = settings.RefreshToken;
          HttpClient = settings.HttpClient;
+         ApiClients.Clear();
       }
 
       public virtual async Task<bool> LoginAsync(string username, string password) {
@@ -185,12 +181,15 @@ namespace Climbing.Guide.Core.Api {
          content.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authenticationSecret);
       }
 
-      private T GetGenericClient<T>(ref T memberVariable, Func<HttpClient, T> factory) {
-         if (null == memberVariable) {
-            memberVariable = factory(GetHttpClient());
+      private T GetGenericClient<T>(Func<HttpClient, T> factory) where T : BaseClient {
+
+         lock (apiClientsLock) {
+            if (!ApiClients.ContainsKey(typeof(T))) {
+               ApiClients.Add(typeof(T), factory(GetHttpClient()));
+            }
          }
 
-         return memberVariable;
+         return (T)ApiClients[typeof(T)];
       }
 
       private HttpClient GetHttpClient() {

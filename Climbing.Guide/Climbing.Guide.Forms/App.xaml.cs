@@ -13,6 +13,11 @@ using Climbing.Guide.Caching.FileSystem;
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Forms {
    public partial class App {
+#if DEBUG
+      private string BaseUrl { get; } = "http://10.0.2.2:8000";
+#else
+      private string BaseUrl { get; } = "https://api.climbingguide.org";
+#endif
 
       public App() : this(null) { }
 
@@ -99,27 +104,20 @@ namespace Climbing.Guide.Forms {
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
 
          containerRegistry.RegisterInstance(GetCacheSettings());
-         containerRegistry.RegisterInstance(GetApiClientSettings());
+
+         GetApiClientSettings(containerRegistry);
       }
 
-      private Core.Api.IApiClientSettings GetApiClientSettings() {
+      private void GetApiClientSettings(IContainerRegistry containerRegistry) {
+
          ICache responseCache = this.Container.Resolve<ICache>();
          ICache largeResponseCache = new Cache(new FileSystemCacheRepository(GetLargeCacheSettings()), new JsonSerializer());
 
-         var baseUrl = "https://api.climbingguide.org";
-#if DEBUG
-         baseUrl = "http://10.0.2.2:8000";
-#endif
+         var cachingHttpClientManager = new Http.CachingHttpClientManager();
+         containerRegistry.RegisterInstance<Http.ICachingHttpClientManager>(cachingHttpClientManager);
 
-         var httpClientHandler = new Http.CachingHttpClientHandler(responseCache, largeResponseCache) {
-            CachePeriod = TimeSpan.FromMinutes(1)
-         };
-
-         return new Core.Api.ApiClientSettings() {
-            HttpClient = new System.Net.Http.HttpClient(httpClientHandler) {
-               BaseAddress = new Uri(baseUrl)
-            }
-         };
+         containerRegistry.RegisterInstance<Core.Api.IApiClientSettings>(
+            new Core.Api.CachingApiClientSettings(cachingHttpClientManager, responseCache, largeResponseCache, BaseUrl));
       }
 
       private ICacheSettings GetCacheSettings() {
