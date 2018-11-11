@@ -5,16 +5,22 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Tasks {
-   public class TaskRunner : ITaskRunner {
-      private ILogger Logger { get; set; }
-      private IErrorService ErrorService { get; set; }
+   public abstract class TaskRunner : ITaskRunner {
+      protected ILogger Logger { get; set; }
+      protected IErrorService ErrorService { get; set; }
 
       public TaskRunner(ILogger logger, IErrorService errorService) {
          Logger = logger;
          ErrorService = errorService;
       }
 
-      public async Task Run(Action action) {
+      public abstract Task RunOnUIThreadAsync(Action action);
+
+      public abstract Task<TResult> RunOnUIThreadAsync<TResult>(Func<TResult> function);
+
+      public abstract Task<TResult> RunOnUIThreadAsync<TResult>(Func<Task<TResult>> function);
+
+      public async Task RunAsync(Action action) {
          try {
             await Task.Run(action);
          } catch(Exception ex) {
@@ -24,7 +30,7 @@ namespace Climbing.Guide.Tasks {
          }
       }
 
-      public async Task<TResult> Run<TResult>(Func<TResult> action) {
+      public async Task<TResult> RunAsync<TResult>(Func<TResult> action) {
          try {
             return await Task.Run(action);
          } catch (Exception ex) {
@@ -34,7 +40,7 @@ namespace Climbing.Guide.Tasks {
          }
       }
 
-      public async Task<TResult> Run<TResult>(Func<Task<TResult>> function) {
+      public async Task<TResult> RunAsync<TResult>(Func<Task<TResult>> function) {
          try {
             return await Task.Run(function);
          } catch (Exception ex) {

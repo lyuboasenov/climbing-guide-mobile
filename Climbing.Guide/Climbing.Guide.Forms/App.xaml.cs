@@ -85,7 +85,7 @@ namespace Climbing.Guide.Forms {
          containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
          containerRegistry.Register<INavigationService, NavigationService>();
          containerRegistry.Register<IMediaService, MediaService>();
-         containerRegistry.Register<ITaskRunner, TaskRunner>();
+         containerRegistry.Register<ITaskRunner, FormsTaskRunner>();
          containerRegistry.Register<ICache, Cache>();
          containerRegistry.Register<ICacheRepository, Caching.Sqlite.SqliteCacheRepository>();
          containerRegistry.Register<IResourceService, ResourceService>();

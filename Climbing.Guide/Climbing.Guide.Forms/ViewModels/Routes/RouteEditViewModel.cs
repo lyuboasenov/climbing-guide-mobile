@@ -1,7 +1,5 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Core.Models.Routes;
-using Climbing.Guide.Forms.Services;
-using Climbing.Guide.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -64,13 +62,13 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
          
       }
 
-      public override void OnNavigatedTo(params object[] parameters) {
-         GetService<ITaskRunner>().Run(async () => await InitializeData(parameters));
+      public async override Task OnNavigatedToAsync(params object[] parameters) {
+         await InitializeData(parameters);
       }
 
       private async Task InitializeData(params object[] parameters) {
          try {
-            base.OnNavigatedTo(parameters);
+            await base.OnNavigatedToAsync(parameters);
             SelectedRegion = parameters[0] as Api.Schemas.Region;
             SelectedArea = parameters[1] as Area;
             SelectedSector = parameters[2] as Sector;

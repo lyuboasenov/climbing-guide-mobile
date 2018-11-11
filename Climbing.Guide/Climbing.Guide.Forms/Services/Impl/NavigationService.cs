@@ -16,46 +16,22 @@ namespace Climbing.Guide.Forms.Services {
       }
 
       public async Task<ITaskResult<bool>> GoBackAsync() {
-         await ProgressService.ShowLoadingIndicatorAsync();
-         INavigationResult result;
-         try {
-            result = await InternalNavigationService.GoBackAsync();
-         } finally {
-            await ProgressService.HideLoadingIndicatorAsync();
-         }
+         var result = await InternalNavigationService.GoBackAsync();
          return result.ToITaskResult();
       }
 
       public async Task<ITaskResult<bool>> GoBackAsync(params object[] parameters) {
-         await ProgressService.ShowLoadingIndicatorAsync();
-         INavigationResult result;
-         try {
-               result = await InternalNavigationService.GoBackAsync(GetParameters(parameters));
-         } finally {
-            await ProgressService.HideLoadingIndicatorAsync();
-         }
+         var result = await InternalNavigationService.GoBackAsync(GetParameters(parameters));
          return result.ToITaskResult();
       }
 
       public async Task<ITaskResult<bool>> NavigateAsync(Uri uri) {
-         await ProgressService.ShowLoadingIndicatorAsync();
-         INavigationResult result;
-         try {
-            result = await InternalNavigationService.NavigateAsync(uri);
-         } finally {
-            await ProgressService.HideLoadingIndicatorAsync();
-         }
+         var result = await InternalNavigationService.NavigateAsync(uri);
          return result.ToITaskResult();
       }
 
       public async Task<ITaskResult<bool>> NavigateAsync(Uri uri, params object[] parameters) {
-         await ProgressService.ShowLoadingIndicatorAsync();
-         INavigationResult result;
-         try {
-            result = await InternalNavigationService.NavigateAsync(uri, GetParameters(parameters));
-         } finally {
-            await ProgressService.HideLoadingIndicatorAsync();
-         }
+         var result = await InternalNavigationService.NavigateAsync(uri, GetParameters(parameters));
          return result.ToITaskResult();
       }
       

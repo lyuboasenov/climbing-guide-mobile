@@ -77,6 +77,16 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          });
       }
 
+      public async override Task OnNavigatedToAsync(params object[] parameters) {
+         var progressService = GetService<IProgressService>();
+         try {
+            await progressService.ShowLoadingIndicatorAsync();
+            await base.OnNavigatedToAsync(parameters);
+         } finally {
+            await progressService.HideLoadingIndicatorAsync();
+         }
+      }
+
       public override void OnSelectedRegionChanged() {
          base.OnSelectedRegionChanged();
          (ClearFilterCommand as Command).ChangeCanExecute();

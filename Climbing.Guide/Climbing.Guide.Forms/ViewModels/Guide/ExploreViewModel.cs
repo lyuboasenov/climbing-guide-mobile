@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using Climbing.Guide.Forms.Helpers;
 using Xamarin.Forms.Maps;
 using Xamarin.Essentials;
+using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -18,15 +19,15 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          Title = VmTitle;
       }
 
-      protected override void InitializeRegions() {
-         base.InitializeRegions();
+      protected async override Task InitializeRegionsAsync() {
+         await base.InitializeRegionsAsync();
 
          Pins = GetPins(Regions, (region) => MapHelper.GetPin(region.Name, region.Latitude, region.Longitude, data: region));
          Location position = null;
          try {
             position = Geolocation.GetLastKnownLocationAsync().GetAwaiter().GetResult();
          } catch (PermissionException pEx) {
-            Errors.HandleExceptionAsync(pEx,
+            await Errors.HandleExceptionAsync(pEx,
                Resources.Strings.Main.Permission_Exception_Format,
                Resources.Strings.Main.Location_Permissino);
          }

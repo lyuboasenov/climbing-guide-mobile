@@ -62,10 +62,10 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
          PreferenceService.TradRouteGradeSystem = SelectedTradRouteGradingSystem.Id.Value;
       }
 
-      public override void OnNavigatedTo(params object[] parameters) {
-         base.OnNavigatedTo(parameters);
+      public async override Task OnNavigatedToAsync(params object[] parameters) {
+         await base.OnNavigatedToAsync(parameters);
 
-         GetService<ITaskRunner>().Run(async () => await InitializeViewModel());
+         await InitializeViewModel();
       }
 
       private void ClearCache() {

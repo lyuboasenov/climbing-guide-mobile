@@ -26,11 +26,11 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
          //ViewSchemaCommand = new Command();
       }
       
-      public override void OnNavigatedTo(params object[] parameters) {
-         base.OnNavigatedTo(parameters);
+      public async override Task OnNavigatedToAsync(params object[] parameters) {
+         await base.OnNavigatedToAsync(parameters);
          Route = parameters[0] as Route;
          if (null != Route) {
-            GetService<ITaskRunner>().Run(() => Initialize(Route));
+            await Initialize(Route);
          }
       }
 

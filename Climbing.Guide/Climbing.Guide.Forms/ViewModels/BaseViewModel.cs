@@ -5,6 +5,7 @@ using Prism.Mvvm;
 using Prism.Navigation;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -34,27 +35,27 @@ namespace Climbing.Guide.Forms.ViewModels {
       }
 
       public void OnNavigatedFrom(INavigationParameters parameters) {
-         OnNavigatedFrom(parameters.Select(p => p.Value));
+         OnNavigatedFromAsync(parameters.Select(p => p.Value));
       }
 
       public void OnNavigatedTo(INavigationParameters parameters) {
-         OnNavigatedTo(parameters.Select(p => p.Value).ToArray());
+         OnNavigatedToAsync(parameters.Select(p => p.Value).ToArray());
       }
 
       public void OnNavigatingTo(INavigationParameters parameters) {
-         OnNavigatingTo(parameters.Select(p => p.Value));
+         OnNavigatingToAsync(parameters.Select(p => p.Value));
       }
 
-      public virtual void OnNavigatedFrom(params object[] parameters) {
-
+      public virtual Task OnNavigatedFromAsync(params object[] parameters) {
+         return Task.CompletedTask;
       }
 
-      public virtual void OnNavigatedTo(params object[] parameters) {
-
+      public virtual Task OnNavigatedToAsync(params object[] parameters) {
+         return Task.CompletedTask;
       }
 
-      public virtual void OnNavigatingTo(params object[] parameters) {
-
+      public virtual Task OnNavigatingToAsync(params object[] parameters) {
+         return Task.CompletedTask;
       }
    }
 }

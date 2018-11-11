@@ -1,5 +1,6 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -21,14 +22,19 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public virtual bool AutoSelectRoutes { get; } = false;
 
       public BaseGuideViewModel() {
-         InitializeRegions();
+         
       }
 
-      protected virtual void InitializeRegions() {
+      public async override Task OnNavigatedToAsync(params object[] parameters) {
+         await base.OnNavigatedToAsync(parameters);
+         await InitializeRegionsAsync();
+      }
+
+      protected async virtual Task InitializeRegionsAsync() {
          try {
-            Regions = TaskRunner.RunSync(() => Client.RegionsClient.ListAsync());
+            Regions = await Client.RegionsClient.ListAsync();
          } catch (ApiCallException ex) {
-            Errors.HandleApiCallExceptionAsync(ex);
+            await Errors.HandleApiCallExceptionAsync(ex);
          }
 
          // Selects first of the received regions
@@ -37,7 +43,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          }
       }
 
-      public virtual void OnSelectedRegionChanged() {
+      protected async virtual Task InitializeAreasAsync() {
          Areas = null;
          SelectedArea = null;
          Sectors = null;
@@ -47,9 +53,9 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
          if (null != SelectedRegion) {
             try {
-               Areas = TaskRunner.RunSync(() => Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString()));
+               Areas = await Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString());
             } catch (ApiCallException ex) {
-               Errors.HandleApiCallExceptionAsync(ex).Wait();
+               await Errors.HandleApiCallExceptionAsync(ex);
                return;
             }
 
@@ -60,7 +66,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          }
       }
 
-      public virtual void OnSelectedAreaChanged() {
+      protected async virtual Task InitializeSectorsAsync() {
          Sectors = null;
          SelectedSector = null;
          Routes = null;
@@ -68,9 +74,9 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
          if (null != SelectedArea) {
             try {
-               Sectors = TaskRunner.RunSync(() => Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString()));
+               Sectors = await Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString());
             } catch (ApiCallException ex) {
-               Errors.HandleApiCallExceptionAsync(ex).Wait();
+               await Errors.HandleApiCallExceptionAsync(ex);
                return;
             }
 
@@ -81,15 +87,15 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          }
       }
 
-      public virtual void OnSelectedSectorChanged() {
+      protected async virtual Task InitializeRoutesAsync() {
          Routes = null;
          SelectedRoute = null;
 
          if (null != SelectedSector) {
             try {
-               Routes = TaskRunner.RunSync(() => Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString()));
+               Routes = await Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString());
             } catch (ApiCallException ex) {
-               Errors.HandleApiCallExceptionAsync(ex).Wait();
+               await Errors.HandleApiCallExceptionAsync(ex);
             }
 
             if (AutoSelectRoutes && Routes.Count > 0) {
@@ -98,8 +104,19 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          }
       }
 
-      public virtual void OnSelectedRouteChanged() {
+      public async virtual void OnSelectedRegionChanged() {
+         await InitializeAreasAsync();
+      }
 
+      public async virtual void OnSelectedAreaChanged() {
+         await InitializeSectorsAsync();
+      }
+
+      public async virtual void OnSelectedSectorChanged() {
+         await InitializeRoutesAsync();
+      }
+
+      public virtual void OnSelectedRouteChanged() {
       }
    }
 }
