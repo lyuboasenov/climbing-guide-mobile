@@ -1,5 +1,6 @@
 ﻿using Climbing.Guide.Core.Api;
 using Climbing.Guide.Services;
+using Climbing.Guide.Tasks;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ using System.Linq;
 namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class BaseViewModel : BindableBase, INavigationAware {
+
+      protected ITaskRunner TaskRunner { get; } = GetService<ITaskRunner>();
 
       public IApiClient Client => GetService<IApiClient>();
       protected Services.INavigationService Navigation => GetService<Services.INavigationService>();
