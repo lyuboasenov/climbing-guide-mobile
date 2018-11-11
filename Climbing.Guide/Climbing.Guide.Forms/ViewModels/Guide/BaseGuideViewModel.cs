@@ -26,7 +26,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       protected virtual void InitializeRegions() {
          try {
-            Regions = Client.RegionsClient.ListAsync().GetAwaiter().GetResult();
+            Regions = TaskRunner.RunSync(() => Client.RegionsClient.ListAsync());
          } catch (ApiCallException ex) {
             Errors.HandleApiCallExceptionAsync(ex);
          }
@@ -47,7 +47,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
          if (null != SelectedRegion) {
             try {
-               Areas = Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString()).GetAwaiter().GetResult();
+               Areas = TaskRunner.RunSync(() => Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString()));
             } catch (ApiCallException ex) {
                Errors.HandleApiCallExceptionAsync(ex).Wait();
                return;
@@ -68,7 +68,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
          if (null != SelectedArea) {
             try {
-               Sectors = Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString()).GetAwaiter().GetResult();
+               Sectors = TaskRunner.RunSync(() => Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString()));
             } catch (ApiCallException ex) {
                Errors.HandleApiCallExceptionAsync(ex).Wait();
                return;
@@ -87,7 +87,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
          if (null != SelectedSector) {
             try {
-               Routes = Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString()).GetAwaiter().GetResult();
+               Routes = TaskRunner.RunSync(() => Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString()));
             } catch (ApiCallException ex) {
                Errors.HandleApiCallExceptionAsync(ex).Wait();
             }
