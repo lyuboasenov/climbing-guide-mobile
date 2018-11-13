@@ -72,7 +72,8 @@
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Services\CloseApplication.cs" />
     <Compile Include="Services\ProgressServiceiOS.cs" />
-    <Compile Include="Views\Renderers\BindableMapRenderer.cs" />
+    <Compile Include="Views\CustomMKAnnotationView.cs" />
+    <Compile Include="Views\Renderers\ClimbingMapRenderer.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -158,5 +159,8 @@
       <Project>{D0692222-3842-42D6-B93A-B44B941BD9EC}</Project>
       <Name>Climbing.Guide.Forms</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pin.png" />
   </ItemGroup>
 </Project>

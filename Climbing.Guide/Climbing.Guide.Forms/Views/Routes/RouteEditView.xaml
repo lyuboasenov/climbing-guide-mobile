@@ -50,7 +50,7 @@
    </ContentPage>
    <ContentPage Title="{x:Static strings:Routes.Route_Edit_Map_Title}">
       <ContentPage.Content>
-         <views:BindableMap MapType="Hybrid"
+         <views:ClimbingMap MapType="Hybrid"
                             IsShowingUser="False"
                             ShowSelectedLocation="True"
                             BindableVisibleRegion="{Binding VisibleRegion, Mode=TwoWay}"/>

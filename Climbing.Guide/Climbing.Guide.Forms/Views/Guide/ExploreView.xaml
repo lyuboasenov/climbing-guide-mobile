@@ -3,8 +3,12 @@
    xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+   xmlns:converters="clr-namespace:Climbing.Guide.Forms.Converters"
    x:Class="Climbing.Guide.Forms.Views.Guide.ExploreView"
    Title="{Binding Title}">
+   <ContentPage.Resources>
+      <converters:ToPositionConverter x:Key="ToPositionConverter" />
+   </ContentPage.Resources>
 
    <Grid>
       <Grid.RowDefinitions>
@@ -18,17 +22,24 @@
          <ColumnDefinition Width="Auto" />
       </Grid.ColumnDefinitions>
 
-      <views:BindableMap Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="4"
+      <views:ClimbingMap Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="4" x:Name="map" x:Uid="map123"
+                         MapType="Hybrid"
+                         ShowSelectedLocation="False"
+                         PinsSource="{Binding Pins}"
+                         PinLabelBinding="{Binding Name}"
+                         PinPositionBinding="{Binding ., Converter={StaticResource ToPositionConverter}}"/>
+      <!--<views:BindableMap Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="4"
                          IsShowingUser="True"
                          MapType="Hybrid"
                          BindablePins="{Binding Pins}"
-                         BindableVisibleRegion="{Binding VisibleRegion, Mode=TwoWay}"/>
+                         PinLabelDisplayBinding="{Binding Name}"
+                         BindableVisibleRegion="{Binding VisibleRegion, Mode=TwoWay}"/>-->
 
-      <Picker Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Regions}" SelectedItem="{Binding SelectedRegion}" ItemDisplayBinding="{Binding Name}" />
+      <!--<Picker Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Regions}" SelectedItem="{Binding SelectedRegion}" ItemDisplayBinding="{Binding Name}" />
       <Picker Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Areas}" SelectedItem="{Binding SelectedArea}" ItemDisplayBinding="{Binding Name}" />
       <Picker Grid.Column="2" Grid.Row="0" ItemsSource="{Binding Sectors}" SelectedItem="{Binding SelectedSector}" ItemDisplayBinding="{Binding Name}" />
 
-      <Button Grid.Column="3" Grid.Row="0" Command="{Binding ClearFilterCommand}" />
+      <Button Grid.Column="3" Grid.Row="0" Command="{Binding ClearFilterCommand}" />-->
 
    </Grid>
 </ContentPage>

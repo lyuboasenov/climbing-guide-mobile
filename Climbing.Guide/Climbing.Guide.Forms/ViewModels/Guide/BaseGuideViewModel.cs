@@ -25,8 +25,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          
       }
 
-      public async override Task OnNavigatedToAsync(params object[] parameters) {
-         await base.OnNavigatedToAsync(parameters);
+      protected async override Task InitializeViewModel() {
          await InitializeRegionsAsync();
       }
 

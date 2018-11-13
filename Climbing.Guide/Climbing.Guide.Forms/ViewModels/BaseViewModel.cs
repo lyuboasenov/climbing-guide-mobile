@@ -30,6 +30,10 @@ namespace Climbing.Guide.Forms.ViewModels {
 
       }
 
+      protected virtual Task InitializeViewModel() {
+         return Task.CompletedTask;
+      }
+
       protected static T GetService<T>() where T : class {
          return IoC.Container.Get<T>();
       }
@@ -39,7 +43,9 @@ namespace Climbing.Guide.Forms.ViewModels {
       }
 
       public void OnNavigatedTo(INavigationParameters parameters) {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
          OnNavigatedToAsync(parameters.Select(p => p.Value).ToArray());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
       }
 
       public void OnNavigatingTo(INavigationParameters parameters) {
@@ -50,8 +56,8 @@ namespace Climbing.Guide.Forms.ViewModels {
          return Task.CompletedTask;
       }
 
-      public virtual Task OnNavigatedToAsync(params object[] parameters) {
-         return Task.CompletedTask;
+      public async virtual Task OnNavigatedToAsync(params object[] parameters) {
+         await InitializeViewModel();
       }
 
       public virtual Task OnNavigatingToAsync(params object[] parameters) {

@@ -153,10 +153,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\CustomViews\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Climbing.Guide\Climbing.Guide.csproj" />
   </ItemGroup>
 
@@ -165,6 +161,12 @@
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="Resources\FontFileResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Themes\Base.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Themes\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="Views\AboutView.xaml">
