@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Climbing.Guide.Forms.Helpers;
+﻿using Climbing.Guide.Forms.Helpers;
 using Xamarin.Forms.Maps;
 using Xamarin.Essentials;
 using System.Threading.Tasks;
 using System.Collections;
-using Climbing.Guide.Forms.Services;
+using System.Windows.Input;
+using Xamarin.Forms;
+using Climbing.Guide.Api.Schemas;
+using System;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -14,6 +14,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public static string VmTitle { get; } = Resources.Strings.Guide.Explore_Title;
 
       //public ObservableCollection<Pin> Pins { get; set; }
+      public ICommand PinTappedCommand { get; private set; }
       public IEnumerable Pins { get; set; }
       public MapSpan VisibleRegion { get; set; }
       public Position SelectedLocation { get; set; }
@@ -27,67 +28,89 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          Title = VmTitle;
       }
 
+      protected override void InitializeCommands() {
+         base.InitializeCommands();
+
+         PinTappedCommand = new Command(async (data) => { await OnPinTapped(data); } );
+      }
+
+      private async Task OnPinTapped(object data) {
+         if (data is Api.Schemas.Region) {
+            SelectedRegion = data as Api.Schemas.Region;
+         } else if (data is Area) {
+            SelectedArea = data as Area;
+         } else if (data is Sector) {
+            SelectedSector = data as Sector;
+         } else if (data is Route) {
+            await ViewRoute(data as Route);
+         }
+      }
+
       protected async override Task InitializeRegionsAsync() {
          await base.InitializeRegionsAsync();
          Pins = Regions;
 
-         //Pins = GetPins(Regions, (region) => MapHelper.GetPin(region.Name, region.Latitude, region.Longitude, data: region));
-         //Location position = null;
-         //try {
-         //   position = await Geolocation.GetLastKnownLocationAsync();
-         //} catch (PermissionException pEx) {
-         //   await Errors.HandleExceptionAsync(pEx,
-         //      Resources.Strings.Main.Permission_Exception_Format,
-         //      Resources.Strings.Main.Location_Permissino);
-         //}
-         
-         //if (null != position) {
-         //   VisibleRegion = MapSpan.FromCenterAndRadius(
-         //   new Position(position.Latitude, position.Longitude),
-         //   new Distance(5000000));
-         //}
+         Location position = null;
+         try {
+            position = await Geolocation.GetLastKnownLocationAsync();
+         } catch (FeatureNotSupportedException fnsEx) {
+            await Errors.HandleExceptionAsync(fnsEx,
+               Resources.Strings.Main.Permission_Exception_Format,
+               Resources.Strings.Main.Location_Permissino);
+         } catch (PermissionException pEx) {
+            await Errors.HandleExceptionAsync(pEx,
+               Resources.Strings.Main.Permission_Exception_Format,
+               Resources.Strings.Main.Location_Permissino);
+         } catch (Exception ex) {
+            await Errors.HandleExceptionAsync(ex,
+               Resources.Strings.Main.Permission_Exception_Format,
+               Resources.Strings.Main.Location_Permissino);
+         }
+
+         if (null != position) {
+            VisibleRegion = MapSpan.FromCenterAndRadius(
+            new Position(position.Latitude, position.Longitude),
+            new Distance(5000000));
+         }
       }
 
       public override void OnSelectedRegionChanged() {
          base.OnSelectedRegionChanged();
          Pins = Areas;
 
-         //Pins = GetPins(Areas, (area) => MapHelper.GetPin(area.Name, area.Latitude, area.Longitude, data: area));
-         //VisibleRegion = MapSpan.FromCenterAndRadius(
-         //   MapHelper.GetPosition(SelectedRegion.Latitude, SelectedRegion.Longitude),
-         //   new Distance(22000));
+         VisibleRegion = MapSpan.FromCenterAndRadius(
+            MapHelper.GetPosition(SelectedRegion.Latitude, SelectedRegion.Longitude),
+            new Distance(22000));
       }
 
       public override void OnSelectedAreaChanged() {
          base.OnSelectedAreaChanged();
          Pins = Sectors;
 
-         //Pins = GetPins(Sectors, (sector) => MapHelper.GetPin(sector.Name, sector.Latitude, sector.Longitude, data: sector));
-         //VisibleRegion = MapSpan.FromCenterAndRadius(
-         //   MapHelper.GetPosition(SelectedArea.Latitude, SelectedArea.Longitude),
-         //   new Distance(1400));
+         VisibleRegion = MapSpan.FromCenterAndRadius(
+            MapHelper.GetPosition(SelectedArea.Latitude, SelectedArea.Longitude),
+            new Distance(1400));
       }
 
       public override void OnSelectedSectorChanged() {
          base.OnSelectedSectorChanged();
          Pins = Routes;
-
-         //Pins = GetPins(Routes, (route) => MapHelper.GetPin(route.Name, route.Latitude, route.Longitude, data: route));
-         //VisibleRegion = MapSpan.FromCenterAndRadius(
-         //   MapHelper.GetPosition(SelectedSector.Latitude, SelectedSector.Longitude),
-         //   new Distance(170));
+         
+         VisibleRegion = MapSpan.FromCenterAndRadius(
+            MapHelper.GetPosition(SelectedSector.Latitude, SelectedSector.Longitude),
+            new Distance(170));
       }
 
-      public override void OnSelectedRouteChanged() {
-         base.OnSelectedRouteChanged();
+      private async Task ViewRoute(Route route) {
+         if (null != route) {
+            var navigationResult = await Navigation.NavigateAsync(
+               Navigation.GetShellNavigationUri(nameof(Views.Routes.RouteView)),
+               route);
+            if (!navigationResult.Result) {
+               await Errors.HandleExceptionAsync(navigationResult.Exception,
+                  Resources.Strings.Routes.Route_View_Error_Message, route.Name);
+            }
+         }
       }
-
-      //private ObservableCollection<Pin> GetPins<T>(IEnumerable<T> objects, Func<T, Pin> objectToPinConverter) {
-      //   var result = new ObservableCollection<Pin>();
-      //   foreach (T obj in objects) {
-      //      result.Add(objectToPinConverter(obj));
-      //   }
-      //   return result;
-      //}
    }
 }

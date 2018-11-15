@@ -27,7 +27,9 @@
                          ShowSelectedLocation="False"
                          PinsSource="{Binding Pins}"
                          PinLabelBinding="{Binding Name}"
-                         PinPositionBinding="{Binding ., Converter={StaticResource ToPositionConverter}}"/>
+                         PinPositionBinding="{Binding ., Converter={StaticResource ToPositionConverter}}"
+                         PinTapped="{Binding PinTappedCommand}"
+                         BindableVisibleRegion="{Binding VisibleRegion, Mode=TwoWay}"/>
       <!--<views:BindableMap Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="4"
                          IsShowingUser="True"
                          MapType="Hybrid"

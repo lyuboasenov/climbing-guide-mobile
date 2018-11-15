@@ -20,20 +20,16 @@ namespace Climbing.Guide.Droid.Views.Renderers {
 
       public ClimbingMapRenderer(Context context) : base(context) { }
 
-      // We use a native google map for Android
-      private GoogleMap _map;
-
       protected override void OnMapReady(GoogleMap map) {
          base.OnMapReady(map);
-         _map = map;
 
          NativeMap.InfoWindowClick += OnInfoWindowClick;
          NativeMap.SetInfoWindowAdapter(this);
 
-         if (_map != null) {
-            _map.MapLongClick += googleMap_MapClick;
-            //_map.CameraChange += googleMap_CameraChange;
-            _map.CameraMove += googleMap_CameraMove;
+         if (NativeMap != null) {
+            NativeMap.MapLongClick += googleMap_MapClick;
+            //NativeMap.CameraChange += googleMap_CameraChange;
+            NativeMap.CameraMove += googleMap_CameraMove;
 
          }
       }
@@ -44,12 +40,8 @@ namespace Climbing.Guide.Droid.Views.Renderers {
             throw new Exception("Custom pin not found");
          }
 
-         //if (!string.IsNullOrWhiteSpace(customPin.Url)) {
-         //   var url = Android.Net.Uri.Parse(customPin.Url);
-         //   var intent = new Intent(Intent.ActionView, url);
-         //   intent.AddFlags(ActivityFlags.NewTask);
-         //   Android.App.Application.Context.StartActivity(intent);
-         //}
+         var climbingMap = Map as ClimbingMap;
+         climbingMap.OnPinSelected(customPin.BindingContext);
       }
 
       private Pin GetCustomPin(Marker annotation) {
@@ -63,10 +55,10 @@ namespace Climbing.Guide.Droid.Views.Renderers {
       }
 
       protected override void OnElementChanged(ElementChangedEventArgs<Map> e) {
-         if (_map != null) {
-            _map.MapLongClick -= googleMap_MapClick;
-            //_map.CameraChange -= googleMap_CameraChange;
-            _map.CameraMove += googleMap_CameraMove;
+         if (NativeMap != null) {
+            NativeMap.MapLongClick -= googleMap_MapClick;
+            //NativeMap.CameraChange -= googleMap_CameraChange;
+            NativeMap.CameraMove += googleMap_CameraMove;
          }
 
          base.OnElementChanged(e);
@@ -96,12 +88,12 @@ namespace Climbing.Guide.Droid.Views.Renderers {
       }
 
       private void googleMap_CameraMove(object sender, EventArgs e) {
-         var latitude = _map.Projection.VisibleRegion.LatLngBounds.Center.Latitude;
-         var longitude = _map.Projection.VisibleRegion.LatLngBounds.Center.Longitude;
-         var latitudeDegrees = Math.Abs(_map.Projection.VisibleRegion.LatLngBounds.Southwest.Latitude -
-                               _map.Projection.VisibleRegion.LatLngBounds.Northeast.Latitude);
-         var longitudeDegrees = Math.Abs(_map.Projection.VisibleRegion.LatLngBounds.Southwest.Latitude -
-                               _map.Projection.VisibleRegion.LatLngBounds.Northeast.Latitude);
+         var latitude = NativeMap.Projection.VisibleRegion.LatLngBounds.Center.Latitude;
+         var longitude = NativeMap.Projection.VisibleRegion.LatLngBounds.Center.Longitude;
+         var latitudeDegrees = Math.Abs(NativeMap.Projection.VisibleRegion.LatLngBounds.Southwest.Latitude -
+                               NativeMap.Projection.VisibleRegion.LatLngBounds.Northeast.Latitude);
+         var longitudeDegrees = Math.Abs(NativeMap.Projection.VisibleRegion.LatLngBounds.Southwest.Latitude -
+                               NativeMap.Projection.VisibleRegion.LatLngBounds.Northeast.Latitude);
 
          ((ClimbingMap)Element).OnVisibleRegionChanged(latitude, longitude, latitudeDegrees, longitudeDegrees);
       }

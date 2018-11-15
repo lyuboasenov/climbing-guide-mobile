@@ -1,6 +1,7 @@
 ﻿using Climbing.Guide.Forms.Helpers;
 using System;
 using System.Collections;
+using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
@@ -9,6 +10,9 @@ namespace Climbing.Guide.Forms.Views {
 
       private MapSpan currentVisibleRegion;
       private Pin selectedLocationPin;
+
+      public static readonly BindableProperty PinTappedProperty =
+         BindableProperty.Create(nameof(PinTapped), typeof(ICommand), typeof(ClimbingMap), null);
 
       public static readonly BindableProperty ShowSelectedLocationProperty =
          BindableProperty.Create(nameof(ShowSelectedLocation), typeof(bool), typeof(ClimbingMap), true);
@@ -24,6 +28,11 @@ namespace Climbing.Guide.Forms.Views {
       public static readonly BindableProperty BindableVisibleRegionProperty =
          BindableProperty.Create(nameof(BindableVisibleRegion), typeof(MapSpan), typeof(ClimbingMap), null,
             propertyChanged: OnBindableVisibleRegionChanged);
+
+      public ICommand PinTapped {
+         get { return (ICommand)GetValue(PinTappedProperty); }
+         set { SetValue(PinTappedProperty, value); }
+      }
 
       public bool ShowSelectedLocation {
          get { return (bool)GetValue(ShowSelectedLocationProperty); }
@@ -175,6 +184,12 @@ namespace Climbing.Guide.Forms.Views {
          //As all the pins are removed we call on selected loation changed 
          //so the selected location can be reinitialized
          OnSelectedLocationChanged();
+      }
+
+      public void OnPinSelected(object data) {
+         if (null != PinTapped && PinTapped.CanExecute(data)) {
+            PinTapped.Execute(data);
+         }
       }
    }
 }

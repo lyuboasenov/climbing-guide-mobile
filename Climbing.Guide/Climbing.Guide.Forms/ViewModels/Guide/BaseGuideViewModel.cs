@@ -103,16 +103,16 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          }
       }
 
-      public async virtual void OnSelectedRegionChanged() {
-         await InitializeAreasAsync();
+      public virtual void OnSelectedRegionChanged() {
+         TaskRunner.RunSync(async () => { await InitializeAreasAsync(); });
       }
 
-      public async virtual void OnSelectedAreaChanged() {
-         await InitializeSectorsAsync();
+      public virtual void OnSelectedAreaChanged() {
+         TaskRunner.RunSync(async () => { await InitializeSectorsAsync(); });
       }
 
-      public async virtual void OnSelectedSectorChanged() {
-         await InitializeRoutesAsync();
+      public virtual void OnSelectedSectorChanged() {
+         TaskRunner.RunSync(async () => { await InitializeRoutesAsync(); });
       }
 
       public virtual void OnSelectedRouteChanged() {
