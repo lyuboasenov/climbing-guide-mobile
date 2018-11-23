@@ -1,4 +1,5 @@
 ﻿using Climbing.Guide.Caching;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
@@ -22,6 +23,8 @@ namespace Climbing.Guide.Http {
       protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
          HttpResponseMessage response = null;
 
+         RemoveInvalidatedRequests();
+
          if (!CachingHttpClientManager.UseCache || request.Method != HttpMethod.Get) {
             response = await base.SendAsync(request, cancellationToken);
          } else {
@@ -40,6 +43,12 @@ namespace Climbing.Guide.Http {
          }
 
          return response;
+      }
+
+      private void RemoveInvalidatedRequests() {
+         var invalidKeys = CachingHttpClientManager.GetKeysToInvalidate();
+         ResponseCache.Remove(invalidKeys);
+         LargeResponseCache.Remove(invalidKeys);
       }
 
       private HttpResponseMessage GetResponseFromCache(string requestUri) {
