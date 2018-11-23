@@ -273,6 +273,7 @@ namespace Climbing.Guide.Api.Schemas
         private System.DateTime? _approved_on;
         private DisplayUser _created_by;
         private DisplayUser _approved_by;
+        private string _tags;
     
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Id
@@ -459,6 +460,21 @@ namespace Climbing.Guide.Api.Schemas
             }
         }
     
+        [Newtonsoft.Json.JsonProperty("tags", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(int.MaxValue, MinimumLength = 1)]
+        public string Tags
+        {
+            get { return _tags; }
+            set 
+            {
+                if (_tags != value)
+                {
+                    _tags = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
         public string ToJson() 
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
@@ -497,6 +513,7 @@ namespace Climbing.Guide.Api.Schemas
         private System.DateTime? _approved_on;
         private DisplayUser _created_by;
         private DisplayUser _approved_by;
+        private string _tags;
     
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Id
@@ -692,6 +709,21 @@ namespace Climbing.Guide.Api.Schemas
                 if (_approved_by != value)
                 {
                     _approved_by = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("tags", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(int.MaxValue, MinimumLength = 1)]
+        public string Tags
+        {
+            get { return _tags; }
+            set 
+            {
+                if (_tags != value)
+                {
+                    _tags = value; 
                     RaisePropertyChanged();
                 }
             }
@@ -1043,6 +1075,8 @@ namespace Climbing.Guide.Api.Schemas
         private System.DateTime? _approved_on;
         private DisplayUser _created_by;
         private DisplayUser _approved_by;
+        private string _country_code;
+        private string _tags;
     
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Id
@@ -1201,6 +1235,36 @@ namespace Climbing.Guide.Api.Schemas
             }
         }
     
+        [Newtonsoft.Json.JsonProperty("country_code", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(10, MinimumLength = 1)]
+        public string Country_code
+        {
+            get { return _country_code; }
+            set 
+            {
+                if (_country_code != value)
+                {
+                    _country_code = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("tags", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(int.MaxValue, MinimumLength = 1)]
+        public string Tags
+        {
+            get { return _tags; }
+            set 
+            {
+                if (_tags != value)
+                {
+                    _tags = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
         public string ToJson() 
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
@@ -1243,6 +1307,7 @@ namespace Climbing.Guide.Api.Schemas
         private System.DateTime? _approved_on;
         private DisplayUser _created_by;
         private DisplayUser _approved_by;
+        private string _tags;
     
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Id
@@ -1494,6 +1559,21 @@ namespace Climbing.Guide.Api.Schemas
                 if (_approved_by != value)
                 {
                     _approved_by = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("tags", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(int.MaxValue, MinimumLength = 1)]
+        public string Tags
+        {
+            get { return _tags; }
+            set 
+            {
+                if (_tags != value)
+                {
+                    _tags = value; 
                     RaisePropertyChanged();
                 }
             }
