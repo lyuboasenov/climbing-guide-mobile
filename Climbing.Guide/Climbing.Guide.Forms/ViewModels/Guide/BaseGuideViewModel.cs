@@ -31,7 +31,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       protected async virtual Task InitializeRegionsAsync() {
          try {
-            Regions = await Client.RegionsClient.ListAsync();
+            Regions = await GetService<Services.IResourceService>().GetRegionsAsync();
          } catch (ApiCallException ex) {
             await Errors.HandleApiCallExceptionAsync(ex);
          }

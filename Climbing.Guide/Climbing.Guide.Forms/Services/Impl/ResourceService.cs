@@ -9,10 +9,23 @@ namespace Climbing.Guide.Forms.Services {
    public class ResourceService : IResourceService {
       private IApiClient ApiClient { get; set; }
       private ICache Cache { get; set; }
+      private Http.ICachingHttpClientManager CachingHttpClientManager { get; set; }
 
-      public ResourceService(IApiClient apiClient, ICache cache) {
+      public ResourceService(IApiClient apiClient, ICache cache, Http.ICachingHttpClientManager cachingHttpClientManager) {
          ApiClient = apiClient;
          Cache = cache;
+         CachingHttpClientManager = cachingHttpClientManager;
+      }
+
+      public async Task<ObservableCollection<Region>> GetRegionsAsync() {
+         using (var cachingSession = CachingHttpClientManager.CreateCacheSession(TimeSpan.FromMinutes(1))) {
+            try {
+               return await ApiClient.RegionsClient.ListAsync();
+            } catch(ApiCallException ex) {
+               cachingSession.Invalidate();
+               throw;
+            }
+         }
       }
 
       public async Task<ObservableCollection<Grade>> GetGradeSystemAsync(int gradeSystemId, bool force = false) {
