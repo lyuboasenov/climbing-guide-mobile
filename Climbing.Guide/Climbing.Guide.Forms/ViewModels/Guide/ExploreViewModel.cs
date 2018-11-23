@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Climbing.Guide.Api.Schemas;
 using System;
+using Climbing.Guide.Forms.Services;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -26,6 +27,16 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       public ExploreViewModel() {
          Title = VmTitle;
+      }
+
+      public async override Task OnNavigatedToAsync(params object[] parameters) {
+         var progressService = GetService<IProgressService>();
+         try {
+            await progressService.ShowLoadingIndicatorAsync();
+            await base.OnNavigatedToAsync(parameters);
+         } finally {
+            await progressService.HideLoadingIndicatorAsync();
+         }
       }
 
       protected override void InitializeCommands() {
@@ -52,7 +63,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
          Location position = null;
          try {
-            position = await Geolocation.GetLastKnownLocationAsync();
+            position = await Geolocation.GetLocationAsync();
          } catch (FeatureNotSupportedException fnsEx) {
             await Errors.HandleExceptionAsync(fnsEx,
                Resources.Strings.Main.Permission_Exception_Format,
