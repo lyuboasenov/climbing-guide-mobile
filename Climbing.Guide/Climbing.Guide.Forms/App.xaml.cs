@@ -15,10 +15,10 @@ namespace Climbing.Guide.Forms {
    public partial class App {
 #if DEBUG
       private string BaseUrl { get; } = "http://10.0.2.2:8000";
+      // private string BaseUrl { get; } = "http://127.0.0.1:8000";
 #else
       private string BaseUrl { get; } = "https://api.climbingguide.org";
 #endif
-
       public App() : this(null) { }
 
       public App(IPlatformInitializer initializer) : base(initializer) { }
