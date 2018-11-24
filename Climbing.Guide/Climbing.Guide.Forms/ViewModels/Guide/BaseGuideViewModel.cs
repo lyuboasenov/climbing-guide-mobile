@@ -52,7 +52,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
          if (null != SelectedRegion) {
             try {
-               Areas = await Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString());
+               Areas = (await Client.AreasClient.ListAsync(SelectedRegion.Id?.ToString())).Results;
             } catch (ApiCallException ex) {
                await Errors.HandleApiCallExceptionAsync(ex);
                return;
@@ -73,7 +73,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
          if (null != SelectedArea) {
             try {
-               Sectors = await Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString());
+               Sectors = (await Client.SectorsClient.ListAsync(SelectedArea.Id?.ToString())).Results;
             } catch (ApiCallException ex) {
                await Errors.HandleApiCallExceptionAsync(ex);
                return;
@@ -92,7 +92,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
          if (null != SelectedSector) {
             try {
-               Routes = await Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString());
+               Routes = (await Client.RoutesClient.ListAsync(SelectedSector.Id?.ToString())).Results;
             } catch (ApiCallException ex) {
                await Errors.HandleApiCallExceptionAsync(ex);
             }
