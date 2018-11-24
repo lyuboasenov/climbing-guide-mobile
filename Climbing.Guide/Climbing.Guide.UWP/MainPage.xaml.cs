@@ -8,7 +8,7 @@ namespace Climbing.Guide.UWP {
       public MainPage() {
          this.InitializeComponent();
          Xamarin.FormsMaps.Init("INSERT_MAP_KEY_HERE");
-         this.LoadApplication(new Climbing.Guide.Forms.App());
+         this.LoadApplication(new Forms.App());
       }
    }
 }
