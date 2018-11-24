@@ -34,11 +34,13 @@ namespace Climbing.Guide.Api.Client
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
     
+        /// <param name="page">A page number within the paginated result set.</param>
+        /// <param name="page_size">Number of results to return per page.</param>
         /// <param name="fields">Represents a list of resource fields to be served. If not specified all fields are returned.</param>
         /// <param name="light">Specified that short list of resource's fields to be served.</param>
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Sector>> ListAsync(string area, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<Response> ListAsync(string area, int? page = null, int? page_size = null, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (area == null)
                 throw new System.ArgumentNullException("area");
@@ -46,6 +48,14 @@ namespace Climbing.Guide.Api.Client
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("areas/{area}/sectors?");
             urlBuilder_.Replace("{area}", System.Uri.EscapeDataString(ConvertToString(area, System.Globalization.CultureInfo.InvariantCulture)));
+            if (page != null) 
+            {
+                urlBuilder_.Append("page=").Append(System.Uri.EscapeDataString(ConvertToString(page, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (page_size != null) 
+            {
+                urlBuilder_.Append("page_size=").Append(System.Uri.EscapeDataString(ConvertToString(page_size, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
             if (fields != null) 
             {
                 urlBuilder_.Append("fields=").Append(System.Uri.EscapeDataString(ConvertToString(fields, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
@@ -85,10 +95,10 @@ namespace Climbing.Guide.Api.Client
                         if (status_ == "200") 
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.ObjectModel.ObservableCollection<Sector>); 
+                            var result_ = default(Response); 
                             try
                             {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.ObjectModel.ObservableCollection<Sector>>(responseData_, _settings.Value);
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<Response>(responseData_, _settings.Value);
                                 return result_; 
                             } 
                             catch (System.Exception exception_) 
@@ -103,7 +113,7 @@ namespace Climbing.Guide.Api.Client
                             throw new ApiCallException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
             
-                        return default(System.Collections.ObjectModel.ObservableCollection<Sector>);
+                        return default(Response);
                     }
                     finally
                     {
@@ -841,11 +851,13 @@ namespace Climbing.Guide.Api.Client
             }
         }
     
+        /// <param name="page">A page number within the paginated result set.</param>
+        /// <param name="page_size">Number of results to return per page.</param>
         /// <param name="fields">Represents a list of resource fields to be served. If not specified all fields are returned.</param>
         /// <param name="light">Specified that short list of resource's fields to be served.</param>
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Area>> ListAsync(string region, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<Response2> ListAsync(string region, int? page = null, int? page_size = null, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (region == null)
                 throw new System.ArgumentNullException("region");
@@ -853,6 +865,14 @@ namespace Climbing.Guide.Api.Client
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("regions/{region}/areas?");
             urlBuilder_.Replace("{region}", System.Uri.EscapeDataString(ConvertToString(region, System.Globalization.CultureInfo.InvariantCulture)));
+            if (page != null) 
+            {
+                urlBuilder_.Append("page=").Append(System.Uri.EscapeDataString(ConvertToString(page, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (page_size != null) 
+            {
+                urlBuilder_.Append("page_size=").Append(System.Uri.EscapeDataString(ConvertToString(page_size, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
             if (fields != null) 
             {
                 urlBuilder_.Append("fields=").Append(System.Uri.EscapeDataString(ConvertToString(fields, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
@@ -892,10 +912,10 @@ namespace Climbing.Guide.Api.Client
                         if (status_ == "200") 
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.ObjectModel.ObservableCollection<Area>); 
+                            var result_ = default(Response2); 
                             try
                             {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.ObjectModel.ObservableCollection<Area>>(responseData_, _settings.Value);
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<Response2>(responseData_, _settings.Value);
                                 return result_; 
                             } 
                             catch (System.Exception exception_) 
@@ -910,7 +930,7 @@ namespace Climbing.Guide.Api.Client
                             throw new ApiCallException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
             
-                        return default(System.Collections.ObjectModel.ObservableCollection<Area>);
+                        return default(Response2);
                     }
                     finally
                     {
@@ -1503,14 +1523,24 @@ namespace Climbing.Guide.Api.Client
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
     
+        /// <param name="page">A page number within the paginated result set.</param>
+        /// <param name="page_size">Number of results to return per page.</param>
         /// <param name="fields">Represents a list of resource fields to be served. If not specified all fields are returned.</param>
         /// <param name="light">Specified that short list of resource's fields to be served.</param>
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Region>> ListAsync(string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<Response3> ListAsync(int? page = null, int? page_size = null, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("regions?");
+            if (page != null) 
+            {
+                urlBuilder_.Append("page=").Append(System.Uri.EscapeDataString(ConvertToString(page, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (page_size != null) 
+            {
+                urlBuilder_.Append("page_size=").Append(System.Uri.EscapeDataString(ConvertToString(page_size, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
             if (fields != null) 
             {
                 urlBuilder_.Append("fields=").Append(System.Uri.EscapeDataString(ConvertToString(fields, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
@@ -1550,10 +1580,10 @@ namespace Climbing.Guide.Api.Client
                         if (status_ == "200") 
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.ObjectModel.ObservableCollection<Region>); 
+                            var result_ = default(Response3); 
                             try
                             {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.ObjectModel.ObservableCollection<Region>>(responseData_, _settings.Value);
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<Response3>(responseData_, _settings.Value);
                                 return result_; 
                             } 
                             catch (System.Exception exception_) 
@@ -1568,7 +1598,7 @@ namespace Climbing.Guide.Api.Client
                             throw new ApiCallException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
             
-                        return default(System.Collections.ObjectModel.ObservableCollection<Region>);
+                        return default(Response3);
                     }
                     finally
                     {
@@ -2302,11 +2332,13 @@ namespace Climbing.Guide.Api.Client
             }
         }
     
+        /// <param name="page">A page number within the paginated result set.</param>
+        /// <param name="page_size">Number of results to return per page.</param>
         /// <param name="fields">Represents a list of resource fields to be served. If not specified all fields are returned.</param>
         /// <param name="light">Specified that short list of resource's fields to be served.</param>
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Route>> ListAsync(string sector, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<Response4> ListAsync(string sector, int? page = null, int? page_size = null, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (sector == null)
                 throw new System.ArgumentNullException("sector");
@@ -2314,6 +2346,14 @@ namespace Climbing.Guide.Api.Client
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("sectors/{sector}/routes?");
             urlBuilder_.Replace("{sector}", System.Uri.EscapeDataString(ConvertToString(sector, System.Globalization.CultureInfo.InvariantCulture)));
+            if (page != null) 
+            {
+                urlBuilder_.Append("page=").Append(System.Uri.EscapeDataString(ConvertToString(page, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (page_size != null) 
+            {
+                urlBuilder_.Append("page_size=").Append(System.Uri.EscapeDataString(ConvertToString(page_size, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
             if (fields != null) 
             {
                 urlBuilder_.Append("fields=").Append(System.Uri.EscapeDataString(ConvertToString(fields, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
@@ -2353,10 +2393,10 @@ namespace Climbing.Guide.Api.Client
                         if (status_ == "200") 
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.ObjectModel.ObservableCollection<Route>); 
+                            var result_ = default(Response4); 
                             try
                             {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.ObjectModel.ObservableCollection<Route>>(responseData_, _settings.Value);
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<Response4>(responseData_, _settings.Value);
                                 return result_; 
                             } 
                             catch (System.Exception exception_) 
@@ -2371,7 +2411,7 @@ namespace Climbing.Guide.Api.Client
                             throw new ApiCallException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
             
-                        return default(System.Collections.ObjectModel.ObservableCollection<Route>);
+                        return default(Response4);
                     }
                     finally
                     {

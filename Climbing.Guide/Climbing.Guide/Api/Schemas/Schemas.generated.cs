@@ -11,11 +11,13 @@ namespace Climbing.Guide.Api.Schemas
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
     public partial interface ISectorsClient
     {
+        /// <param name="page">A page number within the paginated result set.</param>
+        /// <param name="page_size">Number of results to return per page.</param>
         /// <param name="fields">Represents a list of resource fields to be served. If not specified all fields are returned.</param>
         /// <param name="light">Specified that short list of resource's fields to be served.</param>
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Sector>> ListAsync(string area, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<Response> ListAsync(string area, int? page = null, int? page_size = null, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -70,11 +72,13 @@ namespace Climbing.Guide.Api.Schemas
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task DeleteAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     
+        /// <param name="page">A page number within the paginated result set.</param>
+        /// <param name="page_size">Number of results to return per page.</param>
         /// <param name="fields">Represents a list of resource fields to be served. If not specified all fields are returned.</param>
         /// <param name="light">Specified that short list of resource's fields to be served.</param>
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Area>> ListAsync(string region, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<Response2> ListAsync(string region, int? page = null, int? page_size = null, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -116,11 +120,13 @@ namespace Climbing.Guide.Api.Schemas
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "11.20.1.0 (NJsonSchema v9.11.0.0 (Newtonsoft.Json v9.0.0.0))")]
     public partial interface IRegionsClient
     {
+        /// <param name="page">A page number within the paginated result set.</param>
+        /// <param name="page_size">Number of results to return per page.</param>
         /// <param name="fields">Represents a list of resource fields to be served. If not specified all fields are returned.</param>
         /// <param name="light">Specified that short list of resource's fields to be served.</param>
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Region>> ListAsync(string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<Response3> ListAsync(int? page = null, int? page_size = null, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -175,11 +181,13 @@ namespace Climbing.Guide.Api.Schemas
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task DeleteAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     
+        /// <param name="page">A page number within the paginated result set.</param>
+        /// <param name="page_size">Number of results to return per page.</param>
         /// <param name="fields">Represents a list of resource fields to be served. If not specified all fields are returned.</param>
         /// <param name="light">Specified that short list of resource's fields to be served.</param>
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Route>> ListAsync(string sector, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<Response4> ListAsync(string sector, int? page = null, int? page_size = null, string fields = null, bool? light = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     
         /// <exception cref="ApiCallException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -1676,6 +1684,350 @@ namespace Climbing.Guide.Api.Schemas
         public static User FromJson(string data)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<User>(data);
+        }
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class Response : System.ComponentModel.INotifyPropertyChanged
+    {
+        private int _count;
+        private System.Uri _next;
+        private System.Uri _previous;
+        private System.Collections.ObjectModel.ObservableCollection<Sector> _results = new System.Collections.ObjectModel.ObservableCollection<Sector>();
+    
+        [Newtonsoft.Json.JsonProperty("count", Required = Newtonsoft.Json.Required.Always)]
+        public int Count
+        {
+            get { return _count; }
+            set 
+            {
+                if (_count != value)
+                {
+                    _count = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("next", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Uri Next
+        {
+            get { return _next; }
+            set 
+            {
+                if (_next != value)
+                {
+                    _next = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("previous", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Uri Previous
+        {
+            get { return _previous; }
+            set 
+            {
+                if (_previous != value)
+                {
+                    _previous = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("results", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.ObjectModel.ObservableCollection<Sector> Results
+        {
+            get { return _results; }
+            set 
+            {
+                if (_results != value)
+                {
+                    _results = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+        
+        public static Response FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Response>(data);
+        }
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class Response2 : System.ComponentModel.INotifyPropertyChanged
+    {
+        private int _count;
+        private System.Uri _next;
+        private System.Uri _previous;
+        private System.Collections.ObjectModel.ObservableCollection<Area> _results = new System.Collections.ObjectModel.ObservableCollection<Area>();
+    
+        [Newtonsoft.Json.JsonProperty("count", Required = Newtonsoft.Json.Required.Always)]
+        public int Count
+        {
+            get { return _count; }
+            set 
+            {
+                if (_count != value)
+                {
+                    _count = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("next", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Uri Next
+        {
+            get { return _next; }
+            set 
+            {
+                if (_next != value)
+                {
+                    _next = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("previous", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Uri Previous
+        {
+            get { return _previous; }
+            set 
+            {
+                if (_previous != value)
+                {
+                    _previous = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("results", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.ObjectModel.ObservableCollection<Area> Results
+        {
+            get { return _results; }
+            set 
+            {
+                if (_results != value)
+                {
+                    _results = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+        
+        public static Response2 FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Response2>(data);
+        }
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class Response3 : System.ComponentModel.INotifyPropertyChanged
+    {
+        private int _count;
+        private System.Uri _next;
+        private System.Uri _previous;
+        private System.Collections.ObjectModel.ObservableCollection<Region> _results = new System.Collections.ObjectModel.ObservableCollection<Region>();
+    
+        [Newtonsoft.Json.JsonProperty("count", Required = Newtonsoft.Json.Required.Always)]
+        public int Count
+        {
+            get { return _count; }
+            set 
+            {
+                if (_count != value)
+                {
+                    _count = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("next", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Uri Next
+        {
+            get { return _next; }
+            set 
+            {
+                if (_next != value)
+                {
+                    _next = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("previous", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Uri Previous
+        {
+            get { return _previous; }
+            set 
+            {
+                if (_previous != value)
+                {
+                    _previous = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("results", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.ObjectModel.ObservableCollection<Region> Results
+        {
+            get { return _results; }
+            set 
+            {
+                if (_results != value)
+                {
+                    _results = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+        
+        public static Response3 FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Response3>(data);
+        }
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.11.0.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class Response4 : System.ComponentModel.INotifyPropertyChanged
+    {
+        private int _count;
+        private System.Uri _next;
+        private System.Uri _previous;
+        private System.Collections.ObjectModel.ObservableCollection<Route> _results = new System.Collections.ObjectModel.ObservableCollection<Route>();
+    
+        [Newtonsoft.Json.JsonProperty("count", Required = Newtonsoft.Json.Required.Always)]
+        public int Count
+        {
+            get { return _count; }
+            set 
+            {
+                if (_count != value)
+                {
+                    _count = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("next", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Uri Next
+        {
+            get { return _next; }
+            set 
+            {
+                if (_next != value)
+                {
+                    _next = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("previous", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Uri Previous
+        {
+            get { return _previous; }
+            set 
+            {
+                if (_previous != value)
+                {
+                    _previous = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("results", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.ObjectModel.ObservableCollection<Route> Results
+        {
+            get { return _results; }
+            set 
+            {
+                if (_results != value)
+                {
+                    _results = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+        
+        public static Response4 FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Response4>(data);
         }
     
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
