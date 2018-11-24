@@ -34,7 +34,11 @@ namespace Climbing.Guide.Http {
                response.EnsureSuccessStatusCode();
 
                if (CachingHttpClientManager.CacheResponses) {
+                  CachingHttpClientManager.AddKey(requestUri);
                   await CacheResponseAsync(requestUri, response);
+                  if (null != response) {
+                     response.Dispose();
+                  }
                   response = GetResponseFromCache(requestUri);
                }
             } else {
@@ -47,8 +51,10 @@ namespace Climbing.Guide.Http {
 
       private void RemoveInvalidatedRequests() {
          var invalidKeys = CachingHttpClientManager.GetKeysToInvalidate();
-         ResponseCache.Remove(invalidKeys);
-         LargeResponseCache.Remove(invalidKeys);
+         if(null != invalidKeys && invalidKeys.Length > 0) {
+            ResponseCache.Remove(invalidKeys);
+            LargeResponseCache.Remove(invalidKeys);
+         }
       }
 
       private HttpResponseMessage GetResponseFromCache(string requestUri) {
