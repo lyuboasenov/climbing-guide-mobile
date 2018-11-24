@@ -8,6 +8,7 @@ namespace Climbing.Guide.Http {
 
       ICachingHttpSession CreateCacheSession();
       ICachingHttpSession CreateCacheSession(TimeSpan cachePeriod);
+      void AddKey(string key);
       void FinalizeCacheSession(ICachingHttpSession cachingHttpSession);
       void InvalidateCacheSession(ICachingHttpSession cachingHttpSession);
       string[] GetKeysToInvalidate();

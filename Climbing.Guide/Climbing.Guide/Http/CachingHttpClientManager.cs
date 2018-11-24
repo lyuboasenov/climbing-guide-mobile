@@ -55,5 +55,11 @@ namespace Climbing.Guide.Http {
       public void InvalidateCacheSession(ICachingHttpSession cachingHttpSession) {
          InvalidKeys.AddRange(cachingHttpSession.Keys);
       }
+
+      public void AddKey(string key) {
+         if(Sessions.Count > 0) {
+            Sessions.Peek().AddKey(key);
+         }
+      }
    }
 }

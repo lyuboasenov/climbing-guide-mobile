@@ -49,6 +49,14 @@ namespace Climbing.Guide.Http {
          KeysInternal.Clear();
       }
 
+      public void Commit() {
+         if (disposed) {
+            throw new InvalidOperationException("Caching session have already been disposed.");
+         }
+
+         KeysInternal.Clear();
+      }
+
       public void AddKey(string key) {
          KeysInternal.Add(key);
       }
