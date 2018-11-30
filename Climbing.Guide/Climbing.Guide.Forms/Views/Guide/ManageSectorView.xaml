@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:strings="clr-namespace:Climbing.Guide.Forms.Resources.Strings"
+            xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
+            x:Class="Climbing.Guide.Forms.Views.Guide.ManageSectorView">
+   <TabbedPage.ToolbarItems>
+      <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
+      <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}"/>
+   </TabbedPage.ToolbarItems>
+   
+   <!--Pages can be added as references or inline-->
+   <ContentPage Title="{x:Static strings:Guide.Manage_Sector_Into_Title}">
+      <ContentPage.Content>
+         <ScrollView>
+            <StackLayout>
+               <Picker ItemsSource="{Binding Regions}"
+                       SelectedItem="{Binding SelectedRegion}"
+                       ItemDisplayBinding="{Binding Name}"
+                       Title="{x:Static strings:Guide.Manage_Sector_Region}"/>
+               <Picker ItemsSource="{Binding Areas}"
+                       SelectedItem="{Binding SelectedArea}"
+                       ItemDisplayBinding="{Binding Name}"
+                       Title="{x:Static strings:Guide.Manage_Sector_Area}"/>
+               <Entry Text="{Binding Name}" Placeholder="{x:Static strings:Guide.Manage_Sector_Name}"/>
+               <Editor Text="{Binding Info}" Placeholder="{x:Static strings:Guide.Manage_Sector_Info}"/>
+               <Editor Text="{Binding Restrictions}" Placeholder="{x:Static strings:Guide.Manage_Sector_Restrictions}"/>
+               <Editor Text="{Binding Restrictions}" Placeholder="{x:Static strings:Guide.Manage_Sector_Access}"/>
+               <Editor Text="{Binding Restrictions}" Placeholder="{x:Static strings:Guide.Manage_Sector_Descent}"/>
+            </StackLayout>
+         </ScrollView>
+      </ContentPage.Content>
+   </ContentPage>
+   <ContentPage Title="{x:Static strings:Guide.Manage_Sector_Map_Title}">
+      <ContentPage.Content>
+         <views:LocationPicker MapType="Hybrid"
+                               IsShowingUser="False"
+                               Location="{Binding Location, Mode=TwoWay}"/>
+      </ContentPage.Content>
+   </ContentPage>
+</TabbedPage>

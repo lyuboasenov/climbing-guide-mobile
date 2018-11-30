@@ -56,6 +56,8 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
             if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Region_Selection_Item) == 0) {
                // show add region
+               var navigationResult = await Navigation.NavigateAsync(
+                  Navigation.GetShellNavigationUri(nameof(Views.Guide.ManageRegionView)));
             } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Area_Selection_Item) == 0) {
                // show add area
             } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Sector_Selection_Item) == 0) {
