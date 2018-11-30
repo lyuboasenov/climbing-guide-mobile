@@ -123,6 +123,72 @@
   <data name="Guide_Title" xml:space="preserve">
     <value>Guide</value>
   </data>
+  <data name="Manage_Area_Access" xml:space="preserve">
+    <value>Access info</value>
+  </data>
+  <data name="Manage_Area_Descent" xml:space="preserve">
+    <value>Descent info</value>
+  </data>
+  <data name="Manage_Area_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Manage_Area_Into_Title" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Manage_Area_Map_Title" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="Manage_Area_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Manage_Area_Region" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="Manage_Area_Restrictions" xml:space="preserve">
+    <value>Restrictions</value>
+  </data>
+  <data name="Manage_Region_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Manage_Region_Into_Title" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Manage_Region_Map_Title" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="Manage_Region_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Manage_Region_Restrictions" xml:space="preserve">
+    <value>Restrictions</value>
+  </data>
+  <data name="Manage_Sector_Access" xml:space="preserve">
+    <value>Access</value>
+  </data>
+  <data name="Manage_Sector_Area" xml:space="preserve">
+    <value>Area</value>
+  </data>
+  <data name="Manage_Sector_Descent" xml:space="preserve">
+    <value>Descent</value>
+  </data>
+  <data name="Manage_Sector_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Manage_Sector_Into_Title" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Manage_Sector_Map_Title" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="Manage_Sector_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Manage_Sector_Region" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="Manage_Sector_Restrictions" xml:space="preserve">
+    <value>Restrictions</value>
+  </data>
   <data name="Search_Title" xml:space="preserve">
     <value>Search</value>
   </data>

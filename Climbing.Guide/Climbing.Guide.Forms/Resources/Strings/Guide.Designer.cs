@@ -79,6 +79,204 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access info.
+        /// </summary>
+        public static string Manage_Area_Access {
+            get {
+                return ResourceManager.GetString("Manage_Area_Access", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Descent info.
+        /// </summary>
+        public static string Manage_Area_Descent {
+            get {
+                return ResourceManager.GetString("Manage_Area_Descent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        public static string Manage_Area_Info {
+            get {
+                return ResourceManager.GetString("Manage_Area_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        public static string Manage_Area_Into_Title {
+            get {
+                return ResourceManager.GetString("Manage_Area_Into_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map.
+        /// </summary>
+        public static string Manage_Area_Map_Title {
+            get {
+                return ResourceManager.GetString("Manage_Area_Map_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Manage_Area_Name {
+            get {
+                return ResourceManager.GetString("Manage_Area_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Region.
+        /// </summary>
+        public static string Manage_Area_Region {
+            get {
+                return ResourceManager.GetString("Manage_Area_Region", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restrictions.
+        /// </summary>
+        public static string Manage_Area_Restrictions {
+            get {
+                return ResourceManager.GetString("Manage_Area_Restrictions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        public static string Manage_Region_Info {
+            get {
+                return ResourceManager.GetString("Manage_Region_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        public static string Manage_Region_Into_Title {
+            get {
+                return ResourceManager.GetString("Manage_Region_Into_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map.
+        /// </summary>
+        public static string Manage_Region_Map_Title {
+            get {
+                return ResourceManager.GetString("Manage_Region_Map_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Manage_Region_Name {
+            get {
+                return ResourceManager.GetString("Manage_Region_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restrictions.
+        /// </summary>
+        public static string Manage_Region_Restrictions {
+            get {
+                return ResourceManager.GetString("Manage_Region_Restrictions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Access.
+        /// </summary>
+        public static string Manage_Sector_Access {
+            get {
+                return ResourceManager.GetString("Manage_Sector_Access", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Area.
+        /// </summary>
+        public static string Manage_Sector_Area {
+            get {
+                return ResourceManager.GetString("Manage_Sector_Area", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Descent.
+        /// </summary>
+        public static string Manage_Sector_Descent {
+            get {
+                return ResourceManager.GetString("Manage_Sector_Descent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        public static string Manage_Sector_Info {
+            get {
+                return ResourceManager.GetString("Manage_Sector_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        public static string Manage_Sector_Into_Title {
+            get {
+                return ResourceManager.GetString("Manage_Sector_Into_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map.
+        /// </summary>
+        public static string Manage_Sector_Map_Title {
+            get {
+                return ResourceManager.GetString("Manage_Sector_Map_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Manage_Sector_Name {
+            get {
+                return ResourceManager.GetString("Manage_Sector_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Region.
+        /// </summary>
+        public static string Manage_Sector_Region {
+            get {
+                return ResourceManager.GetString("Manage_Sector_Region", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restrictions.
+        /// </summary>
+        public static string Manage_Sector_Restrictions {
+            get {
+                return ResourceManager.GetString("Manage_Sector_Restrictions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
         public static string Search_Title {
