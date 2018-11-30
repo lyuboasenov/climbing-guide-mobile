@@ -55,6 +55,9 @@
     <Compile Update="Themes\Colors.xaml.cs">
       <DependentUpon>Colors.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Guide\ManageRegionView.xaml.cs">
+      <DependentUpon>ManageRegionView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Routes\SchemaEditorView.xaml.cs">
       <DependentUpon>SchemaEditorView.xaml</DependentUpon>
     </Compile>

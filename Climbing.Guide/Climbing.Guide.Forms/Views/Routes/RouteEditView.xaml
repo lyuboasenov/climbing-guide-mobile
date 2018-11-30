@@ -50,10 +50,10 @@
    </ContentPage>
    <ContentPage Title="{x:Static strings:Routes.Route_Edit_Map_Title}">
       <ContentPage.Content>
-         <views:ClimbingMap MapType="Hybrid"
-                            IsShowingUser="False"
-                            ShowSelectedLocation="True"
-                            BindableVisibleRegion="{Binding VisibleRegion, Mode=TwoWay}"/>
+         <views:LocationPicker MapType="Hybrid"
+                               IsShowingUser="False"
+                               IsAreaVisible="False"
+                               Location="{Binding VisibleRegion, Mode=TwoWay}"/>
       </ContentPage.Content>
    </ContentPage>
 </TabbedPage>

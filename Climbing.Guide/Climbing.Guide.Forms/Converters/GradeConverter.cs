@@ -21,7 +21,7 @@ namespace Climbing.Guide.Forms.Converters {
          string result = string.Empty;
          if (null != route) {
             var prefService = IoC.Container.Get<IPreferenceService>();
-            var routeType = route.Type.Value;
+            var routeType = route.Type;
             int gradingSystemId = 1;
 
             if (routeType == RouteType._1) { gradingSystemId = prefService.BoulderingGradeSystem; }

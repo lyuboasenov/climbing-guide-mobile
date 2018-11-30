@@ -22,7 +22,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       public string Name { get; set; }
       public string Info { get; set; }
       public IGrade SelectedDifficulty { get; set; }
-      public IEnumerable<IGrade> Difficulty { get; set; } = GetService<IGradeService>().GetGradeList(GradeType.V);
+      public IEnumerable<IGrade> Difficulty { get; set; } = GetService<IGradeService>().GetGradeList(Core.Models.Routes.GradeType.V);
       public string RouteType { get; set; } = Resources.Strings.Routes.Route_Edit_Route_Type_Boulder;
       public IEnumerable<string> RouteTypes { get; set; }
       public double Length { get; set; }
