@@ -73,6 +73,7 @@
     <Compile Include="Services\CloseApplication.cs" />
     <Compile Include="Services\ProgressServiceiOS.cs" />
     <Compile Include="Views\CustomMKAnnotationView.cs" />
+    <Compile Include="Views\Renderers\LocationPickerRenderer.cs" />
     <Compile Include="Views\Renderers\ClimbingMapRenderer.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />

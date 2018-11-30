@@ -78,6 +78,7 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Services\CloseApplication.cs" />
     <Compile Include="Services\ProgressServiceDroid.cs" />
+    <Compile Include="Views\Renderers\LocationPickerRenderer.cs" />
     <Compile Include="Views\Renderers\ClimbingMapRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
