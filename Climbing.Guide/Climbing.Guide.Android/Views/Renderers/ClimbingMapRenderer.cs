@@ -28,7 +28,6 @@ namespace Climbing.Guide.Droid.Views.Renderers {
 
          if (NativeMap != null) {
             NativeMap.MapLongClick += googleMap_MapClick;
-            //NativeMap.CameraChange += googleMap_CameraChange;
             NativeMap.CameraMove += googleMap_CameraMove;
 
          }
@@ -57,7 +56,6 @@ namespace Climbing.Guide.Droid.Views.Renderers {
       protected override void OnElementChanged(ElementChangedEventArgs<Map> e) {
          if (NativeMap != null) {
             NativeMap.MapLongClick -= googleMap_MapClick;
-            //NativeMap.CameraChange -= googleMap_CameraChange;
             NativeMap.CameraMove += googleMap_CameraMove;
          }
 
