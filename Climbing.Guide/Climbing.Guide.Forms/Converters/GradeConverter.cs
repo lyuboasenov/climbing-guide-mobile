@@ -29,7 +29,7 @@ namespace Climbing.Guide.Forms.Converters {
             else if (routeType == RouteType._4) { gradingSystemId = prefService.TradRouteGradeSystem; }
             Grade grade = null;
 
-            var taskRunner = IoC.Container.Get<ITaskRunner>();
+            var taskRunner = IoC.Container.Get<ISyncTaskRunner>();
             grade = taskRunner.RunSync(() => IoC.Container.Get<IResourceService>().GetGradeSystemAsync(gradingSystemId))
                .Where(g => g.Value <= route.Difficulty).OrderByDescending(g => g.Value).First();
             
