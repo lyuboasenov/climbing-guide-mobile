@@ -8,7 +8,7 @@ using Xamarin.Forms.Maps;
 
 namespace Climbing.Guide.Forms.Converters {
    public class ToPositionConverter : IValueConverter {
-      private Api.Schemas.Region region;
+      private Guide.Api.Schemas.Region region;
       private Area area;
       private Sector sector;
       private Route route;
@@ -17,7 +17,7 @@ namespace Climbing.Guide.Forms.Converters {
          decimal latitude = -1;
          decimal longitude = -1;
 
-         if (null != (region = value as Api.Schemas.Region)) {
+         if (null != (region = value as Guide.Api.Schemas.Region)) {
             latitude = region.Latitude;
             longitude = region.Longitude;
          } else if (null != (area = value as Area)) {
