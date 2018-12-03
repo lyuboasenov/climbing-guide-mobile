@@ -60,15 +60,17 @@ namespace Climbing.Guide.Forms.ViewModels.User {
 
       private async Task SignUp() {
          try {
-            await Client.UsersClient.CreateAsync(new Api.Schemas.User() {
+            await Client.UsersClient.CreateAsync(new Climbing.Guide.Api.Schemas.User() {
                Username = Username,
                Email = Username,
                Password = Password
             });
 
             await Login();
-         } catch(Api.Schemas.ApiCallException ex) {
-            await Errors.HandleApiCallExceptionAsync(ex);
+         } catch(Climbing.Guide.Api.Schemas.ApiCallException ex) {
+            await Errors.HandleAsync(ex,
+               Resources.Strings.Main.Communication_Error_Message,
+               Resources.Strings.Main.Communication_Error_Message_Detailed_Format);
          }
       }
 

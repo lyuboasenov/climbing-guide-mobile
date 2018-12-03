@@ -46,8 +46,8 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       }
 
       private async Task OnPinTapped(object data) {
-         if (data is Api.Schemas.Region) {
-            SelectedRegion = data as Api.Schemas.Region;
+         if (data is Climbing.Guide.Api.Schemas.Region) {
+            SelectedRegion = data as Climbing.Guide.Api.Schemas.Region;
          } else if (data is Area) {
             SelectedArea = data as Area;
          } else if (data is Sector) {
@@ -65,15 +65,15 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          try {
             position = await Geolocation.GetLocationAsync();
          } catch (FeatureNotSupportedException fnsEx) {
-            await Errors.HandleExceptionAsync(fnsEx,
+            await Errors.HandleAsync(fnsEx,
                Resources.Strings.Main.Permission_Exception_Format,
                Resources.Strings.Main.Location_Permissino);
          } catch (PermissionException pEx) {
-            await Errors.HandleExceptionAsync(pEx,
+            await Errors.HandleAsync(pEx,
                Resources.Strings.Main.Permission_Exception_Format,
                Resources.Strings.Main.Location_Permissino);
          } catch (Exception ex) {
-            await Errors.HandleExceptionAsync(ex,
+            await Errors.HandleAsync(ex,
                Resources.Strings.Main.Permission_Exception_Format,
                Resources.Strings.Main.Location_Permissino);
          }
@@ -118,7 +118,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
                Navigation.GetShellNavigationUri(nameof(Views.Routes.RouteView)),
                route);
             if (!navigationResult.Result) {
-               await Errors.HandleExceptionAsync(navigationResult.Exception,
+               await Errors.HandleAsync(navigationResult.Exception,
                   Resources.Strings.Routes.Route_View_Error_Message, route.Name);
             }
          }

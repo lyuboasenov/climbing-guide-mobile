@@ -1,4 +1,5 @@
 ﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Tasks;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -33,7 +34,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          try {
             Regions = await GetService<Services.IResourceService>().GetRegionsAsync();
          } catch (ApiCallException ex) {
-            await Errors.HandleApiCallExceptionAsync(ex);
+            await Errors.HandleAsync(ex);
          }
 
          // Selects first of the received regions
@@ -54,7 +55,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
             try {
                Areas = (await Client.AreasClient.ListAsync(SelectedRegion.Id.Value)).Results;
             } catch (ApiCallException ex) {
-               await Errors.HandleApiCallExceptionAsync(ex);
+               await Errors.HandleAsync(ex);
                return;
             }
 
@@ -75,7 +76,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
             try {
                Sectors = (await Client.SectorsClient.ListAsync(SelectedArea.Id.Value)).Results;
             } catch (ApiCallException ex) {
-               await Errors.HandleApiCallExceptionAsync(ex);
+               await Errors.HandleAsync(ex);
                return;
             }
 
@@ -94,7 +95,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
             try {
                Routes = (await Client.RoutesClient.ListAsync(SelectedSector.Id.Value)).Results;
             } catch (ApiCallException ex) {
-               await Errors.HandleApiCallExceptionAsync(ex);
+               await Errors.HandleAsync(ex);
             }
 
             if (AutoSelectRoutes && Routes.Count > 0) {
@@ -104,15 +105,15 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       }
 
       public virtual void OnSelectedRegionChanged() {
-         TaskRunner.RunSync(async () => { await InitializeAreasAsync(); });
+         GetService<ISyncTaskRunner>().RunSync(async () => { await InitializeAreasAsync(); });
       }
 
       public virtual void OnSelectedAreaChanged() {
-         TaskRunner.RunSync(async () => { await InitializeSectorsAsync(); });
+         GetService<ISyncTaskRunner>().RunSync(async () => { await InitializeSectorsAsync(); });
       }
 
       public virtual void OnSelectedSectorChanged() {
-         TaskRunner.RunSync(async () => { await InitializeRoutesAsync(); });
+         GetService<ISyncTaskRunner>().RunSync(async () => { await InitializeRoutesAsync(); });
       }
 
       public virtual void OnSelectedRouteChanged() {

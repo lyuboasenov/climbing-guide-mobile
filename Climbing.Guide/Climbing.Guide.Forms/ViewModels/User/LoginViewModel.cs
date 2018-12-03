@@ -28,9 +28,11 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       private async Task Login() {
          bool success = false;
          try {
-            success = await Client.LoginAsync(Username, Password);
+            success = await Client.AuthenticationManager.LoginAsync(Username, Password);
          } catch (ApiCallException ex) {
-            await Errors.HandleApiCallExceptionAsync(ex);
+            await Errors.HandleAsync(ex,
+               Resources.Strings.Main.Communication_Error_Message,
+               Resources.Strings.Main.Communication_Error_Message_Detailed_Format);
          }
 
          if (!success) {
@@ -52,7 +54,7 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       private async Task Signup() {
          var navigationResult = await Navigation.NavigateAsync(Navigation.GetShellNavigationUri(nameof(Views.User.SignupView)));
          if (!navigationResult.Result) {
-            await Errors.HandleExceptionAsync(navigationResult.Exception,
+            await Errors.HandleAsync(navigationResult.Exception,
                Resources.Strings.Main.Shell_Navigation_Error_Message, SignupViewModel.VmTitle);
          }
       }

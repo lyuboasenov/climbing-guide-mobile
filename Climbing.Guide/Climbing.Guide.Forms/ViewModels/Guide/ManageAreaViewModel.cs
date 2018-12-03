@@ -14,8 +14,8 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public ICommand SaveCommand { get; set; }
       public ICommand CancelCommand { get; set; }
 
-      public ObservableCollection<Api.Schemas.Region> Regions { get; set; }
-      public Api.Schemas.Region SelectedRegion { get; set; }
+      public ObservableCollection<Climbing.Guide.Api.Schemas.Region> Regions { get; set; }
+      public Climbing.Guide.Api.Schemas.Region SelectedRegion { get; set; }
 
       public string Name { get; set; }
       public string Info { get; set; }

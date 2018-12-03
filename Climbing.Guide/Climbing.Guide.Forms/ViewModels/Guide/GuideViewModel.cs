@@ -109,7 +109,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
             Navigation.GetShellNavigationUri(nameof(Views.Routes.RouteView)),
             route);
          if (!navigationResult.Result) {
-            await Errors.HandleExceptionAsync(navigationResult.Exception,
+            await Errors.HandleAsync(navigationResult.Exception,
                Resources.Strings.Routes.Route_View_Error_Message, route.Name);
          }
       }

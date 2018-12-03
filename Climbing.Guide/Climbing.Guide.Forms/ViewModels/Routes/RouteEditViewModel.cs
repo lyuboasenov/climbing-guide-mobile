@@ -1,11 +1,9 @@
 ﻿using Climbing.Guide.Api.Schemas;
-using Climbing.Guide.Core.Models.Routes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
@@ -21,8 +19,9 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
 
       public string Name { get; set; }
       public string Info { get; set; }
-      public IGrade SelectedDifficulty { get; set; }
-      public IEnumerable<IGrade> Difficulty { get; set; } = GetService<IGradeService>().GetGradeList(Core.Models.Routes.GradeType.V);
+      // TODO: fix grades
+      // public IGrade SelectedDifficulty { get; set; }
+      // public IEnumerable<IGrade> Difficulty { get; set; } = GetService<IGradeService>().GetGradeList(Core.Models.Routes.GradeType.V);
       public string RouteType { get; set; } = Resources.Strings.Routes.Route_Edit_Route_Type_Boulder;
       public IEnumerable<string> RouteTypes { get; set; }
       public double Length { get; set; }
@@ -69,7 +68,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       private async Task InitializeData(params object[] parameters) {
          try {
             await base.OnNavigatedToAsync(parameters);
-            SelectedRegion = parameters[0] as Api.Schemas.Region;
+            SelectedRegion = parameters[0] as Climbing.Guide.Api.Schemas.Region;
             SelectedArea = parameters[1] as Area;
             SelectedSector = parameters[2] as Sector;
             LocalSchemaThumbPath = parameters[3] as string;
@@ -82,7 +81,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
                VisibleRegion = MapSpan.FromCenterAndRadius(new Position(latitude, longitude), new Distance(170));
             }
          }catch(Exception ex) {
-            await Errors.HandleExceptionAsync(ex, string.Empty);
+            await Errors.HandleAsync(ex);
          }
       }
 

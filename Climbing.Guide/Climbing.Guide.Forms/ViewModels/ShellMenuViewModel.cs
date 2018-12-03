@@ -38,7 +38,7 @@ namespace Climbing.Guide.Forms.ViewModels {
                   var result = Navigation.NavigateAsync(SelectedMenuItem.NavigationUri);
                   result.Wait();
                   if (!result.Result.Result) {
-                     await Errors.HandleExceptionAsync(result.Exception,
+                     await Errors.HandleAsync(result.Exception,
                         Resources.Strings.Main.Shell_Navigation_Error_Message,
                         SelectedMenuItem.Title);
                   }
@@ -47,7 +47,7 @@ namespace Climbing.Guide.Forms.ViewModels {
                SelectedMenuItem = MenuItems[0];
             }
          }catch (Exception ex) {
-            await Errors.HandleExceptionAsync(ex,
+            await Errors.HandleAsync(ex,
                Resources.Strings.Main.Shell_Navigation_Error_Message,
                SelectedMenuItem.Title);
          }
@@ -56,7 +56,7 @@ namespace Climbing.Guide.Forms.ViewModels {
       public void InitializeMenuItems() {
          MenuItems = new ObservableCollection<MenuItemModel>();
 
-         var userLoggedIn = Client.IsLoggedIn;
+         var userLoggedIn = Client.AuthenticationManager.IsLoggedIn;
 
          MenuItems.Add(GetMenuItem(HomeViewModel.VmTitle,
             Navigation.GetShellNavigationUri(nameof(Views.HomeView))));
@@ -114,9 +114,11 @@ namespace Climbing.Guide.Forms.ViewModels {
 
       private async Task LogoutAsync() {
          try {
-            await Client.LogoutAsync();
+            await Client.AuthenticationManager.LogoutAsync();
          } catch (ApiCallException ex) {
-            await Errors.HandleApiCallExceptionAsync(ex);
+            await Errors.HandleAsync(ex,
+               Resources.Strings.Main.Communication_Error_Message,
+               Resources.Strings.Main.Communication_Error_Message_Detailed_Format);
          }
 
          InitializeMenuItems();

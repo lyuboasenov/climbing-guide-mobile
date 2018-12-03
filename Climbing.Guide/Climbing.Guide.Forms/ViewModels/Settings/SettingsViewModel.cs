@@ -73,7 +73,7 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
          CacheSize = Cache.GetCacheSize();
       }
 
-      private async Task InitializeViewModel() {
+      protected override async Task InitializeViewModel() {
          try {
             Languages = await ResourceService.GetLanguagesAsync();
 
@@ -93,9 +93,11 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
 
             CacheSize = Cache.GetCacheSize();
          } catch (ApiCallException ex) {
-            await Errors.HandleApiCallExceptionAsync(ex);
+            await Errors.HandleAsync(ex,
+               Resources.Strings.Main.Communication_Error_Message,
+               Resources.Strings.Main.Communication_Error_Message_Detailed_Format);
          } catch (Exception ex) {
-
+            await Errors.HandleAsync(ex);
          }
       }
    }
