@@ -1,4 +1,5 @@
-﻿using Climbing.Guide.Tasks;
+﻿using Climbing.Guide.Collections;
+using Climbing.Guide.Tasks;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
@@ -7,31 +8,74 @@ using System.Threading.Tasks;
 namespace Climbing.Guide.Forms.Services {
    public class NavigationService : INavigationService {
 
+      private const int NAVIGATION_STACK_SIZE = 10;
+
+      private FixedStack<NavigationItem> NavigationStack { get; set; }
       private Prism.Navigation.INavigationService InternalNavigationService { get; set; }
       private IProgressService ProgressService { get; set; }
 
       public NavigationService(Prism.Navigation.INavigationService navigationService, IProgressService progressService) {
          InternalNavigationService = navigationService;
          ProgressService = progressService;
+         NavigationStack = new FixedStack<NavigationItem>(NAVIGATION_STACK_SIZE);
       }
 
       public async Task<ITaskResult<bool>> GoBackAsync() {
-         var result = await InternalNavigationService.GoBackAsync();
+         if (NavigationStack.Count > 0) {
+            // Remove current and go to the previous page
+            NavigationStack.Pop();
+         }
+
+         var navigationItem = NavigationStack.Count > 0 ? 
+            NavigationStack.Peek() : 
+            new NavigationItem() { Uri = GetShellNavigationUri(nameof(Views.HomeView)) };
+
+         INavigationResult result;
+
+         if (null != navigationItem.Parameters) {
+            result = await InternalNavigationService.NavigateAsync(navigationItem.Uri, GetParameters(navigationItem.Parameters));
+         } else {
+            result = await InternalNavigationService.NavigateAsync(navigationItem.Uri);
+         }
          return result.ToITaskResult();
       }
 
       public async Task<ITaskResult<bool>> GoBackAsync(params object[] parameters) {
-         var result = await InternalNavigationService.GoBackAsync(GetParameters(parameters));
+         if (NavigationStack.Count > 0) {
+            // Remove current and go to the previous page
+            NavigationStack.Pop();
+         }
+
+         var navigationItem = NavigationStack.Count > 0 ?
+            NavigationStack.Peek() :
+            new NavigationItem() { Uri = GetShellNavigationUri(nameof(Views.HomeView)) };
+
+         var result = await InternalNavigationService.NavigateAsync(navigationItem.Uri, GetParameters(parameters));
          return result.ToITaskResult();
       }
 
       public async Task<ITaskResult<bool>> NavigateAsync(Uri uri) {
          var result = await InternalNavigationService.NavigateAsync(uri);
+
+         if (result.Success) {
+            NavigationStack.Push(new NavigationItem() {
+               Uri = uri
+            });
+         }
+
          return result.ToITaskResult();
       }
 
       public async Task<ITaskResult<bool>> NavigateAsync(Uri uri, params object[] parameters) {
          var result = await InternalNavigationService.NavigateAsync(uri, GetParameters(parameters));
+
+         if (result.Success) {
+            NavigationStack.Push(new NavigationItem() {
+               Uri = uri,
+               Parameters = parameters
+            });
+         }
+
          return result.ToITaskResult();
       }
       
@@ -68,5 +112,10 @@ namespace Climbing.Guide.Forms.Services {
    public class NavigationResult : ITaskResult<bool> {
       public bool Result { get; set; }
       public Exception Exception { get; set; }
+   }
+
+   public class NavigationItem {
+      public Uri Uri { get; set; }
+      public object[] Parameters { get; set; }
    }
 }
