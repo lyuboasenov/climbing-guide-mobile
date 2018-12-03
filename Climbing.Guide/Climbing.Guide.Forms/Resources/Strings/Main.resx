@@ -174,4 +174,7 @@
   <data name="Shell_Navigation_Error_Message" xml:space="preserve">
     <value>Error occured while trying to access {0}.</value>
   </data>
+  <data name="Error_Mesage" xml:space="preserve">
+    <value>A generic error occur.</value>
+  </data>
 </root>

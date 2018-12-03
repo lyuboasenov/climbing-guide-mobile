@@ -151,6 +151,15 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A generic error occur..
+        /// </summary>
+        public static string Error_Mesage {
+            get {
+                return ResourceManager.GetString("Error_Mesage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string Error_Title {

@@ -196,6 +196,15 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New region.
+        /// </summary>
+        public static string Manage_Region_Title {
+            get {
+                return ResourceManager.GetString("Manage_Region_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Access.
         /// </summary>
         public static string Manage_Sector_Access {

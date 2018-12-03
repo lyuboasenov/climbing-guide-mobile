@@ -162,6 +162,9 @@
   <data name="Manage_Region_Restrictions" xml:space="preserve">
     <value>Restrictions</value>
   </data>
+  <data name="Manage_Region_Title" xml:space="preserve">
+    <value>New region</value>
+  </data>
   <data name="Manage_Sector_Access" xml:space="preserve">
     <value>Access</value>
   </data>
