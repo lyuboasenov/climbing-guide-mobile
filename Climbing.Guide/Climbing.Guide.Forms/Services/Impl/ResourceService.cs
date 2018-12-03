@@ -4,30 +4,30 @@ using System.Threading.Tasks;
 using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Caching;
 using Climbing.Guide.Core.Api;
-using Climbing.Guide.Services;
+using Climbing.Guide.Exceptions;
 
 namespace Climbing.Guide.Forms.Services {
    public class ResourceService : IResourceService {
       private IApiClient ApiClient { get; set; }
       private ICache Cache { get; set; }
       private Http.ICachingHttpClientManager CachingHttpClientManager { get; set; }
-      private IErrorService ErrorService { get; set; }
+      private IExceptionHandler ExceptionHandler { get; set; }
 
-      public ResourceService(IApiClient apiClient, ICache cache, Http.ICachingHttpClientManager cachingHttpClientManager, IErrorService errorService) {
+      public ResourceService(IApiClient apiClient, ICache cache, Http.ICachingHttpClientManager cachingHttpClientManager, IExceptionHandler exceptionHandler) {
          ApiClient = apiClient;
          Cache = cache;
          CachingHttpClientManager = cachingHttpClientManager;
-         ErrorService = errorService;
+         ExceptionHandler = exceptionHandler;
       }
 
-      public async Task<ObservableCollection<Region>> GetRegionsAsync() {
+      public Task<ObservableCollection<Region>> GetRegionsAsync() {
          ObservableCollection<Region> regions = new ObservableCollection<Region>();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
          LoadRegionsAsync(regions);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-         return regions;
+         return Task.FromResult(regions);
       }
 
       private async Task LoadRegionsAsync(ObservableCollection<Region> regions) {
@@ -54,7 +54,7 @@ namespace Climbing.Guide.Forms.Services {
                      page--;
                      await Task.Delay(1000);
                   } else {
-                     await ErrorService.HandleApiCallExceptionAsync(ex);
+                     await ExceptionHandler.HandleAsync(ex);
                      throw;
                   }
                }
