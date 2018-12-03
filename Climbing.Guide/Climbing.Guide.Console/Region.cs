@@ -13,6 +13,8 @@ namespace Climbing.Guide.Console {
       public string Country { get; set; }
       public string City { get; set; }
 
+      public List<Area> Areas { get; set; }
+
       public override string ToString() {
          return $"{Id} {Name}";
       }
