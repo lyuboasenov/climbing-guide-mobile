@@ -1,30 +1,26 @@
-﻿using Climbing.Guide.Logging;
-using Climbing.Guide.Services;
+﻿using Climbing.Guide.Exceptions;
+using Climbing.Guide.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Tasks {
-   public abstract class TaskRunner : ITaskRunner {
+   public class TaskRunner : ISyncTaskRunner, IAsyncTaskRunner {
       protected ILogger Logger { get; set; }
-      protected IErrorService ErrorService { get; set; }
+      protected IExceptionHandler ExceptionHandler { get; set; }
 
-      public TaskRunner(ILogger logger, IErrorService errorService) {
+      public TaskRunner() : this(new VoidLogger(), new VoidExceptionHandler()) { }
+
+      public TaskRunner(ILogger logger, IExceptionHandler exceptionHandler) {
          Logger = logger;
-         ErrorService = errorService;
+         ExceptionHandler = exceptionHandler;
       }
-
-      public abstract Task RunOnUIThreadAsync(Action action);
-
-      public abstract Task<TResult> RunOnUIThreadAsync<TResult>(Func<TResult> function);
-
-      public abstract Task<TResult> RunOnUIThreadAsync<TResult>(Func<Task<TResult>> function);
 
       public async Task RunAsync(Action action) {
          try {
             await Task.Run(action);
          } catch(Exception ex) {
-            await ErrorService.HandleExceptionAsync(ex, "Error executing task.");
+            await ExceptionHandler.HandleAsync(ex, "Error executing task.");
             Logger.Log(ex);
             throw;
          }
@@ -34,7 +30,7 @@ namespace Climbing.Guide.Tasks {
          try {
             return await Task.Run(action);
          } catch (Exception ex) {
-            await ErrorService.HandleExceptionAsync(ex, "Error executing task.");
+            await ExceptionHandler.HandleAsync(ex, "Error executing task.");
             Logger.Log(ex);
             throw;
          }
@@ -44,7 +40,7 @@ namespace Climbing.Guide.Tasks {
          try {
             return await Task.Run(function);
          } catch (Exception ex) {
-            await ErrorService.HandleExceptionAsync(ex, "Error executing task.");
+            await ExceptionHandler.HandleAsync(ex, "Error executing task.");
             Logger.Log(ex);
             throw;
          }
