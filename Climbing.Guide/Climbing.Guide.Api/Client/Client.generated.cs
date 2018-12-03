@@ -11,13 +11,12 @@ namespace Climbing.Guide.Api.Client
     #pragma warning disable // Disable all warnings
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.0.3.0 (NJsonSchema v9.12.5.0 (Newtonsoft.Json v11.0.0.0))")]
-    public partial class AreasClient : BaseClient, IAreasClient
+    public partial class AreasClient : ServiceClient, IAreasClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-        private System.Lazy<Newtonsoft.Json.JsonSerializer> _jsonSerializer;
     
-        public AreasClient(System.Net.Http.HttpClient httpClient)
+        public AreasClient(ServiceClientSettings configuration, System.Net.Http.HttpClient httpClient) : base(configuration)
         {
             _httpClient = httpClient; 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
@@ -26,11 +25,9 @@ namespace Climbing.Guide.Api.Client
                 UpdateJsonSerializerSettings(settings);
                 return settings;
             });
-            _jsonSerializer = new System.Lazy<Newtonsoft.Json.JsonSerializer>(() => Newtonsoft.Json.JsonSerializer.Create(JsonSerializerSettings));
         }
     
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
-        public Newtonsoft.Json.JsonSerializer JsonSerializer { get { return _jsonSerializer.Value; } }
     
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
@@ -540,13 +537,12 @@ namespace Climbing.Guide.Api.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.0.3.0 (NJsonSchema v9.12.5.0 (Newtonsoft.Json v11.0.0.0))")]
-    public partial class SectorsClient : BaseClient, ISectorsClient
+    public partial class SectorsClient : ServiceClient, ISectorsClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-        private System.Lazy<Newtonsoft.Json.JsonSerializer> _jsonSerializer;
     
-        public SectorsClient(System.Net.Http.HttpClient httpClient)
+        public SectorsClient(ServiceClientSettings configuration, System.Net.Http.HttpClient httpClient) : base(configuration)
         {
             _httpClient = httpClient; 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
@@ -555,11 +551,9 @@ namespace Climbing.Guide.Api.Client
                 UpdateJsonSerializerSettings(settings);
                 return settings;
             });
-            _jsonSerializer = new System.Lazy<Newtonsoft.Json.JsonSerializer>(() => Newtonsoft.Json.JsonSerializer.Create(JsonSerializerSettings));
         }
     
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
-        public Newtonsoft.Json.JsonSerializer JsonSerializer { get { return _jsonSerializer.Value; } }
     
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
@@ -1069,13 +1063,12 @@ namespace Climbing.Guide.Api.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.0.3.0 (NJsonSchema v9.12.5.0 (Newtonsoft.Json v11.0.0.0))")]
-    public partial class GradesClient : BaseClient, IGradesClient
+    public partial class GradesClient : ServiceClient, IGradesClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-        private System.Lazy<Newtonsoft.Json.JsonSerializer> _jsonSerializer;
     
-        public GradesClient(System.Net.Http.HttpClient httpClient)
+        public GradesClient(ServiceClientSettings configuration, System.Net.Http.HttpClient httpClient) : base(configuration)
         {
             _httpClient = httpClient; 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
@@ -1084,11 +1077,9 @@ namespace Climbing.Guide.Api.Client
                 UpdateJsonSerializerSettings(settings);
                 return settings;
             });
-            _jsonSerializer = new System.Lazy<Newtonsoft.Json.JsonSerializer>(() => Newtonsoft.Json.JsonSerializer.Create(JsonSerializerSettings));
         }
     
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
-        public Newtonsoft.Json.JsonSerializer JsonSerializer { get { return _jsonSerializer.Value; } }
     
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
@@ -1272,13 +1263,12 @@ namespace Climbing.Guide.Api.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.0.3.0 (NJsonSchema v9.12.5.0 (Newtonsoft.Json v11.0.0.0))")]
-    public partial class LanguagesClient : BaseClient, ILanguagesClient
+    public partial class LanguagesClient : ServiceClient, ILanguagesClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-        private System.Lazy<Newtonsoft.Json.JsonSerializer> _jsonSerializer;
     
-        public LanguagesClient(System.Net.Http.HttpClient httpClient)
+        public LanguagesClient(ServiceClientSettings configuration, System.Net.Http.HttpClient httpClient) : base(configuration)
         {
             _httpClient = httpClient; 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
@@ -1287,11 +1277,9 @@ namespace Climbing.Guide.Api.Client
                 UpdateJsonSerializerSettings(settings);
                 return settings;
             });
-            _jsonSerializer = new System.Lazy<Newtonsoft.Json.JsonSerializer>(() => Newtonsoft.Json.JsonSerializer.Create(JsonSerializerSettings));
         }
     
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
-        public Newtonsoft.Json.JsonSerializer JsonSerializer { get { return _jsonSerializer.Value; } }
     
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
@@ -1403,13 +1391,12 @@ namespace Climbing.Guide.Api.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.0.3.0 (NJsonSchema v9.12.5.0 (Newtonsoft.Json v11.0.0.0))")]
-    public partial class FeedsClient : BaseClient, IFeedsClient
+    public partial class FeedsClient : ServiceClient, IFeedsClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-        private System.Lazy<Newtonsoft.Json.JsonSerializer> _jsonSerializer;
     
-        public FeedsClient(System.Net.Http.HttpClient httpClient)
+        public FeedsClient(ServiceClientSettings configuration, System.Net.Http.HttpClient httpClient) : base(configuration)
         {
             _httpClient = httpClient; 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
@@ -1418,11 +1405,9 @@ namespace Climbing.Guide.Api.Client
                 UpdateJsonSerializerSettings(settings);
                 return settings;
             });
-            _jsonSerializer = new System.Lazy<Newtonsoft.Json.JsonSerializer>(() => Newtonsoft.Json.JsonSerializer.Create(JsonSerializerSettings));
         }
     
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
-        public Newtonsoft.Json.JsonSerializer JsonSerializer { get { return _jsonSerializer.Value; } }
     
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
@@ -1534,13 +1519,12 @@ namespace Climbing.Guide.Api.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.0.3.0 (NJsonSchema v9.12.5.0 (Newtonsoft.Json v11.0.0.0))")]
-    public partial class RegionsClient : BaseClient, IRegionsClient
+    public partial class RegionsClient : ServiceClient, IRegionsClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-        private System.Lazy<Newtonsoft.Json.JsonSerializer> _jsonSerializer;
     
-        public RegionsClient(System.Net.Http.HttpClient httpClient)
+        public RegionsClient(ServiceClientSettings configuration, System.Net.Http.HttpClient httpClient) : base(configuration)
         {
             _httpClient = httpClient; 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
@@ -1549,11 +1533,9 @@ namespace Climbing.Guide.Api.Client
                 UpdateJsonSerializerSettings(settings);
                 return settings;
             });
-            _jsonSerializer = new System.Lazy<Newtonsoft.Json.JsonSerializer>(() => Newtonsoft.Json.JsonSerializer.Create(JsonSerializerSettings));
         }
     
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
-        public Newtonsoft.Json.JsonSerializer JsonSerializer { get { return _jsonSerializer.Value; } }
     
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
@@ -2053,13 +2035,12 @@ namespace Climbing.Guide.Api.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.0.3.0 (NJsonSchema v9.12.5.0 (Newtonsoft.Json v11.0.0.0))")]
-    public partial class RoutesClient : BaseClient, IRoutesClient
+    public partial class RoutesClient : ServiceClient, IRoutesClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-        private System.Lazy<Newtonsoft.Json.JsonSerializer> _jsonSerializer;
     
-        public RoutesClient(System.Net.Http.HttpClient httpClient)
+        public RoutesClient(ServiceClientSettings configuration, System.Net.Http.HttpClient httpClient) : base(configuration)
         {
             _httpClient = httpClient; 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
@@ -2068,11 +2049,9 @@ namespace Climbing.Guide.Api.Client
                 UpdateJsonSerializerSettings(settings);
                 return settings;
             });
-            _jsonSerializer = new System.Lazy<Newtonsoft.Json.JsonSerializer>(() => Newtonsoft.Json.JsonSerializer.Create(JsonSerializerSettings));
         }
     
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
-        public Newtonsoft.Json.JsonSerializer JsonSerializer { get { return _jsonSerializer.Value; } }
     
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
@@ -2582,13 +2561,12 @@ namespace Climbing.Guide.Api.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.0.3.0 (NJsonSchema v9.12.5.0 (Newtonsoft.Json v11.0.0.0))")]
-    public partial class UsersClient : BaseClient, IUsersClient
+    public partial class UsersClient : ServiceClient, IUsersClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-        private System.Lazy<Newtonsoft.Json.JsonSerializer> _jsonSerializer;
     
-        public UsersClient(System.Net.Http.HttpClient httpClient)
+        public UsersClient(ServiceClientSettings configuration, System.Net.Http.HttpClient httpClient) : base(configuration)
         {
             _httpClient = httpClient; 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
@@ -2597,11 +2575,9 @@ namespace Climbing.Guide.Api.Client
                 UpdateJsonSerializerSettings(settings);
                 return settings;
             });
-            _jsonSerializer = new System.Lazy<Newtonsoft.Json.JsonSerializer>(() => Newtonsoft.Json.JsonSerializer.Create(JsonSerializerSettings));
         }
     
         protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
-        public Newtonsoft.Json.JsonSerializer JsonSerializer { get { return _jsonSerializer.Value; } }
     
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);

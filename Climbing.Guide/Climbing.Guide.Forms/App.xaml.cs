@@ -5,10 +5,12 @@ using Xamarin.Forms.Xaml;
 using Climbing.Guide.Forms.Services;
 using System;
 using Climbing.Guide.Caching;
-using Climbing.Guide.Services;
 using Climbing.Guide.Tasks;
 using Climbing.Guide.Serialization;
 using Climbing.Guide.Caching.FileSystem;
+using Climbing.Guide.Exceptions;
+using Climbing.Guide.Core.Api;
+using Climbing.Guide.Api;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Forms {
@@ -80,17 +82,17 @@ namespace Climbing.Guide.Forms {
          // Register services
          containerRegistry.Register<IEventService, EventService>();
          containerRegistry.Register<IPreferenceService, PreferenceService>();
-         containerRegistry.Register<IErrorService, ErrorService>();
+         containerRegistry.Register<IExceptionHandler, FormsExceptionHandler>();
          containerRegistry.Register<IAlertService, AlertService>();
-         containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
-         containerRegistry.Register<INavigationService, NavigationService>();
+         //containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
          containerRegistry.Register<IMediaService, MediaService>();
-         containerRegistry.Register<ITaskRunner, FormsTaskRunner>();
+         containerRegistry.Register<IAsyncTaskRunner, FormsTaskRunner>();
+         containerRegistry.Register<ISyncTaskRunner, FormsTaskRunner>();
+         containerRegistry.Register<IMainThreadTaskRunner, FormsTaskRunner>();
          containerRegistry.Register<ICache, Cache>();
          containerRegistry.Register<ICacheRepository, Caching.Sqlite.SqliteCacheRepository>();
          containerRegistry.Register<IResourceService, ResourceService>();
          containerRegistry.Register<ISerializer, JsonSerializer>();
-         containerRegistry.Register<Core.Api.IApiClient, ApiClient>();
          containerRegistry.Register<IEnvironment, Services.Environment>();
 
 #if DEBUG
@@ -100,6 +102,9 @@ namespace Climbing.Guide.Forms {
 #endif
 
          // Register instances
+         containerRegistry.RegisterSingleton<Core.Api.IApiClient, ApiClient>();
+         containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
+
          containerRegistry.RegisterInstance(DependencyService.Get<IProgressService>());
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
 
@@ -116,8 +121,16 @@ namespace Climbing.Guide.Forms {
          var cachingHttpClientManager = new Http.CachingHttpClientManager();
          containerRegistry.RegisterInstance<Http.ICachingHttpClientManager>(cachingHttpClientManager);
 
-         containerRegistry.RegisterInstance<Core.Api.IApiClientSettings>(
-            new Core.Api.CachingApiClientSettings(cachingHttpClientManager, responseCache, largeResponseCache, BaseUrl));
+         var httpClient = new System.Net.Http.HttpClient() { BaseAddress = new Uri(BaseUrl) };
+         var authenticationManager = new Api.ClimbingGuideAuthenticationManager(httpClient);
+         containerRegistry.RegisterInstance<IAuthenticationManager>(authenticationManager);
+
+         containerRegistry.RegisterInstance<IApiClientSettings>(
+            new CachingApiClientSettings(cachingHttpClientManager, 
+               responseCache, 
+               largeResponseCache, 
+               BaseUrl, 
+               authenticationManager));
       }
 
       private ICacheSettings GetCacheSettings() {
