@@ -9,9 +9,11 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="YamlDotNet.Signed" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Climbing.Guide.Api\Climbing.Guide.Api.csproj" />
     <ProjectReference Include="..\Climbing.Guide\Climbing.Guide.csproj" />
   </ItemGroup>
 

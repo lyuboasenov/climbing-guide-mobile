@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
