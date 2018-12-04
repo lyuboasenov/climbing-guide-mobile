@@ -126,10 +126,8 @@ namespace Climbing.Guide.Api {
          });
 
          using (var response = await HttpClient.PostAsync("o/revoke_token/", content)) {
-            Token = string.Empty;
-            RefreshToken = string.Empty;
             Username = string.Empty;
-            TokenExpiration = DateTime.MinValue;
+            SetCredentials(string.Empty, string.Empty, string.Empty, DateTime.MinValue);
          }
       }
    }

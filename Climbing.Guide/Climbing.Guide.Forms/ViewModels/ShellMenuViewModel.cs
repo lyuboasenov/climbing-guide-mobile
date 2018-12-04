@@ -122,6 +122,8 @@ namespace Climbing.Guide.Forms.ViewModels {
          }
 
          InitializeMenuItems();
+
+         await Navigation.NavigateAsync(Navigation.GetShellNavigationUri(nameof(Views.HomeView)));
       }
 
       private MenuItemModel GetMenuItem(string title, Uri navigationUri, string group = null) {
