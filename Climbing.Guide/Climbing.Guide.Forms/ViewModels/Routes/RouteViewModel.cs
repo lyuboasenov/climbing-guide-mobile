@@ -29,9 +29,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       public async override Task OnNavigatedToAsync(params object[] parameters) {
          await base.OnNavigatedToAsync(parameters);
          Route = parameters[0] as Route;
-         if (null != Route) {
-            await Initialize(Route);
-         }
+         await Initialize(Route);
       }
 
       private async Task Initialize(Route route) {

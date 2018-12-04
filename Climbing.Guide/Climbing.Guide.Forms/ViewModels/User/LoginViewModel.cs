@@ -1,5 +1,7 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Forms.Validations;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -18,7 +20,7 @@ namespace Climbing.Guide.Forms.ViewModels.User {
          //Username = string.Empty;
          //Password = string.Empty;
 
-         LoginCommand = new Command(async () => await Login(), () => !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password));
+         LoginCommand = new Command(async () => await Login(), () => !HasValidationErrors);
          SignupCommand = new Command(async () => await Signup());
       }
 
@@ -43,10 +45,25 @@ namespace Climbing.Guide.Forms.ViewModels.User {
          }
       }
 
+      protected override void InitializeValidationRules() {
+         base.InitializeValidationRules();
+         AddValidationRule(nameof(Username), new EmailValidationRule(Resources.Strings.User.Username_Validation_Error));
+         AddValidationRule(nameof(Password),
+            new CustomValidationRule(Resources.Strings.User.Password_Validation_Error,
+               (key, value) => {
+                  var password = value as string;
+                  return !string.IsNullOrEmpty(password) &&
+                  password.Trim().Length > 8 &&
+                  password.Any(char.IsDigit) &&
+                  password.Any(char.IsLetter);
+               }));
+      }
+
       // Update can execute of the login command
-      public void OnPropertyChanged(string propertyName, object before, object after) {
-         if(propertyName.CompareTo(nameof(Username)) == 0 ||
-            propertyName.CompareTo(nameof(Password)) == 0) {
+      public override void OnPropertyChanged(string propertyName, object before, object after) {
+         base.OnPropertyChanged(propertyName, before, after);
+
+         if (null != LoginCommand) {
             (LoginCommand as Command).ChangeCanExecute();
          }
       }

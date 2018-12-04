@@ -4,8 +4,12 @@
    xmlns:strings="clr-namespace:Climbing.Guide.Forms.Resources.Strings"
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+   xmlns:validations="clr-namespace:Climbing.Guide.Forms.Validations"
    x:Class="Climbing.Guide.Forms.Views.User.LoginView"
    Title="{Binding Title}">
+   <ContentPage.Resources>
+      <validations:ValidationErrorConverter x:Key="ValidationErrorConverter" />
+   </ContentPage.Resources>
 
    <Grid>
       <Grid.RowDefinitions>
@@ -20,8 +24,14 @@
 
       <ScrollView Grid.Row="1">
          <StackLayout Orientation="Vertical" Padding="16,40,16,40" Spacing="10">
-            <Entry Grid.Row="1" Text="{Binding Username}" HorizontalOptions="FillAndExpand" Placeholder="{Binding Source={x:Static strings:User.Username_Hint}}" />
-            <Entry Grid.Row="2" Text="{Binding Password}" HorizontalOptions="FillAndExpand" Placeholder="{Binding Source={x:Static strings:User.Password_Hint}}" IsPassword="True" />
+            <Entry Text="{Binding Username}" HorizontalOptions="FillAndExpand" Placeholder="{Binding Source={x:Static strings:User.Username_Hint}}" />
+            <Label LineBreakMode="WordWrap" 
+                   TextColor="Red" 
+                   Text="{Binding ValidationErrors, Converter={StaticResource ValidationErrorConverter}, ConverterParameter=Username}" />
+            <Entry Text="{Binding Password}" HorizontalOptions="FillAndExpand" Placeholder="{Binding Source={x:Static strings:User.Password_Hint}}" IsPassword="True" />
+            <Label LineBreakMode="WordWrap" 
+                   TextColor="Red" 
+                   Text="{Binding ValidationErrors, Converter={StaticResource ValidationErrorConverter}, ConverterParameter=Password}" />
 
             <Grid>
                <Grid.ColumnDefinitions>
