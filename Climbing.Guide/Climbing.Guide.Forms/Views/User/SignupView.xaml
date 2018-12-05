@@ -4,6 +4,7 @@
    xmlns:strings="clr-namespace:Climbing.Guide.Forms.Resources.Strings"
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+   xmlns:validations="clr-namespace:Climbing.Guide.Forms.Validations"
    x:Class="Climbing.Guide.Forms.Views.User.SignupView"
    Title="{Binding Title}">
 
@@ -21,9 +22,12 @@
       <ScrollView Grid.Row="1">
          <StackLayout Orientation="Vertical" Padding="16,40,16,40" Spacing="10">
             <Entry Grid.Row="1" Text="{Binding Username}" HorizontalOptions="FillAndExpand" Placeholder="{Binding Source={x:Static strings:User.Username_Hint}}" />
+            <validations:ErrorLabel ErrorKey="Username" />
             <Entry Grid.Row="2" Text="{Binding Password}" HorizontalOptions="FillAndExpand" Placeholder="{Binding Source={x:Static strings:User.Password_Hint}}" IsPassword="True" />
+            <validations:ErrorLabel ErrorKey="Password" />
             <Entry Grid.Row="2" Text="{Binding ConfirmPassword}" HorizontalOptions="FillAndExpand" Placeholder="{Binding Source={x:Static strings:User.Confirm_Password_Hint}}" IsPassword="True" />
-
+            <validations:ErrorLabel ErrorKey="ConfirmPassword" />
+            
             <Grid>
                <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="*" />

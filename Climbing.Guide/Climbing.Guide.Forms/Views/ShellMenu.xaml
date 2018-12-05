@@ -7,17 +7,13 @@
    x:Class="Climbing.Guide.Forms.Views.ShellMenu"
    Title="{Binding Title}">
    <ContentPage.Content>
-      <StackLayout>
-         <ScrollView>
-            <ListView ItemsSource="{Binding MenuItems}"
-                      SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay}">
-               <ListView.ItemTemplate>
-                  <DataTemplate>
-                     <TextCell Text="{Binding Title}" />
-                  </DataTemplate>
-               </ListView.ItemTemplate>
-            </ListView>
-         </ScrollView>
-      </StackLayout>
+      <ListView ItemsSource="{Binding MenuItems}"
+                SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay}">
+         <ListView.ItemTemplate>
+            <DataTemplate>
+               <TextCell Text="{Binding Title}" />
+            </DataTemplate>
+         </ListView.ItemTemplate>
+      </ListView>
    </ContentPage.Content>
 </ContentPage>
