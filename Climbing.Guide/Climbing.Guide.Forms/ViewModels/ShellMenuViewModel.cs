@@ -20,7 +20,7 @@ namespace Climbing.Guide.Forms.ViewModels {
          Title = Resources.Strings.Main.CG;
          InitializeMenuItems();
 
-         GetService<IEventService>().GetEvent<Events.ShellMenuInalidated>().Subscribe(InitializeMenuItems);
+         GetService<IEventService>().GetEvent<Events.ShellMenuInalidatedEvent>().Subscribe(InitializeMenuItems);
       }
 
       public async void OnSelectedMenuItemChanged() {
@@ -104,12 +104,20 @@ namespace Climbing.Guide.Forms.ViewModels {
          var progressService = GetService<IProgressService>();
          await progressService.ShowProgressIndicatorAsync();
 
-         for(int i = 0; i < 100; i++) {
+         for (int i = 0; i < 100; i++) {
             await progressService.UpdateLoadingProgressAsync(i, 100, $"{i} / 100 items processed.");
-            await Task.Delay(500);
+            await Task.Delay(100);
          }
 
          await progressService.HideProgressIndicatorAsync();
+         //var progressService = GetService<IProgressService>();
+         //await progressService.ShowLoadingIndicatorAsync();
+
+         //for (int i = 0; i < 50; i++) {
+         //   await Task.Delay(500);
+         //}
+
+         //await progressService.HideLoadingIndicatorAsync();
       }
 
       private async Task LogoutAsync() {
