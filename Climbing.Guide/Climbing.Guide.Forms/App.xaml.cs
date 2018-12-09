@@ -84,7 +84,6 @@ namespace Climbing.Guide.Forms {
          containerRegistry.Register<IPreferenceService, PreferenceService>();
          containerRegistry.Register<IExceptionHandler, FormsExceptionHandler>();
          containerRegistry.Register<IAlertService, AlertService>();
-         //containerRegistry.Register<Core.Models.Routes.IGradeService, Core.Models.Routes.GradeService>();
          containerRegistry.Register<IMediaService, MediaService>();
          containerRegistry.Register<IAsyncTaskRunner, FormsTaskRunner>();
          containerRegistry.Register<ISyncTaskRunner, FormsTaskRunner>();
@@ -94,6 +93,7 @@ namespace Climbing.Guide.Forms {
          containerRegistry.Register<IResourceService, ResourceService>();
          containerRegistry.Register<ISerializer, JsonSerializer>();
          containerRegistry.Register<IEnvironment, Services.Environment>();
+         containerRegistry.Register<IProgressService, ProgressService>();
 
 #if DEBUG
          containerRegistry.Register<Logging.ILogger, Logging.DebugLogger>();
@@ -105,7 +105,6 @@ namespace Climbing.Guide.Forms {
          containerRegistry.RegisterSingleton<Core.Api.IApiClient, ApiClient>();
          containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
 
-         containerRegistry.RegisterInstance(DependencyService.Get<IProgressService>());
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
 
          containerRegistry.RegisterInstance(GetCacheSettings());

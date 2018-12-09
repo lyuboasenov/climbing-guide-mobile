@@ -1,62 +1,64 @@
-﻿using System.Threading.Tasks;
-using Xamarin.Forms;
+﻿using Climbing.Guide.Forms.Events;
+using Climbing.Guide.Tasks;
+using Rg.Plugins.Popup.Pages;
+using System;
+using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.Services {
-   public abstract class ProgressService : IProgressService {
+   public class ProgressService : IProgressService {
 
-      private Page progressView;
-      private Page loadingView;
+      private Lazy<PopupPage> LoadingView { get; set; }
+      private Lazy<PopupPage> ProgressView { get; set; }
 
-      protected Page LoadingView {
-         get {
-            if (null == loadingView) {
-               loadingView = new Views.LoadingIndicatorView();
-            }
+      private IEventService EventService { get; set; }
+      private IMainThreadTaskRunner MainThreadTaskRunner { get; set; }
 
-            return loadingView;
-         }
+      public ProgressService(IEventService eventService, IMainThreadTaskRunner mainThreadTaskRunner) {
+         EventService = eventService;
+         MainThreadTaskRunner = mainThreadTaskRunner;
+
+         LoadingView = new Lazy<PopupPage>(() => new Views.LoadingView());
+         ProgressView = new Lazy<PopupPage>(() => new Views.ProgressView(EventService));
       }
 
-      protected Page ProgressView {
-         get {
-            if (null == progressView) {
-               progressView = new Views.ProgressIndicatorView();
-            }
-
-            return progressView;
-         }
-      }
-
-      protected abstract void ShowLoadingIndicatorInternal();
-      protected abstract void HideLoadingIndicatorInternal();
-
-      protected abstract void ShowProgressIndicatorInternal();
-      protected abstract void HideProgressIndicatorInternal();
-
-      protected abstract void UpdateLoadingProgressInternal(decimal progress, decimal total, string message);
-
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
       public async Task ShowLoadingIndicatorAsync() {
-
-         Device.BeginInvokeOnMainThread(ShowLoadingIndicatorInternal);
+         await MainThreadTaskRunner.RunOnUIThreadAsync(ShowLoadingIndicatorInternal);
       }
       public async Task HideLoadingIndicatorAsync() {
-         Device.BeginInvokeOnMainThread(HideLoadingIndicatorInternal);
+         await MainThreadTaskRunner.RunOnUIThreadAsync(HideLoadingIndicatorInternal);
       }
 
       public async Task ShowProgressIndicatorAsync() {
-         Device.BeginInvokeOnMainThread(ShowProgressIndicatorInternal);
+         await MainThreadTaskRunner.RunOnUIThreadAsync(ShowProgressIndicatorInternal);
       }
       public async Task HideProgressIndicatorAsync() {
-         Device.BeginInvokeOnMainThread(HideProgressIndicatorInternal);
+         await MainThreadTaskRunner.RunOnUIThreadAsync(HideProgressIndicatorInternal);
       }
 
-      public async Task UpdateLoadingProgressAsync(double progress, double total, string message) {
-         Device.BeginInvokeOnMainThread(() => {
-            (ProgressView as Views.ProgressIndicatorView).ProgressBar.Progress = progress / total;
-            (ProgressView as Views.ProgressIndicatorView).MessageLabel.Text = message;
-         });
+      public Task UpdateLoadingProgressAsync(double processed, double total, string message) {
+         EventService.GetEvent<ProgressChangedEvent, Events.Payload.ProgressChanged>().
+            Publish(new Events.Payload.ProgressChanged() {
+               Message = message,
+               Processed = processed,
+               Total = total
+            });
+         return Task.CompletedTask;
       }
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+
+      private void ShowLoadingIndicatorInternal() {
+         Rg.Plugins.Popup.Services.PopupNavigation.Instance.PushAsync(LoadingView.Value);
+      }
+
+      private void HideLoadingIndicatorInternal() {
+         Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAsync();
+      }
+
+      private void ShowProgressIndicatorInternal() {
+         Rg.Plugins.Popup.Services.PopupNavigation.Instance.PushAsync(ProgressView.Value);
+      }
+
+      private void HideProgressIndicatorInternal() {
+         Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAsync();
+      }
    }
 }
