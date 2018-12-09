@@ -17,6 +17,7 @@ namespace Climbing.Guide.Droid {
          base.SetTheme(Resource.Style.MainTheme);
 
          base.OnCreate(savedInstanceState);
+         Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
          Xamarin.Essentials.Platform.Init(this, savedInstanceState); // add this line to your code
          global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 

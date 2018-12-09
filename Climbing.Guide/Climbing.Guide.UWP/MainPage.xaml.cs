@@ -7,6 +7,7 @@ namespace Climbing.Guide.UWP {
    public sealed partial class MainPage : WindowsPage {
       public MainPage() {
          this.InitializeComponent();
+         Rg.Plugins.Popup.Popup.Init();
          Xamarin.FormsMaps.Init("INSERT_MAP_KEY_HERE");
          this.LoadApplication(new Forms.App());
       }
