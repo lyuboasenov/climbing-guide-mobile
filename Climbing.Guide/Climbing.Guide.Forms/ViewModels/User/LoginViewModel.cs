@@ -40,7 +40,7 @@ namespace Climbing.Guide.Forms.ViewModels.User {
          if (!success) {
             await GetService<IAlertService>().DisplayAlertAsync(Resources.Strings.User.Login_Invalid_Title, Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
          } else {
-            GetService<IEventService>().GetEvent<Events.ShellMenuInalidated>().Publish();
+            GetService<IEventService>().GetEvent<Events.ShellMenuInvalidatedEvent>().Publish();
             await Navigation.NavigateAsync(Navigation.GetShellNavigationUri(nameof(Views.HomeView)));
          }
       }

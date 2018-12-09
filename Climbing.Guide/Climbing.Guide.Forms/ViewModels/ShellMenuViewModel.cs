@@ -20,7 +20,7 @@ namespace Climbing.Guide.Forms.ViewModels {
          Title = Resources.Strings.Main.CG;
          InitializeMenuItems();
 
-         GetService<IEventService>().GetEvent<Events.ShellMenuInalidatedEvent>().Subscribe(InitializeMenuItems);
+         GetService<IEventService>().GetEvent<Events.ShellMenuInvalidatedEvent>().Subscribe(InitializeMenuItems);
       }
 
       public async void OnSelectedMenuItemChanged() {
