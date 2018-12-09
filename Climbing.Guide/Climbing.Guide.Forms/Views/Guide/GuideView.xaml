@@ -80,7 +80,7 @@
               HeightRequest="40"
               BorderRadius="20"
               Margin="15"
-              IsVisible="{Binding Client.IsLoggedIn}"
+              IsVisible="{Binding Client.AuthenticationManager.IsLoggedIn}"
               FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
               Text="{x:Static resources:GlyphNames.Plus}"
               Command="{Binding AddRouteCommand}"/>
