@@ -239,5 +239,14 @@ namespace Climbing.Guide.Forms.Resources.Strings {
                 return ResourceManager.GetString("Splash_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} field is required..
+        /// </summary>
+        public static string Validation_Required_Field {
+            get {
+                return ResourceManager.GetString("Validation_Required_Field", resourceCulture);
+            }
+        }
     }
 }

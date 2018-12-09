@@ -12,7 +12,7 @@ namespace Climbing.Guide.Forms.Validations {
       public void Validate(string key, object value) {
          var strValue = value as string;
          IsValid = null != strValue && !string.IsNullOrEmpty(strValue.Trim()) //value is string and is checked for whitespace only value
-            || null != value; //if value is not string then only null check is applied
+            || null == strValue && null != value; //if value is not string then only null check is applied
       }
    }
 }

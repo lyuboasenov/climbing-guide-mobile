@@ -177,4 +177,7 @@
   <data name="Error_Mesage" xml:space="preserve">
     <value>A generic error occur.</value>
   </data>
+  <data name="Validation_Required_Field" xml:space="preserve">
+    <value>{0} field is required.</value>
+  </data>
 </root>

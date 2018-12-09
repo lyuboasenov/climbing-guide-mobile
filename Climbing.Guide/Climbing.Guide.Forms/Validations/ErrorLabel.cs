@@ -1,10 +1,13 @@
-﻿using Climbing.Guide.Forms.Validations;
+﻿using System;
+using System.Globalization;
+using Climbing.Guide.Forms.Validations;
 using Xamarin.Forms;
 
 namespace Climbing.Guide.Forms.Validations {
    public class ErrorLabel : Label {
 
       private static ValidationErrorConverter ValidationErrorConverter { get; } = new ValidationErrorConverter();
+      private static StringToVisibilityConverter StringToVisibilityConverter { get; } = new StringToVisibilityConverter();
 
       public static readonly BindableProperty ErrorKeyProperty =
          BindableProperty.Create(nameof(ErrorKey), typeof(string), typeof(ErrorLabel), null, propertyChanged: OnErrorKeyPropertyChanged);
@@ -21,6 +24,9 @@ namespace Climbing.Guide.Forms.Validations {
       private void OnErrorKeyChanged(BindableObject bindable, object oldValue, object newValue) {
          var textBinding = new Binding("ValidationErrors", converter: ValidationErrorConverter, converterParameter: newValue);
          SetBinding(TextProperty, textBinding);
+
+         var visibilityBinding = new Binding("ValidationErrors", converter: StringToVisibilityConverter, converterParameter: newValue);
+         SetBinding(IsVisibleProperty, visibilityBinding);
       }
    }
 }
