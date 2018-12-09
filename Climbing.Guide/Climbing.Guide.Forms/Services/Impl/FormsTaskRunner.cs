@@ -11,22 +11,43 @@ namespace Climbing.Guide.Forms.Services {
          base (logger, exceptionHandler) { }
 
       public Task RunOnUIThreadAsync(Action action) {
-         Func<Task> asyncAction = async () => { action(); };
+         Func<Task> asyncAction = () => {
+            try {
+               action();
+               return Task.CompletedTask;
+            } catch(Exception ex) {
+               return Task.FromException(ex);
+            }
+         };
 
          return RunOnUIThreadAsync(asyncAction);
       }
 
       public Task<TResult> RunOnUIThreadAsync<TResult>(Func<TResult> function) {
-         Func<Task<TResult>> asyncFunc = async () => { return function(); };
+         Func<Task<TResult>> asyncFunc = () => {
+            try {
+               return Task.FromResult(function());
+            } catch (Exception ex) {
+               return Task.FromException<TResult>(ex);
+            }
+         };
 
          return RunOnUIThreadAsync(asyncFunc);
       }
 
       public Task<TResult> RunOnUIThreadAsync<TResult>(Func<Task<TResult>> function) {
-         Task<TResult> result = null;
-         Device.BeginInvokeOnMainThread(() => { result = function(); });
+         TaskCompletionSource<TResult> resultTask = new TaskCompletionSource<TResult>();
 
-         return result;
+         Device.BeginInvokeOnMainThread(async () => {
+            try {
+               var result = await function();
+               resultTask.SetResult(result);
+            } catch (Exception ex) {
+               resultTask.SetException(ex);
+            }
+         });
+
+         return resultTask.Task;
       }
    }
 }
