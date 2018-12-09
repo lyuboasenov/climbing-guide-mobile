@@ -3,6 +3,7 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:strings="clr-namespace:Climbing.Guide.Forms.Resources.Strings"
             xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
+            xmlns:validations="clr-namespace:Climbing.Guide.Forms.Validations"
             x:Class="Climbing.Guide.Forms.Views.Guide.ManageRegionView"
             Title="{Binding Title}">
 
@@ -17,8 +18,11 @@
          <ScrollView>
             <StackLayout>
                <Entry Text="{Binding Name}" Placeholder="{x:Static strings:Guide.Manage_Region_Name}"/>
+               <validations:ErrorLabel ErrorKey="Name" />
                <Editor Text="{Binding Info}" Placeholder="{x:Static strings:Guide.Manage_Region_Info}"/>
+               <validations:ErrorLabel ErrorKey="Info" />
                <Editor Text="{Binding Restrictions}" Placeholder="{x:Static strings:Guide.Manage_Region_Restrictions}"/>
+               <validations:ErrorLabel ErrorKey="Location" />
             </StackLayout>
          </ScrollView>
       </ContentPage.Content>

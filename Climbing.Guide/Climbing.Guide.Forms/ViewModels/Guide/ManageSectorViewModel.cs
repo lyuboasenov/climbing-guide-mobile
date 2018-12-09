@@ -1,5 +1,7 @@
-﻿using Climbing.Guide.Forms.Services;
+﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Validations;
+using Climbing.Guide.Tasks;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,7 +11,7 @@ using Xamarin.Forms.Maps;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class ManageAreaViewModel : BaseViewModel {
+   public class ManageSectorViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
       public ICommand SaveCommand { get; set; }
@@ -17,6 +19,9 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       public ObservableCollection<Climbing.Guide.Api.Schemas.Region> Regions { get; set; }
       public Climbing.Guide.Api.Schemas.Region SelectedRegion { get; set; }
+
+      public ObservableCollection<Area> Areas { get; set; }
+      public Area SelectedArea { get; set; }
 
       public string Name { get; set; }
       public string Info { get; set; }
@@ -26,7 +31,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       public MapSpan Location { get; set; }
 
-      public ManageAreaViewModel() {
+      public ManageSectorViewModel() {
          Title = VmTitle;
       }
 
@@ -56,7 +61,12 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
             new RequiredValidationRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
-                  Resources.Strings.Guide.Manage_Area_Region)));
+                  Resources.Strings.Guide.Manage_Sector_Region)));
+         AddValidationRule(nameof(SelectedArea),
+            new RequiredValidationRule(
+               string.Format(
+                  Resources.Strings.Main.Validation_Required_Field,
+                  Resources.Strings.Guide.Manage_Sector_Area)));
       }
 
       public async override Task OnNavigatedToAsync(params object[] parameters) {
@@ -78,6 +88,10 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          }
       }
 
+      public virtual void OnSelectedRegionChanged() {
+         GetService<ISyncTaskRunner>().RunSync(async () => { await InitializeAreasAsync(); });
+      }
+
       private async Task GoBack() {
          await Navigation.GoBackAsync();
       }
@@ -88,6 +102,20 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       private void Save() {
 
+      }
+
+      protected async virtual Task InitializeAreasAsync() {
+         Areas = null;
+         SelectedArea = null;
+
+         if (null != SelectedRegion) {
+            try {
+               Areas = (await Client.AreasClient.ListAsync(SelectedRegion.Id.Value)).Results;
+            } catch (ApiCallException ex) {
+               await Errors.HandleAsync(ex);
+               return;
+            }
+         }
       }
    }
 }

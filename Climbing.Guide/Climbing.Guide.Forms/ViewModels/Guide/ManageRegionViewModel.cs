@@ -1,4 +1,6 @@
-﻿using Climbing.Guide.Forms.Services;
+﻿using Climbing.Guide.Forms.Resources;
+using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Forms.Validations;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -27,6 +29,25 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       protected override void InitializeCommands() {
          SaveCommand = new Command(async () => await Save(), CanSave);
          CancelCommand = new Command(async () => await GoBack());
+      }
+
+      protected override void InitializeValidationRules() {
+         base.InitializeValidationRules();
+         AddValidationRule(nameof(Name), 
+            new RequiredValidationRule(
+               string.Format(
+                  Resources.Strings.Main.Validation_Required_Field, 
+                  Resources.Strings.Guide.Manage_Region_Name)));
+         AddValidationRule(nameof(Info), 
+            new RequiredValidationRule(
+               string.Format(
+                  Resources.Strings.Main.Validation_Required_Field,
+                  Resources.Strings.Guide.Manage_Region_Info)));
+         AddValidationRule(nameof(Location),
+            new RequiredValidationRule(
+               string.Format(
+                  Resources.Strings.Main.Validation_Required_Field,
+                  Resources.Strings.Guide.Manage_Region_Map_Title)));
       }
 
       public async override Task OnNavigatedToAsync(params object[] parameters) {
@@ -69,13 +90,21 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          }
       }
 
+      public override void OnPropertyChanged(string propertyName, object before, object after) {
+         base.OnPropertyChanged(propertyName, before, after);
+
+         var saveCommand = SaveCommand as Command;
+         if (null != saveCommand) {
+            saveCommand.ChangeCanExecute();
+         }
+      }
+
       private async Task GoBack() {
          await Navigation.GoBackAsync();
       }
 
       private bool CanSave() {
-         // TODO: validate form
-         return true;
+         return !HasValidationErrors;
       }
 
       private async Task Save() {

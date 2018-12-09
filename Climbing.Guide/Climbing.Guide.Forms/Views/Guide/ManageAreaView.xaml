@@ -3,6 +3,7 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:strings="clr-namespace:Climbing.Guide.Forms.Resources.Strings"
             xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
+            xmlns:validations="clr-namespace:Climbing.Guide.Forms.Validations"
             x:Class="Climbing.Guide.Forms.Views.Guide.ManageAreaView"
             Title="{Binding Title}">
 
@@ -20,11 +21,15 @@
                        SelectedItem="{Binding SelectedRegion}"
                        ItemDisplayBinding="{Binding Name}"
                        Title="{x:Static strings:Guide.Manage_Area_Region}"/>
+               <validations:ErrorLabel ErrorKey="SelectedRegion" />
                <Entry Text="{Binding Name}" Placeholder="{x:Static strings:Guide.Manage_Area_Name}"/>
+               <validations:ErrorLabel ErrorKey="Name" />
                <Editor Text="{Binding Info}" Placeholder="{x:Static strings:Guide.Manage_Area_Info}"/>
+               <validations:ErrorLabel ErrorKey="Info" />
                <Editor Text="{Binding Restrictions}" Placeholder="{x:Static strings:Guide.Manage_Area_Restrictions}"/>
-               <Editor Text="{Binding Restrictions}" Placeholder="{x:Static strings:Guide.Manage_Area_Access}"/>
-               <Editor Text="{Binding Restrictions}" Placeholder="{x:Static strings:Guide.Manage_Area_Descent}"/>
+               <Editor Text="{Binding Access}" Placeholder="{x:Static strings:Guide.Manage_Area_Access}"/>
+               <Editor Text="{Binding Descent}" Placeholder="{x:Static strings:Guide.Manage_Area_Descent}"/>
+               <validations:ErrorLabel ErrorKey="Location" />
             </StackLayout>
          </ScrollView>
       </ContentPage.Content>

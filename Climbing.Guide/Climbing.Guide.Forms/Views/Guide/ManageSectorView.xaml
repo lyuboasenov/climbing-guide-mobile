@@ -27,8 +27,8 @@
                <Entry Text="{Binding Name}" Placeholder="{x:Static strings:Guide.Manage_Sector_Name}"/>
                <Editor Text="{Binding Info}" Placeholder="{x:Static strings:Guide.Manage_Sector_Info}"/>
                <Editor Text="{Binding Restrictions}" Placeholder="{x:Static strings:Guide.Manage_Sector_Restrictions}"/>
-               <Editor Text="{Binding Restrictions}" Placeholder="{x:Static strings:Guide.Manage_Sector_Access}"/>
-               <Editor Text="{Binding Restrictions}" Placeholder="{x:Static strings:Guide.Manage_Sector_Descent}"/>
+               <Editor Text="{Binding Access}" Placeholder="{x:Static strings:Guide.Manage_Sector_Access}"/>
+               <Editor Text="{Binding Descent}" Placeholder="{x:Static strings:Guide.Manage_Sector_Descent}"/>
             </StackLayout>
          </ScrollView>
       </ContentPage.Content>
