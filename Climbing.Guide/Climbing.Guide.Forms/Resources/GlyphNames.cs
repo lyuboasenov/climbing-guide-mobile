@@ -1,5 +1,5 @@
 ﻿namespace Climbing.Guide.Forms.Resources {
-   public class GlyphNames {
+   public static class GlyphNames {
       public const string ExpandGlyph = "\uF065";
       public const string ContractGlyph = "\uF066";
 
@@ -367,7 +367,7 @@
       public const string EnvelopeOpenText = "\uF658";
       public const string EnvelopeSquare = "\uF199";
       public const string Envira = "\uF299";
-      public const string Equals = "\uF52c";
+      public const string Equals_ = "\uF52c";
       public const string Eraser = "\uF12d";
       public const string Erlang = "\uF39d";
       public const string Ethereum = "\uF42e";

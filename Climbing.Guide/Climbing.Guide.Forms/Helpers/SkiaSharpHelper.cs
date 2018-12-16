@@ -22,9 +22,9 @@ namespace Climbing.Guide.Forms.Helpers {
          };
       }
 
-      public static SKBitmap HandleOrientation(this SKBitmap bitmap, SKCodecOrigin orientation) {
+      public static SKBitmap HandleOrientation(this SKBitmap bitmap, SKEncodedOrigin orientation) {
          switch (orientation) {
-            case SKCodecOrigin.BottomRight:
+            case SKEncodedOrigin.BottomRight:
 
                using (var surface = new SKCanvas(bitmap)) {
                   surface.RotateDegrees(180, bitmap.Width / 2, bitmap.Height / 2);
@@ -33,7 +33,7 @@ namespace Climbing.Guide.Forms.Helpers {
 
                break;
 
-            case SKCodecOrigin.RightTop:
+            case SKEncodedOrigin.RightTop:
                var workingCopy = new SKBitmap(bitmap.Height, bitmap.Width);
 
                using (var surface = new SKCanvas(workingCopy)) {
@@ -46,7 +46,7 @@ namespace Climbing.Guide.Forms.Helpers {
                bitmap = workingCopy;
                break;
 
-            case SKCodecOrigin.LeftBottom:
+            case SKEncodedOrigin.LeftBottom:
                var workingCopy2 = new SKBitmap(bitmap.Height, bitmap.Width);
 
                using (var surface = new SKCanvas(workingCopy2)) {
@@ -64,18 +64,18 @@ namespace Climbing.Guide.Forms.Helpers {
       }
 
       public static SKBitmap LoadBitmap(string bitmapPath, double width, double height) {
-         using (var input = File.OpenRead(bitmapPath))                   // load the file
+         using (var input = File.OpenRead(bitmapPath))                 // load the file
          using (var inputStream = new SKManagedStream(input))          // create a sream SkiaSharp uses
          using (var codec = SKCodec.Create(inputStream)) {             // get the decoder
 
-            var bitmap = SKBitmap.Decode(codec).HandleOrientation(codec.Origin);
+            var bitmap = SKBitmap.Decode(codec).HandleOrientation(codec.EncodedOrigin);
 
             // Determine scaling factor
             var bitmapAspectRatio = (double)bitmap.Width / bitmap.Height;
             double factor = bitmapAspectRatio > 1 ? width / bitmap.Width : height / bitmap.Height;
 
             SKImageInfo info = new SKImageInfo((int)(bitmap.Width * factor), (int)(bitmap.Height * factor));
-            bitmap = bitmap.Resize(info, SKBitmapResizeMethod.Triangle);
+            bitmap = bitmap.Resize(info, SKFilterQuality.High);
 
             return bitmap;
          }

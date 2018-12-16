@@ -76,7 +76,7 @@ namespace Climbing.Guide.Forms.Services {
          return result;
       }
 
-      private string GRADE_SYSTEMS_CACHE_KEY = Helpers.UriHelper.Get(Helpers.UriHelper.Schema.cache, "/system/grades/systems").ToString();
+      private readonly string GRADE_SYSTEMS_CACHE_KEY = Helpers.UriHelper.Get(Helpers.UriHelper.Schema.cache, "/system/grades/systems").ToString();
       public async Task<ObservableCollection<GradeSystemList>> GetGradeSystemsAsync(bool force = false) {
          ObservableCollection<GradeSystemList> result = null;
          if (force || !Cache.Contains(GRADE_SYSTEMS_CACHE_KEY)) {
@@ -90,7 +90,7 @@ namespace Climbing.Guide.Forms.Services {
          return result;
       }
 
-      private string LANGUAGES_CACHE_KEY = Helpers.UriHelper.Get(Helpers.UriHelper.Schema.cache, "/system/languages").ToString();
+      private readonly string LANGUAGES_CACHE_KEY = Helpers.UriHelper.Get(Helpers.UriHelper.Schema.cache, "/system/languages").ToString();
       public async Task<ObservableCollection<Language>> GetLanguagesAsync(bool force = false) {
          ObservableCollection<Language> result = null;
          if (force || !Cache.Contains(LANGUAGES_CACHE_KEY)) {
