@@ -90,8 +90,9 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
          SelectedRoute = null;
       }
 
-      private async Task ViewSchema() {
+      private Task ViewSchema() {
          //await CurrentPage.DisplayAlert("View schema", "SCHEMA!!!!", Resources.Strings.Main.Ok);
+         return Task.CompletedTask;
       }
    }
 }

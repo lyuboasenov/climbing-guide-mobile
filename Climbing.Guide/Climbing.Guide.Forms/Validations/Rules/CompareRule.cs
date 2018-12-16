@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Climbing.Guide.Forms.Validations {
-   public class CompareValidationRule : IValidationRule {
+namespace Climbing.Guide.Forms.Validations.Rules {
+   public class CompareRule : IRule {
       public string ErrorMessage { get; private set; }
       public bool IsValid { get; private set; }
 
       private Dictionary<string, object> Values { get; set; }
 
-      public CompareValidationRule(string errorMessage) {
+      public CompareRule(string errorMessage) {
          ErrorMessage = errorMessage;
       }
 

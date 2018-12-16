@@ -1,12 +1,12 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Climbing.Guide.Forms.Validations {
-   public class RegExValidationRule : IValidationRule {
+namespace Climbing.Guide.Forms.Validations.Rules {
+   public class RegExRule : IRule {
       private string RegExPattern { get; set; }
       public string ErrorMessage { get; private set; }
       public bool IsValid { get; private set; }
 
-      public RegExValidationRule(string regExPattern, string errorMessage) {
+      public RegExRule(string regExPattern, string errorMessage) {
          RegExPattern = regExPattern;
          ErrorMessage = errorMessage;
       }

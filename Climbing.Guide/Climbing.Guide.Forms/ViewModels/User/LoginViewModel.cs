@@ -1,6 +1,6 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Forms.Services;
-using Climbing.Guide.Forms.Validations;
+using Climbing.Guide.Forms.Validations.Rules;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -47,9 +47,9 @@ namespace Climbing.Guide.Forms.ViewModels.User {
 
       protected override void InitializeValidationRules() {
          base.InitializeValidationRules();
-         AddValidationRule(nameof(Username), new EmailValidationRule(Resources.Strings.User.Username_Validation_Error));
+         AddValidationRule(nameof(Username), new EmailRule(Resources.Strings.User.Username_Validation_Error));
          AddValidationRule(nameof(Password),
-            new CustomValidationRule(Resources.Strings.User.Password_Validation_Error,
+            new CustomRule(Resources.Strings.User.Password_Validation_Error,
                (key, value) => {
                   var password = value as string;
                   return !string.IsNullOrEmpty(password) &&

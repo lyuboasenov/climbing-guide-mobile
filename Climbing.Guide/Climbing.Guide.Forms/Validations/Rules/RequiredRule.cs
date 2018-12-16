@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Climbing.Guide.Forms.Validations {
-   public class RequiredValidationRule : IValidationRule {
+namespace Climbing.Guide.Forms.Validations.Rules {
+   public class RequiredRule : IRule {
       public string ErrorMessage { get; private set; }
       public bool IsValid { get; private set; }
 
-      public RequiredValidationRule(string errorMessage) {
+      public RequiredRule(string errorMessage) {
          ErrorMessage = errorMessage;
       }
 

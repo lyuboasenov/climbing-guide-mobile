@@ -1,5 +1,5 @@
 ﻿using Climbing.Guide.Forms.Services;
-using Climbing.Guide.Forms.Validations;
+using Climbing.Guide.Forms.Validations.Rules;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -38,22 +38,22 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       protected override void InitializeValidationRules() {
          base.InitializeValidationRules();
          AddValidationRule(nameof(Name),
-            new RequiredValidationRule(
+            new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Region_Name)));
          AddValidationRule(nameof(Info),
-            new RequiredValidationRule(
+            new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Region_Info)));
          AddValidationRule(nameof(Location),
-            new RequiredValidationRule(
+            new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Region_Map_Title)));
          AddValidationRule(nameof(SelectedRegion),
-            new RequiredValidationRule(
+            new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Region)));

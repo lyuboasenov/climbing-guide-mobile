@@ -1,9 +1,8 @@
 ﻿using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
-using Climbing.Guide.Forms.Validations;
+using Climbing.Guide.Forms.Validations.Rules;
 using Prism.Mvvm;
 using Prism.Navigation;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +15,7 @@ namespace Climbing.Guide.Forms.ViewModels {
       protected Services.INavigationService Navigation => GetService<Services.INavigationService>();
       protected IExceptionHandler Errors => GetService<IExceptionHandler>();
 
-      private IDictionary<string, List<IValidationRule>> ValidationRules { get; set; }
+      private IDictionary<string, List<IRule>> ValidationRules { get; set; }
       public IDictionary<string, List<string>> ValidationErrors { get; set; }
 
       public BaseViewModel Parent { get; set; }
@@ -30,13 +29,13 @@ namespace Climbing.Guide.Forms.ViewModels {
 
       protected virtual void InitializeValidationRules() { }
 
-      protected void AddValidationRule(string propertyName, IValidationRule rule) {
+      protected void AddValidationRule(string propertyName, IRule rule) {
          if (null == ValidationRules) {
-            ValidationRules = new Dictionary<string, List<IValidationRule>>();
+            ValidationRules = new Dictionary<string, List<IRule>>();
          }
 
          if (!ValidationRules.ContainsKey(propertyName)) {
-            ValidationRules.Add(propertyName, new List<IValidationRule>());
+            ValidationRules.Add(propertyName, new List<IRule>());
          }
 
          ValidationRules[propertyName].Add(rule);
