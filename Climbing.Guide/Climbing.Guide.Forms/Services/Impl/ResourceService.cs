@@ -20,14 +20,12 @@ namespace Climbing.Guide.Forms.Services {
          ExceptionHandler = exceptionHandler;
       }
 
-      public Task<ObservableCollection<Region>> GetRegionsAsync() {
+      public async Task<ObservableCollection<Region>> GetRegionsAsync() {
          ObservableCollection<Region> regions = new ObservableCollection<Region>();
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-         LoadRegionsAsync(regions);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+         await LoadRegionsAsync(regions);
 
-         return Task.FromResult(regions);
+         return regions;
       }
 
       private async Task LoadRegionsAsync(ObservableCollection<Region> regions) {

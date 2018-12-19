@@ -23,7 +23,10 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public virtual bool AutoSelectRoutes { get; } = false;
 
       public BaseGuideViewModel() {
-         
+         Regions = new ObservableCollection<Region>();
+         Areas = new ObservableCollection<Area>();
+         Sectors = new ObservableCollection<Sector>();
+         Routes = new ObservableCollection<Route>();
       }
 
       protected async override Task InitializeViewModel() {
@@ -32,7 +35,10 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       protected async virtual Task InitializeRegionsAsync() {
          try {
-            Regions = await GetService<Services.IResourceService>().GetRegionsAsync();
+            var regions = await GetService<Services.IResourceService>().GetRegionsAsync();
+            foreach(var region in regions) {
+               Regions.Add(region);
+            }
          } catch (ApiCallException ex) {
             await Errors.HandleAsync(ex);
          }
@@ -44,16 +50,19 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       }
 
       protected async virtual Task InitializeAreasAsync() {
-         Areas = null;
+         Areas.Clear();
          SelectedArea = null;
-         Sectors = null;
+         Sectors.Clear();
          SelectedSector = null;
-         Routes = null;
+         Routes.Clear();
          SelectedRoute = null;
 
          if (null != SelectedRegion) {
             try {
-               Areas = (await Client.AreasClient.ListAsync(SelectedRegion.Id.Value)).Results;
+               var areas = await Client.AreasClient.ListAsync(SelectedRegion.Id.Value);
+               foreach(var area in areas.Results) {
+                  Areas.Add(area);
+               }
             } catch (ApiCallException ex) {
                await Errors.HandleAsync(ex);
                return;
@@ -67,14 +76,17 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       }
 
       protected async virtual Task InitializeSectorsAsync() {
-         Sectors = null;
+         Sectors.Clear();
          SelectedSector = null;
-         Routes = null;
+         Routes.Clear();
          SelectedRoute = null;
 
          if (null != SelectedArea) {
             try {
-               Sectors = (await Client.SectorsClient.ListAsync(SelectedArea.Id.Value)).Results;
+               var sectors = await Client.SectorsClient.ListAsync(SelectedArea.Id.Value);
+               foreach(var sector in sectors.Results) {
+                  Sectors.Add(sector);
+               }
             } catch (ApiCallException ex) {
                await Errors.HandleAsync(ex);
                return;
@@ -88,12 +100,15 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       }
 
       protected async virtual Task InitializeRoutesAsync() {
-         Routes = null;
+         Routes.Clear();
          SelectedRoute = null;
 
          if (null != SelectedSector) {
             try {
-               Routes = (await Client.RoutesClient.ListAsync(SelectedSector.Id.Value)).Results;
+               var routes = (await Client.RoutesClient.ListAsync(SelectedSector.Id.Value)).Results;
+               foreach(var route in routes) {
+                  Routes.Add(route);
+               }
             } catch (ApiCallException ex) {
                await Errors.HandleAsync(ex);
             }
