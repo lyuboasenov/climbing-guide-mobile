@@ -1,8 +1,9 @@
 ﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Core.Api;
+using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Helpers;
 using Climbing.Guide.Forms.Models;
 using Climbing.Guide.Forms.Services;
-using Climbing.Guide.Tasks;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -10,17 +11,35 @@ using System.Threading.Tasks;
 namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class ShellMenuViewModel : BaseViewModel {
+      private IApiClient Client { get; }
+      private IExceptionHandler Errors { get; }
+      private Services.INavigation Navigation { get; }
+      private IEvents Events { get; }
+      private IProgress Progress { get; }
+
       public ObservableCollection<MenuItemModel> MenuItems { get; set; }
       public MenuItemModel SelectedMenuItem { get; set; }
 
       private Uri LogoutUri { get; } = UriHelper.Get(UriHelper.Schema.act, "Logout");
       private Uri TestUri { get; } = UriHelper.Get(UriHelper.Schema.act, "Test");
+      
 
-      public ShellMenuViewModel() : base() {
+      public ShellMenuViewModel(IApiClient client,
+         IExceptionHandler errors,
+         Services.INavigation navigation,
+         IEvents events,
+         IProgress progress) {
+         Client = client;
+         Errors = errors;
+         Navigation = navigation;
+         Events = events;
+         Progress = progress;
+
          Title = Resources.Strings.Main.CG;
+
          InitializeMenuItems();
 
-         GetService<IEventService>().GetEvent<Events.ShellMenuInvalidatedEvent>().Subscribe(InitializeMenuItems);
+         Events.GetEvent<Events.ShellMenuInvalidatedEvent>().Subscribe(InitializeMenuItems);
       }
 
       public async void OnSelectedMenuItemChanged() {
@@ -101,15 +120,14 @@ namespace Climbing.Guide.Forms.ViewModels {
       }
 
       private async Task TestAsync() {
-         var progressService = GetService<IProgressService>();
-         await progressService.ShowProgressIndicatorAsync();
+         await Progress.ShowProgressIndicatorAsync();
 
          for (int i = 0; i < 100; i++) {
-            await progressService.UpdateLoadingProgressAsync(i, 100, $"{i} / 100 items processed.");
+            await Progress.UpdateLoadingProgressAsync(i, 100, $"{i} / 100 items processed.");
             await Task.Delay(100);
          }
 
-         await progressService.HideProgressIndicatorAsync();
+         await Progress.HideProgressIndicatorAsync();
          //var progressService = GetService<IProgressService>();
          //await progressService.ShowLoadingIndicatorAsync();
 

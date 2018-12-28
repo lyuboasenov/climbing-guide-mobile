@@ -6,15 +6,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.Services {
-   public class NavigationService : INavigationService {
+   public class Navigation : INavigation {
 
       private const int NAVIGATION_STACK_SIZE = 10;
 
       private FixedStack<NavigationItem> NavigationStack { get; set; }
-      private Prism.Navigation.INavigationService InternalNavigationService { get; set; }
-      private IProgressService ProgressService { get; set; }
+      private INavigationService InternalNavigationService { get; set; }
+      private IProgress ProgressService { get; set; }
 
-      public NavigationService(Prism.Navigation.INavigationService navigationService, IProgressService progressService) {
+      public Navigation(INavigationService navigationService, IProgress progressService) {
          InternalNavigationService = navigationService;
          ProgressService = progressService;
          NavigationStack = new FixedStack<NavigationItem>(NAVIGATION_STACK_SIZE);

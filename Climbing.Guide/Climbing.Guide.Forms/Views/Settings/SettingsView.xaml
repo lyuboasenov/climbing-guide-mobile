@@ -29,7 +29,7 @@
                       Text="{Static strings:Settings.Language}" />
                <Picker Grid.Row="0" Grid.Column="1"
                        ItemsSource="{Binding Languages}"
-                       SelectedItem="{Binding SelectedLanguage}"
+                       SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
                        ItemDisplayBinding="{Binding Name}"/>
 
                <StackLayout Grid.Row="1" Grid.ColumnSpan="2" 
@@ -71,7 +71,7 @@
                       Text="{Static strings:Settings.Bouldering_Grade_System}" />
                <Picker Grid.Row="0" Grid.Column="1"
                        ItemsSource="{Binding BoulderingGradingSystems}"
-                       SelectedItem="{Binding SelectedBoulderingGradingSystem}"
+                       SelectedItem="{Binding SelectedBoulderingGradingSystem, Mode=TwoWay}"
                        ItemDisplayBinding="{Binding Name}"/>
 
                <Label Grid.Row="1" Grid.Column="0"
@@ -79,7 +79,7 @@
                       Text="{Static strings:Settings.Sport_Route_Grade_System}" />
                <Picker Grid.Row="1" Grid.Column="1"
                        ItemsSource="{Binding SportRouteGradingSystems}"
-                       SelectedItem="{Binding SelectedSportRouteGradingSystem}"
+                       SelectedItem="{Binding SelectedSportRouteGradingSystem, Mode=TwoWay}"
                        ItemDisplayBinding="{Binding Name}"/>
 
                <Label Grid.Row="2" Grid.Column="0"
@@ -87,7 +87,7 @@
                       Text="{Static strings:Settings.Trad_Route_Grade_System}" />
                <Picker Grid.Row="2" Grid.Column="1"
                        ItemsSource="{Binding TradRouteGradingSystems}"
-                       SelectedItem="{Binding SelectedTradRouteGradingSystem}"
+                       SelectedItem="{Binding SelectedTradRouteGradingSystem, Mode=TwoWay}"
                        ItemDisplayBinding="{Binding Name}"/>
 
             </Grid>

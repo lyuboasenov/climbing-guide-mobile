@@ -1,6 +1,6 @@
 ﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services;
-using Climbing.Guide.Tasks;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,8 +12,9 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
    public class SettingsViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Settings.Settings_Title;
 
-      private IResourceService ResourceService { get; set; }
-      private IPreferenceService PreferenceService { get; set; }
+      private IExceptionHandler Errors { get; }
+      private IResource ResourceService { get; set; }
+      private IPreferences PreferenceService { get; set; }
       private Caching.ICache Cache { get; set; }
 
       public Language SelectedLanguage { get; set; }
@@ -32,12 +33,18 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
 
       public long CacheSize { get; set; }
 
-      public SettingsViewModel(IResourceService resourceService, IPreferenceService preferenceService, Caching.ICache cache) {
-         Title = VmTitle;
-
+      public SettingsViewModel(IExceptionHandler errors, IResource resourceService, IPreferences preferenceService, Caching.ICache cache) {
+         Errors = errors;
          ResourceService = resourceService;
          PreferenceService = preferenceService;
          Cache = cache;
+
+         Title = VmTitle;
+
+         Languages = new ObservableCollection<Language>();
+         BoulderingGradingSystems = new ObservableCollection<GradeSystem>();
+         SportRouteGradingSystems = new ObservableCollection<GradeSystem>();
+         TradRouteGradingSystems = new ObservableCollection<GradeSystem>();
       }
 
       protected override void InitializeCommands() {
@@ -62,12 +69,6 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
          PreferenceService.TradRouteGradeSystem = SelectedTradRouteGradingSystem.Id.Value;
       }
 
-      public async override Task OnNavigatedToAsync(params object[] parameters) {
-         await base.OnNavigatedToAsync(parameters);
-
-         await InitializeViewModel();
-      }
-
       private void ClearCache() {
          Cache.Invalidate();
          CacheSize = Cache.GetCacheSize();
@@ -75,14 +76,28 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
 
       protected override async Task InitializeViewModel() {
          try {
-            Languages = await ResourceService.GetLanguagesAsync();
+            var languages = await ResourceService.GetLanguagesAsync();
+            Languages.Clear();
+            foreach (var language in languages) {
+               Languages.Add(language);
+            }
 
             SelectedLanguage = Languages.First(l => l.Code.Equals(PreferenceService.LanguageCode, StringComparison.Ordinal));
 
             var gradeSystems = await ResourceService.GetGradeSystemsAsync();
-            BoulderingGradingSystems = gradeSystems.First(gs => gs.RouteType == 1).GradeSystems;
-            SportRouteGradingSystems = gradeSystems.First(gs => gs.RouteType == 2).GradeSystems;
-            TradRouteGradingSystems = gradeSystems.First(gs => gs.RouteType == 4).GradeSystems;
+
+            BoulderingGradingSystems.Clear();
+            foreach (var system in gradeSystems.First(gs => gs.RouteType == 1).GradeSystems) {
+               BoulderingGradingSystems.Add(system);
+            }
+            SportRouteGradingSystems.Clear();
+            foreach(var system in gradeSystems.First(gs => gs.RouteType == 2).GradeSystems) {
+               SportRouteGradingSystems.Add(system);
+            }
+            TradRouteGradingSystems.Clear();
+            foreach(var system in gradeSystems.First(gs => gs.RouteType == 4).GradeSystems) {
+               TradRouteGradingSystems.Add(system);
+            }
 
             SelectedBoulderingGradingSystem = 
                BoulderingGradingSystems.First(gs => gs.Id.Value == PreferenceService.BoulderingGradeSystem);

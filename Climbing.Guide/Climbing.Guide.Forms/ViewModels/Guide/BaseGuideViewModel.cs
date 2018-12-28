@@ -1,134 +1,112 @@
 ﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Core.Api;
+using Climbing.Guide.Exceptions;
 using Climbing.Guide.Tasks;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class BaseGuideViewModel : BaseViewModel {
+      private IApiClient Client { get; }
+      protected IExceptionHandler Errors { get; }
+      private ISyncTaskRunner SyncTaskRunner { get; }
 
-      public ObservableCollection<Region> Regions { get; set; }
+      protected Stack<Area> Breadcrumbs { get; private set; }
+
       public ObservableCollection<Area> Areas { get; set; }
-      public ObservableCollection<Sector> Sectors { get; set; }
       public ObservableCollection<Route> Routes { get; set; }
 
-      public Region SelectedRegion { get; set; }
       public Area SelectedArea { get; set; }
-      public Sector SelectedSector { get; set; }
       public Route SelectedRoute { get; set; }
+      
+      public BaseGuideViewModel(IApiClient client, IExceptionHandler errors, ISyncTaskRunner syncTaskRunner) {
+         Client = client;
+         Errors = errors;
+         SyncTaskRunner = syncTaskRunner;
 
-      public virtual bool AutoSelectRegions { get; } = true;
-      public virtual bool AutoSelectAreas { get; } = true;
-      public virtual bool AutoSelectSectors { get; } = true;
-      public virtual bool AutoSelectRoutes { get; } = false;
+         Breadcrumbs = new Stack<Area>();
 
-      public BaseGuideViewModel() {
-         Regions = new ObservableCollection<Region>();
          Areas = new ObservableCollection<Area>();
-         Sectors = new ObservableCollection<Sector>();
          Routes = new ObservableCollection<Route>();
       }
 
       protected async override Task InitializeViewModel() {
-         await InitializeRegionsAsync();
+         await InitializeAreasAsync(null);
       }
 
-      protected async virtual Task InitializeRegionsAsync() {
+      protected async virtual Task InitializeAreasAsync(Area parentArea) {
+         Areas.Clear();
+         SelectedArea = null;
+         Routes.Clear();
+         SelectedRoute = null;
+
          try {
-            var regions = await GetService<Services.IResourceService>().GetRegionsAsync();
-            foreach(var region in regions) {
-               Regions.Add(region);
+            for(int page = 1; ; page++) {
+               bool hasMorePages = false;
+               IEnumerable<Area> areas = null;
+               if (null == parentArea) {
+                  var pagedAreas = await Client.AreasClient.ListAsync(page: page);
+                  areas = pagedAreas.Results;
+                  hasMorePages = pagedAreas.Next != null;
+               } else {
+                  var pagedAreas = await Client.AreasClient.ListAsync(id: parentArea.Id.Value, page: page);
+                  areas = pagedAreas.Results;
+                  hasMorePages = pagedAreas.Next != null;
+               }
+
+               foreach (var area in areas) {
+                  Areas.Add(area);
+               }
+
+               if (hasMorePages) {
+                  break;
+               }
+            }
+         } catch (ApiCallException ex) {
+            await Errors.HandleAsync(ex);
+            return;
+         }
+      }
+
+      protected async virtual Task InitializeRoutesAsync(Area parentArea) {
+
+         if (null == parentArea) {
+            throw new ArgumentNullException(nameof(parentArea));
+         }
+
+         Routes.Clear();
+         SelectedRoute = null;
+
+         try {
+            for(int page = 1; ; page++) {
+               var pagedRoutes = await Client.RoutesClient.ListAsync(parentArea.Id.Value, page);
+               foreach (var route in pagedRoutes.Results) {
+                  Routes.Add(route);
+               }
+
+               if (null == pagedRoutes.Next) {
+                  break;
+               }
             }
          } catch (ApiCallException ex) {
             await Errors.HandleAsync(ex);
          }
-
-         // Selects first of the received regions
-         if (AutoSelectRegions && Regions.Count > 0) {
-            SelectedRegion = Regions[0];
-         }
-      }
-
-      protected async virtual Task InitializeAreasAsync() {
-         Areas.Clear();
-         SelectedArea = null;
-         Sectors.Clear();
-         SelectedSector = null;
-         Routes.Clear();
-         SelectedRoute = null;
-
-         if (null != SelectedRegion) {
-            try {
-               var areas = await Client.AreasClient.ListAsync(SelectedRegion.Id.Value);
-               foreach(var area in areas.Results) {
-                  Areas.Add(area);
-               }
-            } catch (ApiCallException ex) {
-               await Errors.HandleAsync(ex);
-               return;
-            }
-
-            // Selects first of the received areas
-            if (AutoSelectAreas && Areas.Count > 0) {
-               SelectedArea = Areas[0];
-            }
-         }
-      }
-
-      protected async virtual Task InitializeSectorsAsync() {
-         Sectors.Clear();
-         SelectedSector = null;
-         Routes.Clear();
-         SelectedRoute = null;
-
-         if (null != SelectedArea) {
-            try {
-               var sectors = await Client.SectorsClient.ListAsync(SelectedArea.Id.Value);
-               foreach(var sector in sectors.Results) {
-                  Sectors.Add(sector);
-               }
-            } catch (ApiCallException ex) {
-               await Errors.HandleAsync(ex);
-               return;
-            }
-
-            // Selects first of the received sectors
-            if (AutoSelectSectors && Sectors.Count > 0) {
-               SelectedSector = Sectors[0];
-            }
-         }
-      }
-
-      protected async virtual Task InitializeRoutesAsync() {
-         Routes.Clear();
-         SelectedRoute = null;
-
-         if (null != SelectedSector) {
-            try {
-               var routes = (await Client.RoutesClient.ListAsync(SelectedSector.Id.Value)).Results;
-               foreach(var route in routes) {
-                  Routes.Add(route);
-               }
-            } catch (ApiCallException ex) {
-               await Errors.HandleAsync(ex);
-            }
-
-            if (AutoSelectRoutes && Routes.Count > 0) {
-               SelectedRoute = Routes[0];
-            }
-         }
-      }
-
-      public virtual void OnSelectedRegionChanged() {
-         GetService<ISyncTaskRunner>().RunSync(async () => { await InitializeAreasAsync(); });
       }
 
       public virtual void OnSelectedAreaChanged() {
-         GetService<ISyncTaskRunner>().RunSync(async () => { await InitializeSectorsAsync(); });
-      }
+         SyncTaskRunner.RunSync(async () => {
+            var selectedArea = SelectedArea;
+            Breadcrumbs.Push(selectedArea);
 
-      public virtual void OnSelectedSectorChanged() {
-         GetService<ISyncTaskRunner>().RunSync(async () => { await InitializeRoutesAsync(); });
+            if (selectedArea.Has_subareas??false) {
+               await InitializeAreasAsync(selectedArea);
+            } else if (selectedArea.Has_routes??false) {
+               await InitializeRoutesAsync(selectedArea);
+            }
+         });
       }
 
       public virtual void OnSelectedRouteChanged() {

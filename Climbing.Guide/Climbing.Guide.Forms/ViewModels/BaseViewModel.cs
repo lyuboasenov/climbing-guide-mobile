@@ -1,6 +1,4 @@
-﻿using Climbing.Guide.Core.Api;
-using Climbing.Guide.Exceptions;
-using Climbing.Guide.Forms.Validations.Rules;
+﻿using Climbing.Guide.Forms.Validations.Rules;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System.Collections.Generic;
@@ -10,10 +8,6 @@ using System.Threading.Tasks;
 namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class BaseViewModel : BindableBase, INavigationAware {
-
-      public IApiClient Client => GetService<IApiClient>();
-      protected Services.INavigationService Navigation => GetService<Services.INavigationService>();
-      protected IExceptionHandler Errors => GetService<IExceptionHandler>();
 
       private IDictionary<string, List<IRule>> ValidationRules { get; set; }
       public IDictionary<string, List<string>> ValidationErrors { get; set; }
@@ -58,10 +52,6 @@ namespace Climbing.Guide.Forms.ViewModels {
 
       protected virtual Task InitializeViewModel() {
          return Task.CompletedTask;
-      }
-
-      protected static T GetService<T>() where T : class {
-         return IoC.Container.Get<T>();
       }
 
       public void OnNavigatedFrom(INavigationParameters parameters) {

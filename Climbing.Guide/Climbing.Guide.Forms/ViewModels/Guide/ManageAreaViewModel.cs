@@ -1,4 +1,5 @@
-﻿using Climbing.Guide.Forms.Services;
+﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Validations.Rules;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -12,11 +13,13 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
    public class ManageAreaViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
+      private Services.INavigation Navigation { get; }
+      private IProgress Progress { get; }
+
       public ICommand SaveCommand { get; set; }
       public ICommand CancelCommand { get; set; }
-
-      public ObservableCollection<Climbing.Guide.Api.Schemas.Region> Regions { get; set; }
-      public Climbing.Guide.Api.Schemas.Region SelectedRegion { get; set; }
+      public ObservableCollection<Area> Areas { get; set; }
+      public Area SelectedArea { get; set; }
 
       public string Name { get; set; }
       public string Info { get; set; }
@@ -26,8 +29,13 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       public MapSpan Location { get; set; }
 
-      public ManageAreaViewModel() {
+      public ManageAreaViewModel(Services.INavigation navigation, IProgress progress) {
+         Progress = progress;
+         Navigation = navigation;
+
          Title = VmTitle;
+
+         Areas = new ObservableCollection<Area>();
       }
 
       protected override void InitializeCommands() {
@@ -52,7 +60,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Region_Map_Title)));
-         AddValidationRule(nameof(SelectedRegion),
+         AddValidationRule(nameof(SelectedArea),
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
@@ -60,12 +68,11 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       }
 
       public async override Task OnNavigatedToAsync(params object[] parameters) {
-         var progressService = GetService<IProgressService>();
          try {
-            await progressService.ShowLoadingIndicatorAsync();
+            await Progress.ShowLoadingIndicatorAsync();
             await base.OnNavigatedToAsync(parameters);
          } finally {
-            await progressService.HideLoadingIndicatorAsync();
+            await Progress.HideLoadingIndicatorAsync();
          }
       }
 

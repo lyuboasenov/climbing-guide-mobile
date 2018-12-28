@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.Services {
-   public class AlertService : IAlertService {
+   public class Alerts : IAlerts {
 
       private IPageDialogService InternalPageDialogService { get; set; }
 
-      public AlertService(IPageDialogService pageDialogService) {
+      public Alerts(IPageDialogService pageDialogService) {
          InternalPageDialogService = pageDialogService;
       }
 

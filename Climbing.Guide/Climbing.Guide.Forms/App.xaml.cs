@@ -11,6 +11,8 @@ using Climbing.Guide.Caching.FileSystem;
 using Climbing.Guide.Exceptions;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Api;
+using Climbing.Guide.Http;
+using System.Net.Http;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Forms {
@@ -65,7 +67,6 @@ namespace Climbing.Guide.Forms {
 
       protected override void RegisterTypes(IContainerRegistry containerRegistry) {
          RegisterNavigation(containerRegistry);
-
          RegisterServices(containerRegistry);
       }
 
@@ -80,20 +81,20 @@ namespace Climbing.Guide.Forms {
 
       private void RegisterServices(IContainerRegistry containerRegistry) {
          // Register services
-         containerRegistry.Register<IEventService, EventService>();
-         containerRegistry.Register<IPreferenceService, PreferenceService>();
+         containerRegistry.Register<IEvents, Services.Events>();
+         containerRegistry.Register<IPreferences, Preferences>();
          containerRegistry.Register<IExceptionHandler, FormsExceptionHandler>();
-         containerRegistry.Register<IAlertService, AlertService>();
-         containerRegistry.Register<IMediaService, MediaService>();
+         containerRegistry.Register<IAlerts, Alerts>();
+         containerRegistry.Register<IMedia, Media>();
          containerRegistry.Register<IAsyncTaskRunner, FormsTaskRunner>();
          containerRegistry.Register<ISyncTaskRunner, FormsTaskRunner>();
          containerRegistry.Register<IMainThreadTaskRunner, FormsTaskRunner>();
          containerRegistry.Register<ICache, Cache>();
          containerRegistry.Register<ICacheRepository, Caching.Sqlite.SqliteCacheRepository>();
-         containerRegistry.Register<IResourceService, ResourceService>();
+         containerRegistry.Register<IResource, Services.Resources>();
          containerRegistry.Register<ISerializer, JsonSerializer>();
          containerRegistry.Register<IEnvironment, Services.Environment>();
-         containerRegistry.Register<IProgressService, ProgressService>();
+         containerRegistry.Register<IProgress, Progress>();
 
 #if DEBUG
          containerRegistry.Register<Logging.ILogger, Logging.DebugLogger>();
@@ -102,8 +103,8 @@ namespace Climbing.Guide.Forms {
 #endif
 
          // Register instances
-         containerRegistry.RegisterSingleton<Core.Api.IApiClient, ApiClient>();
-         containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
+         containerRegistry.RegisterSingleton<IApiClient, ApiClient>();
+         containerRegistry.RegisterSingleton<Services.INavigation, Navigation>();
 
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
 
@@ -120,16 +121,18 @@ namespace Climbing.Guide.Forms {
          var cachingHttpClientManager = new Http.CachingHttpClientManager();
          containerRegistry.RegisterInstance<Http.ICachingHttpClientManager>(cachingHttpClientManager);
 
-         var httpClient = new System.Net.Http.HttpClient() { BaseAddress = new Uri(BaseUrl) };
+         var httpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
          var authenticationManager = new Api.ClimbingGuideAuthenticationManager(httpClient);
          containerRegistry.RegisterInstance<IAuthenticationManager>(authenticationManager);
 
          containerRegistry.RegisterInstance<IApiClientSettings>(
-            new CachingApiClientSettings(cachingHttpClientManager, 
-               responseCache, 
-               largeResponseCache, 
-               BaseUrl, 
-               authenticationManager));
+            new ApiClientSettings(() => {
+               return new HttpClient(
+                  new RetryingHandler(3,
+                     new CachingHandler(cachingHttpClientManager, responseCache, largeResponseCache))) {
+                  BaseAddress = new Uri(BaseUrl)
+               };
+            }, authenticationManager));
       }
 
       private ICacheSettings GetCacheSettings() {

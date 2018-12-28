@@ -1,4 +1,6 @@
-﻿using Climbing.Guide.Forms.Validations.Rules;
+﻿using Climbing.Guide.Core.Api;
+using Climbing.Guide.Exceptions;
+using Climbing.Guide.Forms.Validations.Rules;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -10,6 +12,10 @@ namespace Climbing.Guide.Forms.ViewModels.User {
    public class SignupViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.User.Signup_Title;
 
+      private IApiClient Client { get; }
+      protected IExceptionHandler Errors { get; }
+      private Services.INavigation Navigation { get; }
+
       public string Username { get; set; }
       public string Password { get; set; }
       public string ConfirmPassword { get; set; }
@@ -17,7 +23,12 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       public ICommand SignupCommand { get; private set; }
       public ICommand LoginCommand { get; private set; }
 
-      public SignupViewModel() {
+      public SignupViewModel(IApiClient client,
+         IExceptionHandler errors,
+         Services.INavigation navigation) {
+         Client = client;
+         Errors = errors;
+         Navigation = navigation;
          Title = VmTitle;
       }
 

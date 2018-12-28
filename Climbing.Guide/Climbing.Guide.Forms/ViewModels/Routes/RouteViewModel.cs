@@ -1,4 +1,5 @@
 ﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Core.Api;
 using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Tasks;
 using Prism.Navigation;
@@ -15,15 +16,19 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
    public class RouteViewModel : BaseViewModel, IDestructible {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
+      private IApiClient Client { get; }
+      private IEnvironment Environment { get; }
+
       public Route Route { get; set; }
       public ICommand ViewSchemaCommand { get; set; }
       public string LocalSchemaThumbPath { get; set; }
       public ObservableCollection<Point> SchemaRoute { get; set; }
 
-      public RouteViewModel() {
-         Title = VmTitle;
+      public RouteViewModel(IApiClient client, IEnvironment environment) {
+         Client = client;
+         Environment = environment;
 
-         //ViewSchemaCommand = new Command();
+         Title = VmTitle;
       }
       
       public async override Task OnNavigatedToAsync(params object[] parameters) {
@@ -39,7 +44,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
 
          Title = string.Format("{0}   {1}", Route.Name, Converters.GradeConverter.Convert(Route));
 
-         var tempFile = GetService<IEnvironment>().GetTempFileName();
+         var tempFile = Environment.GetTempFileName();
          await Client.DownloadAsync(Route.Schema, tempFile, true).ContinueWith((task) => {
             LocalSchemaThumbPath = tempFile;
          });

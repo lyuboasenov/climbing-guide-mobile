@@ -8,34 +8,41 @@ using Xamarin.Forms;
 using Climbing.Guide.Api.Schemas;
 using System;
 using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Tasks;
+using Climbing.Guide.Core.Api;
+using Climbing.Guide.Exceptions;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class ExploreViewModel : BaseGuideViewModel {
       public static string VmTitle { get; } = Resources.Strings.Guide.Explore_Title;
+      private static int[] ZoomLevel { get; } = new int[] { 5000000, 22000, 1400, 170 };
 
-      //public ObservableCollection<Pin> Pins { get; set; }
+      private IProgress Progress { get; }
+      private Services.INavigation Navigation { get; }
+
       public ICommand PinTappedCommand { get; private set; }
       public IEnumerable Pins { get; set; }
       public MapSpan VisibleRegion { get; set; }
       public Position SelectedLocation { get; set; }
 
-      public override bool AutoSelectRegions { get; } = false;
-      public override bool AutoSelectAreas { get; } = false;
-      public override bool AutoSelectSectors { get; } = false;
-      public override bool AutoSelectRoutes { get; } = false;
+      public ExploreViewModel(IApiClient client, 
+         IExceptionHandler errors, 
+         Services.INavigation navigation, 
+         IProgress progress, 
+         ISyncTaskRunner syncTaskRunner) : base(client, errors, syncTaskRunner) {
+         Progress = progress;
+         Navigation = navigation;
 
-      public ExploreViewModel() {
          Title = VmTitle;
       }
 
       public async override Task OnNavigatedToAsync(params object[] parameters) {
-         var progressService = GetService<IProgressService>();
          try {
-            await progressService.ShowLoadingIndicatorAsync();
+            await Progress.ShowLoadingIndicatorAsync();
             await base.OnNavigatedToAsync(parameters);
          } finally {
-            await progressService.HideLoadingIndicatorAsync();
+            await Progress.HideLoadingIndicatorAsync();
          }
       }
 
@@ -45,21 +52,8 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          PinTappedCommand = new Command(async (data) => { await OnPinTapped(data); } );
       }
 
-      private async Task OnPinTapped(object data) {
-         if (data is Climbing.Guide.Api.Schemas.Region) {
-            SelectedRegion = data as Climbing.Guide.Api.Schemas.Region;
-         } else if (data is Area) {
-            SelectedArea = data as Area;
-         } else if (data is Sector) {
-            SelectedSector = data as Sector;
-         } else if (data is Route) {
-            await ViewRoute(data as Route);
-         }
-      }
-
-      protected async override Task InitializeRegionsAsync() {
-         await base.InitializeRegionsAsync();
-         Pins = Regions;
+      protected override async Task InitializeViewModel() {
+         await base.InitializeViewModel();
 
          Location position = null;
          try {
@@ -85,31 +79,28 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          }
       }
 
-      public override void OnSelectedRegionChanged() {
-         base.OnSelectedRegionChanged();
+      protected override async Task InitializeAreasAsync(Area parentArea) {
+         await base.InitializeAreasAsync(parentArea);
+
          Pins = Areas;
 
+         int zoomLevel = ZoomLevel[Breadcrumbs.Count];
          VisibleRegion = MapSpan.FromCenterAndRadius(
-            MapHelper.GetPosition(SelectedRegion.Latitude, SelectedRegion.Longitude),
-            new Distance(22000));
+            MapHelper.GetPosition(SelectedArea.Latitude, SelectedArea.Longitude),
+            new Distance(zoomLevel));
+      }
+
+      private async Task OnPinTapped(object data) {
+         if (data is Area) {
+            SelectedArea = data as Area;
+         } else if (data is Route) {
+            await ViewRoute(data as Route);
+         }
       }
 
       public override void OnSelectedAreaChanged() {
          base.OnSelectedAreaChanged();
-         Pins = Sectors;
-
-         VisibleRegion = MapSpan.FromCenterAndRadius(
-            MapHelper.GetPosition(SelectedArea.Latitude, SelectedArea.Longitude),
-            new Distance(1400));
-      }
-
-      public override void OnSelectedSectorChanged() {
-         base.OnSelectedSectorChanged();
-         Pins = Routes;
          
-         VisibleRegion = MapSpan.FromCenterAndRadius(
-            MapHelper.GetPosition(SelectedSector.Latitude, SelectedSector.Longitude),
-            new Distance(170));
       }
 
       private async Task ViewRoute(Route route) {

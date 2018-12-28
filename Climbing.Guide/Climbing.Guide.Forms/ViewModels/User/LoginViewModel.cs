@@ -1,4 +1,6 @@
 ﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Core.Api;
+using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Validations.Rules;
 using System.Linq;
@@ -11,22 +13,35 @@ namespace Climbing.Guide.Forms.ViewModels.User {
    public class LoginViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.User.Login_Title;
 
+      private IApiClient Client { get; }
+      private IExceptionHandler Errors { get; }
+      private Services.INavigation Navigation { get; }
+      private IAlerts Alerts { get; }
+      private IEvents Events { get; }
+
+      public ICommand LoginCommand { get; }
+      public ICommand SignupCommand { get; }
+
       public string Username { get; set; }
       public string Password { get; set; }
 
-      public LoginViewModel() {
-         Title = VmTitle;
+      public LoginViewModel(IApiClient client,
+         IExceptionHandler errors,
+         Services.INavigation navigation, 
+         IAlerts alerts, 
+         IEvents events) {
+         Client = client;
+         Errors = errors;
+         Navigation = navigation;
+         Alerts = alerts;
+         Events = events;
 
-         //Username = string.Empty;
-         //Password = string.Empty;
+         Title = VmTitle;
 
          LoginCommand = new Command(async () => await Login(), () => !HasValidationErrors);
          SignupCommand = new Command(async () => await Signup());
       }
 
-      public ICommand LoginCommand { get; }
-      public ICommand SignupCommand { get; }
-      
       private async Task Login() {
          bool success = false;
          try {
@@ -38,9 +53,9 @@ namespace Climbing.Guide.Forms.ViewModels.User {
          }
 
          if (!success) {
-            await GetService<IAlertService>().DisplayAlertAsync(Resources.Strings.User.Login_Invalid_Title, Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
+            await Alerts.DisplayAlertAsync(Resources.Strings.User.Login_Invalid_Title, Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
          } else {
-            GetService<IEventService>().GetEvent<Events.ShellMenuInvalidatedEvent>().Publish();
+            Events.GetEvent<Events.ShellMenuInvalidatedEvent>().Publish();
             await Navigation.NavigateAsync(Navigation.GetShellNavigationUri(nameof(Views.HomeView)));
          }
       }

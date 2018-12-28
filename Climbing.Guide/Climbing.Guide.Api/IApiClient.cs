@@ -8,9 +8,7 @@ namespace Climbing.Guide.Core.Api {
       IAuthenticationManager AuthenticationManager { get; }
 
       IAreasClient AreasClient { get; }
-      IRegionsClient RegionsClient { get; }
       IRoutesClient RoutesClient { get; }
-      ISectorsClient SectorsClient { get; }
       IUsersClient UsersClient { get; }
       IGradesClient GradesClient { get; }
       ILanguagesClient LanguagesClient { get; }

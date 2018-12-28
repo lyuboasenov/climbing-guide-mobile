@@ -11,5 +11,10 @@ namespace Climbing.Guide.Core.Api {
          HttpClient = httpClient;
          AuthenticationManager = authenticationManager;
       }
+
+      public ApiClientSettings(Func<HttpClient> httpClientFactory, IAuthenticationManager authenticationManager) {
+         HttpClient = httpClientFactory();
+         AuthenticationManager = authenticationManager;
+      }
    }
 }

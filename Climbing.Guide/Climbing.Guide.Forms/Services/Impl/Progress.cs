@@ -5,15 +5,15 @@ using System;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.Services {
-   public class ProgressService : IProgressService {
+   public class Progress : IProgress {
 
       private Lazy<PopupPage> LoadingView { get; set; }
       private Lazy<PopupPage> ProgressView { get; set; }
 
-      private IEventService EventService { get; set; }
+      private IEvents EventService { get; set; }
       private IMainThreadTaskRunner MainThreadTaskRunner { get; set; }
 
-      public ProgressService(IEventService eventService, IMainThreadTaskRunner mainThreadTaskRunner) {
+      public Progress(IEvents eventService, IMainThreadTaskRunner mainThreadTaskRunner) {
          EventService = eventService;
          MainThreadTaskRunner = mainThreadTaskRunner;
 
@@ -36,8 +36,8 @@ namespace Climbing.Guide.Forms.Services {
       }
 
       public Task UpdateLoadingProgressAsync(double processed, double total, string message) {
-         EventService.GetEvent<ProgressChangedEvent, Events.Payload.ProgressChanged>().
-            Publish(new Events.Payload.ProgressChanged() {
+         EventService.GetEvent<ProgressChangedEvent, Forms.Events.Payload.ProgressChanged>().
+            Publish(new Forms.Events.Payload.ProgressChanged() {
                Message = message,
                Processed = processed,
                Total = total

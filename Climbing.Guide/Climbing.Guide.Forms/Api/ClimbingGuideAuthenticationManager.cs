@@ -6,8 +6,8 @@ using Xamarin.Essentials;
 
 namespace Climbing.Guide.Forms.Api {
    public class ClimbingGuideAuthenticationManager : OAuthAuthenticatonManager {
-      private const string clientId = "KoZwAMrSN4XjWC2m0Lkp3gjN9t1h9Vano5avgBWI";
-      private const string clientSecret = "FT0YD3LyTr4sZgBKRNUk0vEv8gIinHFbVOIqyd11xQ3zT4GG10NjcffaoPUm3Fw4zfTrCMV0xFxOVtabWWzPYDECFoBhr0ezsLwfl75C6kQC5YMeejEJfbAMr0ZetVKz";
+      private const string clientId = "vYtYO6T59kiIGcLEnabBO0akWbpXUh9HsgVKwEM9";
+      private const string clientSecret = "rPDI7SPeNxK79v8CDZmwiLbVEFtWIc8rkfbVVhuJeJFv8xFrKwSvSHugxhldFI3W1TrWnbqs3rZGintRRKbfIuChc4npwseBI4ntel4wAk8QjwLG68MnKIr19GfnkwCx";
 
       public ClimbingGuideAuthenticationManager(HttpClient httpClient) : base(httpClient, clientId, clientSecret) {
          try {

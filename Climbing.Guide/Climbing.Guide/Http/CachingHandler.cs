@@ -1,18 +1,30 @@
 ﻿using Climbing.Guide.Caching;
-using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Http {
-   public class CachingHttpClientHandler : HttpClientHandler {
+   public class CachingHandler : DelegatingHandler {
 
       private ICachingHttpClientManager CachingHttpClientManager { get; set; }
       private ICache ResponseCache { get; set; }
       private ICache LargeResponseCache { get; set; }
 
-      public CachingHttpClientHandler(ICachingHttpClientManager cachingHttpClientManager,
+      public CachingHandler(ICachingHttpClientManager cachingHttpClientManager,
+         ICache responseCache,
+         ICache largeResponseCache) : 
+         this(cachingHttpClientManager, responseCache, largeResponseCache, new HttpClientHandler()) {
+      }
+
+      public CachingHandler(ICachingHttpClientManager cachingHttpClientManager,
+         ICache responseCache,
+         ICache largeResponseCache,
+         HttpMessageHandler innerHandler) : base(innerHandler) {
+         Initialize(cachingHttpClientManager, responseCache, largeResponseCache);
+      }
+
+      private void Initialize(ICachingHttpClientManager cachingHttpClientManager,
          ICache responseCache,
          ICache largeResponseCache) {
          CachingHttpClientManager = cachingHttpClientManager;

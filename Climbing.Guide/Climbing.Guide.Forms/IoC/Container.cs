@@ -2,7 +2,7 @@
 using System;
 
 namespace Climbing.Guide.Forms.IoC {
-   public class Container : IContainerExtension {
+   public class Container : IContainerExtension, IContainer {
 
       private IContainerExtension InternalContainerExtension { get; set; }
 

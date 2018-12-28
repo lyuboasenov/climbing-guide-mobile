@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace Climbing.Guide.Forms.Services {
-   public interface IProgressService {
+   public interface IProgress {
       Task ShowLoadingIndicatorAsync();
       Task HideLoadingIndicatorAsync();
 

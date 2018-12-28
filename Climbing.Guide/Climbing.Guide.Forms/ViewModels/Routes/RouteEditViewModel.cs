@@ -1,4 +1,8 @@
 ﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Core.Api;
+using Climbing.Guide.Exceptions;
+using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,6 +15,8 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class RouteEditViewModel : Guide.BaseGuideViewModel {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
+
+      private Services.INavigation Navigation { get; }
 
       public ICommand ViewSchemaCommand { get; set; }
       public ICommand SaveCommand { get; set; }
@@ -27,16 +33,15 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       public double Length { get; set; }
       public string FA { get; set; }
 
-      public override bool AutoSelectRegions { get; } = false;
-      public override bool AutoSelectAreas { get; } = false;
-      public override bool AutoSelectSectors { get; } = false;
-      public override bool AutoSelectRoutes { get; } = false;
-
       public ObservableCollection<Point> SchemaRoute { get; set; } = new ObservableCollection<Point>();
 
       public MapSpan VisibleRegion { get; set; }
 
-      public RouteEditViewModel() {
+      public RouteEditViewModel(IApiClient client,
+         IExceptionHandler errors,
+         Services.INavigation navigation, 
+         ISyncTaskRunner syncTaskRunner) : base(client, errors, syncTaskRunner) {
+         Navigation = navigation;
          Title = VmTitle;
 
          ViewSchemaCommand = new Command(async () => await ViewSchema());
@@ -68,10 +73,8 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       private async Task InitializeData(params object[] parameters) {
          try {
             await base.OnNavigatedToAsync(parameters);
-            SelectedRegion = parameters[0] as Climbing.Guide.Api.Schemas.Region;
-            SelectedArea = parameters[1] as Area;
-            SelectedSector = parameters[2] as Sector;
-            LocalSchemaThumbPath = parameters[3] as string;
+            SelectedArea = parameters[0] as Area;
+            LocalSchemaThumbPath = parameters[1] as string;
 
             using (var exifReader = new ExifLib.ExifReader(LocalSchemaThumbPath)) {
                double latitude, longitude;
@@ -83,11 +86,6 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
          }catch(Exception ex) {
             await Errors.HandleAsync(ex);
          }
-      }
-
-      public override void OnSelectedSectorChanged() {
-         Routes = null;
-         SelectedRoute = null;
       }
 
       private Task ViewSchema() {

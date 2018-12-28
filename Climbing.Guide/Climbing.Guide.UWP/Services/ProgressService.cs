@@ -5,7 +5,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(Climbing.Guide.UWP.Services.ProgressService))]
 
 namespace Climbing.Guide.UWP.Services {
-   class ProgressService : IProgressService {
+   class ProgressService : IProgress {
       public Task HideLoadingIndicatorAsync() {
          return Task.CompletedTask;
       }

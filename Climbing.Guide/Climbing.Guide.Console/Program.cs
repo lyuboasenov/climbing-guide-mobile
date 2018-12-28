@@ -87,48 +87,48 @@ namespace Climbing.Guide.Console {
 
             //return;
 
-            foreach (var region in regions) {
-               Api.Schemas.Area payload = new Api.Schemas.Area() {
-                  Name = region.Name,
-                  Info = string.IsNullOrEmpty(region.Info) ? "tba" : region.Info,
-                  Latitude = region.Position[0],
-                  Longitude = region.Position[1],
-                  Size = 20,
-                  Restrictions = region.Access,
-                  Region_id = globalRegionId,
-                  Tags = $"{GetCountryCode(region.Country)},{region.Country},{region.City},{region.Ascents}"
-               };
+         //   foreach (var region in regions) {
+         //      Api.Schemas.Area payload = new Api.Schemas.Area() {
+         //         Name = region.Name,
+         //         Info = string.IsNullOrEmpty(region.Info) ? "tba" : region.Info,
+         //         Latitude = region.Position[0],
+         //         Longitude = region.Position[1],
+         //         Size = 20,
+         //         Restrictions = region.Access,
+         //         Region_id = globalRegionId,
+         //         Tags = $"{GetCountryCode(region.Country)},{region.Country},{region.City},{region.Ascents}"
+         //      };
 
-               Api.Schemas.Area createdArea = client.AreasClient.CreateAsync(payload, globalRegionId).Result;
+         //      Api.Schemas.Area createdArea = client.AreasClient.CreateAsync(payload, globalRegionId).Result;
 
-               foreach (var area in region.Areas) {
-                  Api.Schemas.Sector sectorPayload = new Api.Schemas.Sector() {
-                     Area_id = createdArea.Id.Value,
-                     Name = string.IsNullOrEmpty(area.Name) ? "tba" : area.Name,
-                     Info = "tba",
-                     Latitude = region.Position[0],
-                     Longitude = region.Position[1],
-                     Size = 5
-                  };
+         //      foreach (var area in region.Areas) {
+         //         Api.Schemas.Sector sectorPayload = new Api.Schemas.Sector() {
+         //            Area_id = createdArea.Id.Value,
+         //            Name = string.IsNullOrEmpty(area.Name) ? "tba" : area.Name,
+         //            Info = "tba",
+         //            Latitude = region.Position[0],
+         //            Longitude = region.Position[1],
+         //            Size = 5
+         //         };
 
-                  Api.Schemas.Sector createdSector = client.SectorsClient.CreateAsync(sectorPayload, createdArea.Id.Value).Result;
+         //         Api.Schemas.Sector createdSector = client.SectorsClient.CreateAsync(sectorPayload, createdArea.Id.Value).Result;
 
-                  foreach (var route in area.Routes) {
-                     Api.Schemas.Route routePayload = new Api.Schemas.Route() {
-                        Sector_id = createdSector.Id.Value,
-                        Type = route.Type == 0 ? Api.Schemas.RouteType._2 : Api.Schemas.RouteType._1,
-                        Name = string.IsNullOrEmpty(route.Name) ? "tba" : route.Name,
-                        Difficulty = GetDifficulty(route.Type, route.Grade),
-                        Info = "tba"
-                     };
+         //         foreach (var route in area.Routes) {
+         //            Api.Schemas.Route routePayload = new Api.Schemas.Route() {
+         //               Sector_id = createdSector.Id.Value,
+         //               Type = route.Type == 0 ? Api.Schemas.RouteType._2 : Api.Schemas.RouteType._1,
+         //               Name = string.IsNullOrEmpty(route.Name) ? "tba" : route.Name,
+         //               Difficulty = GetDifficulty(route.Type, route.Grade),
+         //               Info = "tba"
+         //            };
 
-                     client.RoutesClient.CreateAsync(routePayload, createdSector.Id.Value).Wait();
-                  }
-               }
+         //            client.RoutesClient.CreateAsync(routePayload, createdSector.Id.Value).Wait();
+         //         }
+         //      }
 
 
-               System.Console.WriteLine($"{counter++}/{regions.Length}: {region} added sucessfully.");
-            }
+         //      System.Console.WriteLine($"{counter++}/{regions.Length}: {region} added sucessfully.");
+         //   }
          }
       }
 
@@ -313,28 +313,28 @@ namespace Climbing.Guide.Console {
          var client = GetRestApiClient();
          if (Login(client)) {
             do {
-               try {
-                  Api.Schemas.Region payload = new Api.Schemas.Region() {
-                     Name = "Test region name",
-                     Info = "Test region information",
-                     Latitude = 42.42m,
-                     Longitude = 23.23m,
-                     Size = 20,
-                     Restrictions = "Test region restrictions",
-                     Country_code = "uk",
-                     Tags = $"climbing, sick"
-                  };
+               //try {
+               //   Api.Schemas.Region payload = new Api.Schemas.Region() {
+               //      Name = "Test region name",
+               //      Info = "Test region information",
+               //      Latitude = 42.42m,
+               //      Longitude = 23.23m,
+               //      Size = 20,
+               //      Restrictions = "Test region restrictions",
+               //      Country_code = "uk",
+               //      Tags = $"climbing, sick"
+               //   };
 
-                  var createdRegion = client.RegionsClient.CreateAsync(payload).Result;
-                  System.Console.WriteLine($"Region added with id {createdRegion.Id} sucessfully.");
-               } catch (Exception ex) {
-                  System.Console.WriteLine($"Error occured: {ex.Message}.");
-                  System.Console.Write($"Retry (y/n):");
-                  var answer = System.Console.ReadKey();
-                  if (answer.KeyChar != 'y' && answer.KeyChar != 'Y') {
-                     break;
-                  }
-               }
+               //   var createdRegion = client.RegionsClient.CreateAsync(payload).Result;
+               //   System.Console.WriteLine($"Region added with id {createdRegion.Id} sucessfully.");
+               //} catch (Exception ex) {
+               //   System.Console.WriteLine($"Error occured: {ex.Message}.");
+               //   System.Console.Write($"Retry (y/n):");
+               //   var answer = System.Console.ReadKey();
+               //   if (answer.KeyChar != 'y' && answer.KeyChar != 'Y') {
+               //      break;
+               //   }
+               //}
             } while (true);
          }
       }
@@ -387,15 +387,15 @@ namespace Climbing.Guide.Console {
       }
 
       private static void TestRestApiCalls() {
-         var client = GetRestApiClient();
-         var regions = client.RegionsClient.ListAsync().Result.Results;
+         //var client = GetRestApiClient();
+         //var regions = client.RegionsClient.ListAsync().Result.Results;
 
-         System.Console.Clear();
-         foreach(var region in regions) {
-            System.Console.WriteLine("Region: {0} / {1}", region.Id, region.Name);
-         }
+         //System.Console.Clear();
+         //foreach(var region in regions) {
+         //   System.Console.WriteLine("Region: {0} / {1}", region.Id, region.Name);
+         //}
 
-         System.Console.ReadLine();
+         //System.Console.ReadLine();
       }
 
       private static IApiClient GetRestApiClient() {

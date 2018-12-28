@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Climbing.Guide.Api;
 using Climbing.Guide.Api.Client;
@@ -30,22 +29,9 @@ namespace Climbing.Guide.Core.Api {
 
       #region Public
 
-      // Singleton property
-      public IRegionsClient RegionsClient {
-         get {
-            return GetGenericClient((settings, client) => new RegionsClient(settings, client));
-         }
-      }
-
       public IAreasClient AreasClient {
          get {
             return GetGenericClient((settings, client) => new AreasClient(settings, client));
-         }
-      }
-
-      public ISectorsClient SectorsClient {
-         get {
-            return GetGenericClient((settings, client) => new SectorsClient(settings, client));
          }
       }
 
