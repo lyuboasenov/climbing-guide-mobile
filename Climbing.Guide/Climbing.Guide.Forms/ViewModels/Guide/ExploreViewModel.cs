@@ -35,26 +35,36 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          Navigation = navigation;
 
          Title = VmTitle;
+
+         InitializeCommands();
       }
 
       public async override Task OnNavigatedToAsync(params object[] parameters) {
          try {
             await Progress.ShowLoadingIndicatorAsync();
             await base.OnNavigatedToAsync(parameters);
+            await InitializeViewModel();
          } finally {
             await Progress.HideLoadingIndicatorAsync();
          }
       }
 
-      protected override void InitializeCommands() {
-         base.InitializeCommands();
+      protected override async Task InitializeAreasAsync(Area parentArea) {
+         await base.InitializeAreasAsync(parentArea);
 
+         Pins = Areas;
+
+         int zoomLevel = ZoomLevel[Breadcrumbs.Count];
+         VisibleRegion = MapSpan.FromCenterAndRadius(
+            MapHelper.GetPosition(SelectedArea.Latitude, SelectedArea.Longitude),
+            new Distance(zoomLevel));
+      }
+
+      private void InitializeCommands() {
          PinTappedCommand = new Command(async (data) => { await OnPinTapped(data); } );
       }
 
-      protected override async Task InitializeViewModel() {
-         await base.InitializeViewModel();
-
+      private async Task InitializeViewModel() {
          Location position = null;
          try {
             position = await Geolocation.GetLocationAsync();
@@ -79,28 +89,12 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          }
       }
 
-      protected override async Task InitializeAreasAsync(Area parentArea) {
-         await base.InitializeAreasAsync(parentArea);
-
-         Pins = Areas;
-
-         int zoomLevel = ZoomLevel[Breadcrumbs.Count];
-         VisibleRegion = MapSpan.FromCenterAndRadius(
-            MapHelper.GetPosition(SelectedArea.Latitude, SelectedArea.Longitude),
-            new Distance(zoomLevel));
-      }
-
       private async Task OnPinTapped(object data) {
          if (data is Area) {
             SelectedArea = data as Area;
          } else if (data is Route) {
             await ViewRoute(data as Route);
          }
-      }
-
-      public override void OnSelectedAreaChanged() {
-         base.OnSelectedAreaChanged();
-         
       }
 
       private async Task ViewRoute(Route route) {

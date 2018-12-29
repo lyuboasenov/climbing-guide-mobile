@@ -2,7 +2,9 @@
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Forms.Validations;
 using Climbing.Guide.Forms.Validations.Rules;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -10,36 +12,56 @@ using Xamarin.Forms;
 
 namespace Climbing.Guide.Forms.ViewModels.User {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class LoginViewModel : BaseViewModel {
+   public class LoginViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.User.Login_Title;
+
+      public IDictionary<string, IEnumerable<string>> ValidationErrors => new Dictionary<string, IEnumerable<string>>();
+      public IDictionary<string, IEnumerable<IRule>> ValidationRules => new Dictionary<string, IEnumerable<IRule>>();
+      public bool IsValid { get; set; }
+
+      public string Username { get; set; }
+      public string Password { get; set; }
+
+      public ICommand LoginCommand { get; }
+      public ICommand SignupCommand { get; }
 
       private IApiClient Client { get; }
       private IExceptionHandler Errors { get; }
       private Services.INavigation Navigation { get; }
       private IAlerts Alerts { get; }
       private IEvents Events { get; }
-
-      public ICommand LoginCommand { get; }
-      public ICommand SignupCommand { get; }
-
-      public string Username { get; set; }
-      public string Password { get; set; }
+      private IValidator Validator { get; }
 
       public LoginViewModel(IApiClient client,
          IExceptionHandler errors,
          Services.INavigation navigation, 
          IAlerts alerts, 
-         IEvents events) {
+         IEvents events,
+         IValidator validator) {
          Client = client;
          Errors = errors;
          Navigation = navigation;
          Alerts = alerts;
          Events = events;
+         Validator = validator;
 
          Title = VmTitle;
 
-         LoginCommand = new Command(async () => await Login(), () => !HasValidationErrors);
+         LoginCommand = new Command(async () => await Login(), () => IsValid);
          SignupCommand = new Command(async () => await Signup());
+
+         InitializeValidationRules();
+      }
+
+      public void OnPropertyChanged(string propertyName, object before, object after) {
+         Validator.Validate(this, propertyName, after);
+         // Raise validation errors property changed in order to update validation errors
+         RaisePropertyChanged(nameof(ValidationErrors));
+
+         // Update can execute of the login command
+         if (null != LoginCommand) {
+            (LoginCommand as Command).ChangeCanExecute();
+         }
       }
 
       private async Task Login() {
@@ -60,10 +82,10 @@ namespace Climbing.Guide.Forms.ViewModels.User {
          }
       }
 
-      protected override void InitializeValidationRules() {
-         base.InitializeValidationRules();
-         AddValidationRule(nameof(Username), new EmailRule(Resources.Strings.User.Username_Validation_Error));
-         AddValidationRule(nameof(Password),
+      private void InitializeValidationRules() {
+         this.AddRule(nameof(Username),
+            new EmailRule(Resources.Strings.User.Username_Validation_Error));
+         this.AddRule(nameof(Password),
             new CustomRule(Resources.Strings.User.Password_Validation_Error,
                (key, value) => {
                   var password = value as string;
@@ -72,15 +94,6 @@ namespace Climbing.Guide.Forms.ViewModels.User {
                   password.Any(char.IsDigit) &&
                   password.Any(char.IsLetter);
                }));
-      }
-
-      // Update can execute of the login command
-      public override void OnPropertyChanged(string propertyName, object before, object after) {
-         base.OnPropertyChanged(propertyName, before, after);
-
-         if (null != LoginCommand) {
-            (LoginCommand as Command).ChangeCanExecute();
-         }
       }
 
       private async Task Signup() {

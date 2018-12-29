@@ -37,9 +37,16 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          Navigation = navigation;
 
          Title = VmTitle;
+
+         InitializeCommands();
       }
 
-      protected override void InitializeCommands() {
+      public override void OnSelectedAreaChanged() {
+         base.OnSelectedAreaChanged();
+         (ClearFilterCommand as Command).ChangeCanExecute();
+      }
+
+      private void InitializeCommands() {
          ClearFilterCommand = new Command(() => {
             SelectedRoute = null;
             SelectedArea = null;
@@ -90,20 +97,6 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
                }
             }
          });
-      }
-
-      public async override Task OnNavigatedToAsync(params object[] parameters) {
-         try {
-            await Progress.ShowLoadingIndicatorAsync();
-            await base.OnNavigatedToAsync(parameters);
-         } finally {
-            await Progress.HideLoadingIndicatorAsync();
-         }
-      }
-
-      public override void OnSelectedAreaChanged() {
-         base.OnSelectedAreaChanged();
-         (ClearFilterCommand as Command).ChangeCanExecute();
       }
 
       private async Task RouteTapped(Route route) {

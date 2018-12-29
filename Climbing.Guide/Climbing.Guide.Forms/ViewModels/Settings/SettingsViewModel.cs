@@ -45,12 +45,8 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
          BoulderingGradingSystems = new ObservableCollection<GradeSystem>();
          SportRouteGradingSystems = new ObservableCollection<GradeSystem>();
          TradRouteGradingSystems = new ObservableCollection<GradeSystem>();
-      }
 
-      protected override void InitializeCommands() {
-         base.InitializeCommands();
-
-         ClearCacheCommand = new Xamarin.Forms.Command(ClearCache);
+         InitializeCommands();
       }
 
       public void OnSelectedLanguageChanged() {
@@ -69,12 +65,21 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
          PreferenceService.TradRouteGradeSystem = SelectedTradRouteGradingSystem.Id.Value;
       }
 
+      public async override Task OnNavigatedToAsync(params object[] parameters) {
+         await base.OnNavigatedToAsync(parameters);
+         await InitializeViewModel();
+      }
+
+      private void InitializeCommands() {
+         ClearCacheCommand = new Xamarin.Forms.Command(ClearCache);
+      }
+
       private void ClearCache() {
          Cache.Invalidate();
          CacheSize = Cache.GetCacheSize();
       }
 
-      protected override async Task InitializeViewModel() {
+      private async Task InitializeViewModel() {
          try {
             var languages = await ResourceService.GetLanguagesAsync();
             Languages.Clear();

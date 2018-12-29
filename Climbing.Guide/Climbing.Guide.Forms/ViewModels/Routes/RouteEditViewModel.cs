@@ -1,7 +1,6 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
-using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Tasks;
 using System;
 using System.Collections.Generic;
@@ -44,12 +43,15 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
          Navigation = navigation;
          Title = VmTitle;
 
-         ViewSchemaCommand = new Command(async () => await ViewSchema());
+         InitializeCommands();
       }
 
-      protected override void InitializeCommands() {
-         base.InitializeCommands();
+      public async override Task OnNavigatedToAsync(params object[] parameters) {
+         await InitializeData(parameters);
+      }
 
+      private void InitializeCommands() {
+         ViewSchemaCommand = new Command(async () => await ViewSchema());
          SaveCommand = new Command(Save, CanSave);
          CancelCommand = new Command(async () => await GoBack());
       }
@@ -64,10 +66,6 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
 
       private void Save() {
          
-      }
-
-      public async override Task OnNavigatedToAsync(params object[] parameters) {
-         await InitializeData(parameters);
       }
 
       private async Task InitializeData(params object[] parameters) {

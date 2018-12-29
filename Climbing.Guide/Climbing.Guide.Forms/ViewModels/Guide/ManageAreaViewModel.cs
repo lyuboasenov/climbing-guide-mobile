@@ -1,6 +1,8 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Forms.Validations;
 using Climbing.Guide.Forms.Validations.Rules;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -10,14 +12,13 @@ using Xamarin.Forms.Maps;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class ManageAreaViewModel : BaseViewModel {
+   public class ManageAreaViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
-      private Services.INavigation Navigation { get; }
-      private IProgress Progress { get; }
+      public IDictionary<string, IEnumerable<string>> ValidationErrors => new Dictionary<string, IEnumerable<string>>();
+      public IDictionary<string, IEnumerable<IRule>> ValidationRules => new Dictionary<string, IEnumerable<IRule>>();
+      public bool IsValid { get; set; }
 
-      public ICommand SaveCommand { get; set; }
-      public ICommand CancelCommand { get; set; }
       public ObservableCollection<Area> Areas { get; set; }
       public Area SelectedArea { get; set; }
 
@@ -29,68 +30,67 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       public MapSpan Location { get; set; }
 
-      public ManageAreaViewModel(Services.INavigation navigation, IProgress progress) {
+      public ICommand SaveCommand { get; set; }
+      public ICommand CancelCommand { get; set; }
+
+      private Services.INavigation Navigation { get; }
+      private IProgress Progress { get; }
+      private IValidator Validator { get; }
+
+      public ManageAreaViewModel(
+         Services.INavigation navigation,
+         IProgress progress,
+         IValidator validator) {
          Progress = progress;
          Navigation = navigation;
+         Validator = validator;
 
          Title = VmTitle;
 
          Areas = new ObservableCollection<Area>();
+
+         InitializeValidationRules();
+         InitializeCommands();
       }
 
-      protected override void InitializeCommands() {
-         SaveCommand = new Command(Save, CanSave);
+      private void InitializeCommands() {
+         SaveCommand = new Command(Save, () => IsValid);
          CancelCommand = new Command(async () => await GoBack());
       }
 
-      protected override void InitializeValidationRules() {
-         base.InitializeValidationRules();
-         AddValidationRule(nameof(Name),
+      private void InitializeValidationRules() {
+         this.AddRule(nameof(Name),
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Region_Name)));
-         AddValidationRule(nameof(Info),
+         this.AddRule(nameof(Info),
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Region_Info)));
-         AddValidationRule(nameof(Location),
+         this.AddRule(nameof(Location),
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Region_Map_Title)));
-         AddValidationRule(nameof(SelectedArea),
+         this.AddRule(nameof(SelectedArea),
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Region)));
       }
 
-      public async override Task OnNavigatedToAsync(params object[] parameters) {
-         try {
-            await Progress.ShowLoadingIndicatorAsync();
-            await base.OnNavigatedToAsync(parameters);
-         } finally {
-            await Progress.HideLoadingIndicatorAsync();
-         }
-      }
+      public void OnPropertyChanged(string propertyName, object before, object after) {
+         Validator.Validate(this, propertyName, after);
+         // Raise validation errors property changed in order to update validation errors
+         RaisePropertyChanged(nameof(ValidationErrors));
 
-      public override void OnPropertyChanged(string propertyName, object before, object after) {
-         base.OnPropertyChanged(propertyName, before, after);
-
-         var saveCommand = SaveCommand as Command;
-         if (null != saveCommand) {
-            saveCommand.ChangeCanExecute();
-         }
+         (SaveCommand as Command).ChangeCanExecute();
       }
 
       private async Task GoBack() {
          await Navigation.GoBackAsync();
-      }
-
-      private bool CanSave() {
-         return !HasValidationErrors;
       }
 
       private void Save() {

@@ -1,6 +1,8 @@
 ﻿using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
+using Climbing.Guide.Forms.Validations;
 using Climbing.Guide.Forms.Validations.Rules;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,12 +11,12 @@ using Xamarin.Forms;
 
 namespace Climbing.Guide.Forms.ViewModels.User {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class SignupViewModel : BaseViewModel {
+   public class SignupViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.User.Signup_Title;
 
-      private IApiClient Client { get; }
-      protected IExceptionHandler Errors { get; }
-      private Services.INavigation Navigation { get; }
+      public IDictionary<string, IEnumerable<string>> ValidationErrors => new Dictionary<string, IEnumerable<string>>();
+      public IDictionary<string, IEnumerable<IRule>> ValidationRules => new Dictionary<string, IEnumerable<IRule>>();
+      public bool IsValid { get; set; }
 
       public string Username { get; set; }
       public string Password { get; set; }
@@ -23,48 +25,57 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       public ICommand SignupCommand { get; private set; }
       public ICommand LoginCommand { get; private set; }
 
+      protected IExceptionHandler Errors { get; }
+
+      private IApiClient Client { get; }
+      private Services.INavigation Navigation { get; }
+      private IValidator Validator { get; }
+
       public SignupViewModel(IApiClient client,
          IExceptionHandler errors,
-         Services.INavigation navigation) {
+         Services.INavigation navigation,
+         IValidator validator) {
          Client = client;
          Errors = errors;
          Navigation = navigation;
          Title = VmTitle;
+         Validator = validator;
+
+         InitializeValidationRules();
+         InitializeCommands();
       }
 
-      protected override void InitializeCommands() {
-         base.InitializeCommands();
+      public void OnPropertyChanged(string propertyName, object before, object after) {
+         Validator.Validate(this, propertyName, after);
+         // Raise validation errors property changed in order to update validation errors
+         RaisePropertyChanged(nameof(ValidationErrors));
 
-         SignupCommand = new Command(async () => await SignUp(), CanSignUp);
-         LoginCommand = new Command(async () => await Login());
+         ((Command)SignupCommand).ChangeCanExecute();
       }
 
-      protected override void InitializeValidationRules() {
-         base.InitializeValidationRules();
-         AddValidationRule(nameof(Username), new RequiredRule(Resources.Strings.User.Username_Validation_Error));
-         AddValidationRule(nameof(Username), new EmailRule(Resources.Strings.User.Username_Validation_Error));
-         AddValidationRule(nameof(Password), 
-            new CustomRule(Resources.Strings.User.Password_Validation_Error, 
+      private void InitializeCommands() {
+         SignupCommand = new Command(async () => await SignUp(), () => IsValid);
+         LoginCommand = new Command(async () => await NavigateToLogin());
+      }
+
+      private void InitializeValidationRules() {
+         this.AddRule(nameof(Username), 
+            new RequiredRule(Resources.Strings.User.Username_Validation_Error),
+            new EmailRule(Resources.Strings.User.Username_Validation_Error));
+
+         var passwordComparer = new CompareRule(Resources.Strings.User.Confirm_Password_Validation_Error);
+         this.AddRule(nameof(Password),
+            new CustomRule(Resources.Strings.User.Password_Validation_Error,
                (key, value) => {
                   var password = value as string;
                   return !string.IsNullOrEmpty(password) &&
                   password.Trim().Length > 8 &&
                   password.Any(char.IsDigit) &&
                   password.Any(char.IsLetter);
-               }));
-         var passwordComparer = new CompareRule(Resources.Strings.User.Confirm_Password_Validation_Error);
-         AddValidationRule(nameof(Password), passwordComparer);
-         AddValidationRule(nameof(ConfirmPassword), passwordComparer);
-      }
-
-      public override void OnPropertyChanged(string propertyName, object before, object after) {
-         base.OnPropertyChanged(propertyName, before, after);
-
-         ((Command)SignupCommand).ChangeCanExecute();
-      }
-
-      private bool CanSignUp() {
-         return HasValidationErrors;
+               }),
+            passwordComparer);
+         this.AddRule(nameof(ConfirmPassword),
+            passwordComparer);
       }
 
       private async Task SignUp() {
@@ -75,7 +86,7 @@ namespace Climbing.Guide.Forms.ViewModels.User {
                Password = Password
             });
 
-            await Login();
+            await NavigateToLogin();
          } catch(Climbing.Guide.Api.Schemas.ApiCallException ex) {
             await Errors.HandleAsync(ex,
                Resources.Strings.Main.Communication_Error_Message,
@@ -83,7 +94,7 @@ namespace Climbing.Guide.Forms.ViewModels.User {
          }
       }
 
-      private async Task Login() {
+      private async Task NavigateToLogin() {
          await Navigation.NavigateAsync(Navigation.GetShellNavigationUri(nameof(Views.User.LoginView)));
       }
    }

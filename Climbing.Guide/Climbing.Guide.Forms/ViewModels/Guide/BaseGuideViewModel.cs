@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class BaseGuideViewModel : BaseViewModel {
+      public ObservableCollection<Area> Areas { get; set; }
+      public ObservableCollection<Route> Routes { get; set; }
+
+      public Area SelectedArea { get; set; }
+      public Route SelectedRoute { get; set; }
+
       private IApiClient Client { get; }
       protected IExceptionHandler Errors { get; }
       private ISyncTaskRunner SyncTaskRunner { get; }
 
       protected Stack<Area> Breadcrumbs { get; private set; }
 
-      public ObservableCollection<Area> Areas { get; set; }
-      public ObservableCollection<Route> Routes { get; set; }
-
-      public Area SelectedArea { get; set; }
-      public Route SelectedRoute { get; set; }
-      
       public BaseGuideViewModel(IApiClient client, IExceptionHandler errors, ISyncTaskRunner syncTaskRunner) {
          Client = client;
          Errors = errors;
@@ -33,7 +33,8 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          Routes = new ObservableCollection<Route>();
       }
 
-      protected async override Task InitializeViewModel() {
+      public async override Task OnNavigatedToAsync(params object[] parameters) {
+         await base.OnNavigatedToAsync(parameters);
          await InitializeAreasAsync(null);
       }
 
