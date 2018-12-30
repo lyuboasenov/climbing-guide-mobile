@@ -13,6 +13,7 @@ using Climbing.Guide.Core.Api;
 using Climbing.Guide.Api;
 using Climbing.Guide.Http;
 using System.Net.Http;
+using Climbing.Guide.Forms.Services.Progress;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Forms {

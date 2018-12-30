@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using Climbing.Guide.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Caching;

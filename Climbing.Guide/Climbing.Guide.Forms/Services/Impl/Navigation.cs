@@ -1,4 +1,5 @@
 ﻿using Climbing.Guide.Collections;
+using Climbing.Guide.Forms.Services.Progress;
 using Climbing.Guide.Tasks;
 using Prism.Navigation;
 using System;
@@ -12,11 +13,9 @@ namespace Climbing.Guide.Forms.Services {
 
       private FixedStack<NavigationItem> NavigationStack { get; set; }
       private INavigationService InternalNavigationService { get; set; }
-      private IProgress ProgressService { get; set; }
 
-      public Navigation(INavigationService navigationService, IProgress progressService) {
+      public Navigation(INavigationService navigationService) {
          InternalNavigationService = navigationService;
-         ProgressService = progressService;
          NavigationStack = new FixedStack<NavigationItem>(NAVIGATION_STACK_SIZE);
       }
 
