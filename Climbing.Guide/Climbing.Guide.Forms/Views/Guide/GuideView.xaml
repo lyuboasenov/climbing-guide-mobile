@@ -22,33 +22,16 @@
          <RowDefinition Height="*" />
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
-         <ColumnDefinition Width="*" />
-         <ColumnDefinition Width="*" />
-         <ColumnDefinition Width="*" />
          <ColumnDefinition Width="Auto" />
+         <ColumnDefinition Width="*" />
       </Grid.ColumnDefinitions>
 
-      <Picker Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Regions}" SelectedItem="{Binding SelectedRegion}" ItemDisplayBinding="{Binding Name}" />
-      <Picker Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Areas}" SelectedItem="{Binding SelectedArea}" ItemDisplayBinding="{Binding Name}" />
-      <Picker Grid.Column="2" Grid.Row="0" ItemsSource="{Binding Sectors}" SelectedItem="{Binding SelectedSector}" ItemDisplayBinding="{Binding Name}" />
-
-      <Button Grid.Column="3" Grid.Row="0"
-              BackgroundColor="{x:StaticResource RedButtonColor}"
-              HorizontalOptions="EndAndExpand"
-              VerticalOptions="EndAndExpand"
-              WidthRequest="40"
-              HeightRequest="40"
-              BorderRadius="20"
-              FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
-              Text="{x:Static resources:GlyphNames.Times}"
-              Command="{Binding ClearFilterCommand}" />
-
-      <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
-                   ItemsSource="{Binding Routes}"
+      <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                   ItemsSource="{Binding Items}"
                    SelectionMode="None">
          <ListView.Behaviors>
             <behaviors:EventToCommandBehavior EventName="ItemTapped"
-                                              Command="{Binding RouteTappedCommand}"
+                                              Command="{Binding ItemTappedCommand}"
                                               Converter="{StaticResource ItemTappedConverter}" />
          </ListView.Behaviors>
          <ListView.ItemTemplate>
@@ -73,16 +56,29 @@
          </ListView.ItemTemplate>
       </ListView>
 
-      <Button Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1"
-              HorizontalOptions="CenterAndExpand"
-              VerticalOptions="EndAndExpand"
-              WidthRequest="40"
-              HeightRequest="40"
-              BorderRadius="20"
-              Margin="15"
-              IsVisible="{Binding Client.AuthenticationManager.IsLoggedIn}"
-              FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
-              Text="{x:Static resources:GlyphNames.Plus}"
-              Command="{Binding AddRouteCommand}"/>
+      <StackLayout Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="EndAndExpand"
+                   Orientation="Horizontal">
+         <Button HorizontalOptions="EndAndExpand"
+                 VerticalOptions="EndAndExpand"
+                 WidthRequest="40"
+                 HeightRequest="40"
+                 BorderRadius="20"
+                 Margin="15"
+                 FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+                 Text="{x:Static resources:GlyphNames.ChevronLeft}"
+                 Command="{Binding TraverseBackCommand}" />
+         
+         <Button WidthRequest="40"
+                 HeightRequest="40"
+                 BorderRadius="20"
+                 Margin="15"
+                 IsVisible="{Binding Client.AuthenticationManager.IsLoggedIn}"
+                 FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+                 Text="{x:Static resources:GlyphNames.Plus}"
+                 Command="{Binding AddItemCommand}"/>
+      </StackLayout>
+      
    </Grid>
 </ContentPage>

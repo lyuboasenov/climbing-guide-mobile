@@ -1,91 +1,96 @@
 ﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Collections.ObjectModel;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
-using Climbing.Guide.Tasks;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class BaseGuideViewModel : BaseViewModel {
-      public ObservableCollection<Area> Areas { get; set; }
-      public ObservableCollection<Route> Routes { get; set; }
-
-      public Area SelectedArea { get; set; }
-      public Route SelectedRoute { get; set; }
+      public ObservableCollection<object> Items { get; set; }
 
       private IApiClient Client { get; }
       protected IExceptionHandler Errors { get; }
-      private ISyncTaskRunner SyncTaskRunner { get; }
 
-      protected Stack<Area> Breadcrumbs { get; private set; }
+      protected Stack<Area> TraversalPath { get; }
 
-      public BaseGuideViewModel(IApiClient client, IExceptionHandler errors, ISyncTaskRunner syncTaskRunner) {
+      public BaseGuideViewModel(
+         IApiClient client,
+         IExceptionHandler errors) {
          Client = client;
          Errors = errors;
-         SyncTaskRunner = syncTaskRunner;
 
-         Breadcrumbs = new Stack<Area>();
+         TraversalPath = new Stack<Area>();
 
-         Areas = new ObservableCollection<Area>();
-         Routes = new ObservableCollection<Route>();
+         Items = new ObservableCollection<object>();
       }
 
-      public async override Task OnNavigatedToAsync(params object[] parameters) {
-         await base.OnNavigatedToAsync(parameters);
-         await InitializeAreasAsync(null);
+      protected async virtual Task TraverseToAsync(Area parentArea) {
+         TraversalPath.Push(parentArea);
+         await LoadItemsAsync(parentArea);
       }
 
-      protected async virtual Task InitializeAreasAsync(Area parentArea) {
-         Areas.Clear();
-         SelectedArea = null;
-         Routes.Clear();
-         SelectedRoute = null;
+      protected async virtual Task TraverseBackAsync() {
+         // Remove current parent
+         TraversalPath.Pop();
 
+         var parentArea = TraversalPath.Pop();
+         await TraverseToAsync(parentArea);
+      }
+
+      private async Task LoadItemsAsync(Area parentArea) {
+         Items.Clear();
+
+         if (null == parentArea || (parentArea.Has_subareas??false)) {
+            await LoadAreasAsync(parentArea);
+         } else if (null != parentArea && (parentArea.Has_routes ?? false)) {
+            await LoadRoutesAsync(parentArea);
+         }
+      }
+
+      private async Task LoadAreasAsync(Area parentArea) {
          try {
             for(int page = 1; ; page++) {
-               bool hasMorePages = false;
+               bool isLastPage = true;
                IEnumerable<Area> areas = null;
                if (null == parentArea) {
                   var pagedAreas = await Client.AreasClient.ListAsync(page: page);
                   areas = pagedAreas.Results;
-                  hasMorePages = pagedAreas.Next != null;
+                  isLastPage = pagedAreas.Next == null;
                } else {
                   var pagedAreas = await Client.AreasClient.ListAsync(id: parentArea.Id.Value, page: page);
                   areas = pagedAreas.Results;
-                  hasMorePages = pagedAreas.Next != null;
+                  isLastPage = pagedAreas.Next == null;
                }
 
                foreach (var area in areas) {
-                  Areas.Add(area);
+                  Items.Add(area);
                }
 
-               if (hasMorePages) {
+               if (isLastPage) {
                   break;
                }
             }
          } catch (ApiCallException ex) {
             await Errors.HandleAsync(ex);
             return;
+         } catch (AggregateException ex) {
+            await Errors.HandleAsync(ex);
          }
       }
 
-      protected async virtual Task InitializeRoutesAsync(Area parentArea) {
-
+      private async Task LoadRoutesAsync(Area parentArea) {
          if (null == parentArea) {
             throw new ArgumentNullException(nameof(parentArea));
          }
-
-         Routes.Clear();
-         SelectedRoute = null;
 
          try {
             for(int page = 1; ; page++) {
                var pagedRoutes = await Client.RoutesClient.ListAsync(parentArea.Id.Value, page);
                foreach (var route in pagedRoutes.Results) {
-                  Routes.Add(route);
+                  Items.Add(route);
                }
 
                if (null == pagedRoutes.Next) {
@@ -94,23 +99,9 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
             }
          } catch (ApiCallException ex) {
             await Errors.HandleAsync(ex);
+         } catch (AggregateException ex) {
+            await Errors.HandleAsync(ex);
          }
-      }
-
-      public virtual void OnSelectedAreaChanged() {
-         SyncTaskRunner.RunSync(async () => {
-            var selectedArea = SelectedArea;
-            Breadcrumbs.Push(selectedArea);
-
-            if (selectedArea.Has_subareas??false) {
-               await InitializeAreasAsync(selectedArea);
-            } else if (selectedArea.Has_routes??false) {
-               await InitializeRoutesAsync(selectedArea);
-            }
-         });
-      }
-
-      public virtual void OnSelectedRouteChanged() {
       }
    }
 }

@@ -7,10 +7,9 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Climbing.Guide.Api.Schemas;
 using System;
-using Climbing.Guide.Forms.Services;
-using Climbing.Guide.Tasks;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
+using Climbing.Guide.Forms.Services.Progress;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -26,11 +25,10 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public MapSpan VisibleRegion { get; set; }
       public Position SelectedLocation { get; set; }
 
-      public ExploreViewModel(IApiClient client, 
-         IExceptionHandler errors, 
-         Services.INavigation navigation, 
-         IProgress progress, 
-         ISyncTaskRunner syncTaskRunner) : base(client, errors, syncTaskRunner) {
+      public ExploreViewModel(IApiClient client,
+         IExceptionHandler errors,
+         Services.INavigation navigation,
+         IProgress progress) : base(client, errors) {
          Progress = progress;
          Navigation = navigation;
 
@@ -40,34 +38,40 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       }
 
       public async override Task OnNavigatedToAsync(params object[] parameters) {
-         try {
-            await Progress.ShowLoadingIndicatorAsync();
-            await base.OnNavigatedToAsync(parameters);
-            await InitializeViewModel();
-         } finally {
-            await Progress.HideLoadingIndicatorAsync();
-         }
+         await base.OnNavigatedToAsync(parameters);
+         await TraverseToAsync(null);
       }
 
-      protected override async Task InitializeAreasAsync(Area parentArea) {
-         await base.InitializeAreasAsync(parentArea);
+      protected async override Task TraverseToAsync(Area parentArea) {
+         using (var loading = Progress.CreateLoadingSessionAsync()) {
+            await base.TraverseToAsync(parentArea);
 
-         Pins = Areas;
+            Pins = Items;
 
-         int zoomLevel = ZoomLevel[Breadcrumbs.Count];
-         VisibleRegion = MapSpan.FromCenterAndRadius(
-            MapHelper.GetPosition(SelectedArea.Latitude, SelectedArea.Longitude),
-            new Distance(zoomLevel));
+            decimal latitude, longitude;
+            if (null == parentArea) {
+               var location = await GetCurrentLocation();
+               latitude = (decimal)location.Latitude;
+               longitude = (decimal)location.Longitude;
+            } else {
+               latitude = parentArea.Latitude;
+               longitude = parentArea.Longitude;
+            }
+
+            int zoomLevel = ZoomLevel[TraversalPath.Count];
+            VisibleRegion = MapSpan.FromCenterAndRadius(
+               MapHelper.GetPosition(latitude, longitude),
+               new Distance(zoomLevel));
+         }
       }
 
       private void InitializeCommands() {
          PinTappedCommand = new Command(async (data) => { await OnPinTapped(data); } );
       }
 
-      private async Task InitializeViewModel() {
-         Location position = null;
+      private async Task<Location> GetCurrentLocation() {
          try {
-            position = await Geolocation.GetLocationAsync();
+            return await Geolocation.GetLocationAsync();
          } catch (FeatureNotSupportedException fnsEx) {
             await Errors.HandleAsync(fnsEx,
                Resources.Strings.Main.Permission_Exception_Format,
@@ -82,16 +86,12 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
                Resources.Strings.Main.Location_Permissino);
          }
 
-         if (null != position) {
-            VisibleRegion = MapSpan.FromCenterAndRadius(
-            new Position(position.Latitude, position.Longitude),
-            new Distance(5000000));
-         }
+         return await Geolocation.GetLastKnownLocationAsync();
       }
 
       private async Task OnPinTapped(object data) {
          if (data is Area) {
-            SelectedArea = data as Area;
+            await TraverseToAsync(data as Area);
          } else if (data is Route) {
             await ViewRoute(data as Route);
          }
