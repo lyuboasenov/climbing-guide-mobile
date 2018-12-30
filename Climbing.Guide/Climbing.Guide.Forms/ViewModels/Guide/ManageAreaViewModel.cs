@@ -3,7 +3,7 @@ using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Validations;
 using Climbing.Guide.Forms.Validations.Rules;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using Climbing.Guide.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -34,14 +34,11 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public ICommand CancelCommand { get; set; }
 
       private Services.INavigation Navigation { get; }
-      private IProgress Progress { get; }
       private IValidator Validator { get; }
 
       public ManageAreaViewModel(
          Services.INavigation navigation,
-         IProgress progress,
          IValidator validator) {
-         Progress = progress;
          Navigation = navigation;
          Validator = validator;
 
