@@ -2,7 +2,7 @@
 using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services;
 using System;
-using System.Collections.ObjectModel;
+using Climbing.Guide.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;

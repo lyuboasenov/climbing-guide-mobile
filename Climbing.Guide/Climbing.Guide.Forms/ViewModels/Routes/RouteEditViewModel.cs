@@ -4,7 +4,7 @@ using Climbing.Guide.Exceptions;
 using Climbing.Guide.Tasks;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using Climbing.Guide.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -36,10 +36,11 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
 
       public MapSpan VisibleRegion { get; set; }
 
+      public Area ParentArea { get; set; }
+
       public RouteEditViewModel(IApiClient client,
          IExceptionHandler errors,
-         Services.INavigation navigation, 
-         ISyncTaskRunner syncTaskRunner) : base(client, errors, syncTaskRunner) {
+         Services.INavigation navigation) : base(client, errors) {
          Navigation = navigation;
          Title = VmTitle;
 
@@ -71,7 +72,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       private async Task InitializeData(params object[] parameters) {
          try {
             await base.OnNavigatedToAsync(parameters);
-            SelectedArea = parameters[0] as Area;
+            ParentArea = parameters[0] as Area;
             LocalSchemaThumbPath = parameters[1] as string;
 
             using (var exifReader = new ExifLib.ExifReader(LocalSchemaThumbPath)) {

@@ -5,15 +5,16 @@ using Climbing.Guide.Forms.Helpers;
 using Climbing.Guide.Forms.Models;
 using Climbing.Guide.Forms.Services;
 using System;
-using System.Collections.ObjectModel;
+using Climbing.Guide.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Climbing.Guide.Forms.Services.Progress;
 
 namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class ShellMenuViewModel : BaseViewModel {
       private IApiClient Client { get; }
       private IExceptionHandler Errors { get; }
-      private Services.INavigation Navigation { get; }
+      private INavigation Navigation { get; }
       private IEvents Events { get; }
       private IProgress Progress { get; }
 
@@ -26,7 +27,7 @@ namespace Climbing.Guide.Forms.ViewModels {
 
       public ShellMenuViewModel(IApiClient client,
          IExceptionHandler errors,
-         Services.INavigation navigation,
+         INavigation navigation,
          IEvents events,
          IProgress progress) {
          Client = client;
@@ -120,14 +121,12 @@ namespace Climbing.Guide.Forms.ViewModels {
       }
 
       private async Task TestAsync() {
-         await Progress.ShowProgressIndicatorAsync();
-
-         for (int i = 0; i < 100; i++) {
-            await Progress.UpdateLoadingProgressAsync(i, 100, $"{i} / 100 items processed.");
-            await Task.Delay(100);
+         using (var progress = await Progress.CreateProgressSessionAsync()) {
+            for (int i = 0; i < 100; i++) {
+               await progress.UpdateProgressAsync(i, 100, $"{i} / 100 items processed.");
+               await Task.Delay(100);
+            }
          }
-
-         await Progress.HideProgressIndicatorAsync();
          //var progressService = GetService<IProgressService>();
          //await progressService.ShowLoadingIndicatorAsync();
 

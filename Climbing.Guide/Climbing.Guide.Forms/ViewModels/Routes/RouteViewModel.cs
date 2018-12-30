@@ -1,10 +1,9 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Forms.Services;
-using Climbing.Guide.Tasks;
 using Prism.Navigation;
 using System;
-using System.Collections.ObjectModel;
+using Climbing.Guide.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
