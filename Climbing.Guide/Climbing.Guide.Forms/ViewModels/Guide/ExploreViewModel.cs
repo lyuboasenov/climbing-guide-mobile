@@ -21,6 +21,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       private Services.INavigation Navigation { get; }
 
       public ICommand PinTappedCommand { get; private set; }
+      public ICommand TraverseBackCommand { get; private set; }
       public IEnumerable Pins { get; set; }
       public MapSpan VisibleRegion { get; set; }
       public Position SelectedLocation { get; set; }
@@ -45,6 +46,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       protected async override Task TraverseToAsync(Area parentArea) {
          using (var loading = Progress.CreateLoadingSessionAsync()) {
             await base.TraverseToAsync(parentArea);
+            (TraverseBackCommand as Command).ChangeCanExecute();
 
             Pins = Items;
 
@@ -67,6 +69,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       private void InitializeCommands() {
          PinTappedCommand = new Command(async (data) => { await OnPinTapped(data); } );
+         TraverseBackCommand = new Command(async () => await OnTraverseBackAsync(), () => TraversalPath.Count > 1);
       }
 
       private async Task<Location> GetCurrentLocation() {
@@ -95,6 +98,11 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          } else if (data is Route) {
             await ViewRoute(data as Route);
          }
+      }
+
+      private async Task OnTraverseBackAsync() {
+         await TraverseBackAsync();
+         (TraverseBackCommand as Command).ChangeCanExecute();
       }
 
       private async Task ViewRoute(Route route) {
