@@ -144,47 +144,8 @@
   <data name="Manage_Area_Restrictions" xml:space="preserve">
     <value>Restrictions</value>
   </data>
-  <data name="Manage_Region_Info" xml:space="preserve">
-    <value>Info</value>
-  </data>
-  <data name="Manage_Region_Into_Title" xml:space="preserve">
-    <value>Info</value>
-  </data>
-  <data name="Manage_Region_Map_Title" xml:space="preserve">
-    <value>Map</value>
-  </data>
-  <data name="Manage_Region_Name" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="Manage_Region_Restrictions" xml:space="preserve">
-    <value>Restrictions</value>
-  </data>
-  <data name="Manage_Region_Title" xml:space="preserve">
-    <value>New region</value>
-  </data>
-  <data name="Manage_Sector_Access" xml:space="preserve">
-    <value>Access</value>
-  </data>
-  <data name="Manage_Sector_Area" xml:space="preserve">
-    <value>Area</value>
-  </data>
-  <data name="Manage_Sector_Descent" xml:space="preserve">
-    <value>Descent</value>
-  </data>
-  <data name="Manage_Sector_Info" xml:space="preserve">
-    <value>Info</value>
-  </data>
-  <data name="Manage_Sector_Into_Title" xml:space="preserve">
-    <value>Info</value>
-  </data>
-  <data name="Manage_Sector_Map_Title" xml:space="preserve">
-    <value>Map</value>
-  </data>
-  <data name="Manage_Sector_Name" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="Manage_Sector_Restrictions" xml:space="preserve">
-    <value>Restrictions</value>
+  <data name="Manage_Parent_Area" xml:space="preserve">
+    <value>Parent area</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
     <value>Search</value>
