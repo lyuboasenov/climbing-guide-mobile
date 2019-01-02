@@ -97,7 +97,7 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CG.
+        ///   Looks up a localized string similar to Climbing Guide.
         /// </summary>
         public static string CG {
             get {

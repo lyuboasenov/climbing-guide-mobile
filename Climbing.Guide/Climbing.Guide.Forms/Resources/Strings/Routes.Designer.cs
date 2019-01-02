@@ -70,15 +70,6 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Region.
-        /// </summary>
-        public static string Add_Region_Selection_Item {
-            get {
-                return ResourceManager.GetString("Add_Region_Selection_Item", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Pick image and add a route.
         /// </summary>
         public static string Add_Route_From_Gallery_Selection_Item {
@@ -93,15 +84,6 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         public static string Add_Route_From_Image_Selection_Item {
             get {
                 return ResourceManager.GetString("Add_Route_From_Image_Selection_Item", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sector.
-        /// </summary>
-        public static string Add_Sector_Selection_Item {
-            get {
-                return ResourceManager.GetString("Add_Sector_Selection_Item", resourceCulture);
             }
         }
         

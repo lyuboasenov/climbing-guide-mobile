@@ -133,15 +133,6 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Region.
-        /// </summary>
-        public static string Manage_Area_Region {
-            get {
-                return ResourceManager.GetString("Manage_Area_Region", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Restrictions.
         /// </summary>
         public static string Manage_Area_Restrictions {
@@ -264,15 +255,6 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         public static string Manage_Sector_Name {
             get {
                 return ResourceManager.GetString("Manage_Sector_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Region.
-        /// </summary>
-        public static string Manage_Sector_Region {
-            get {
-                return ResourceManager.GetString("Manage_Sector_Region", resourceCulture);
             }
         }
         
