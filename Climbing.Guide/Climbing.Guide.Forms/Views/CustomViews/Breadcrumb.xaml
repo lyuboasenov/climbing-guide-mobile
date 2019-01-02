@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Climbing.Guide.Forms.Views.CustomViews.Breadcrumb">
+   <ContentView.Content>
+      <ScrollView x:Name="breadCrumbsScrollView"
+                  Orientation="Horizontal"
+                  VerticalOptions="StartAndExpand">
+         <StackLayout x:Name="breadcrumbStackLayout"
+                      Orientation="Horizontal"
+                      HorizontalOptions="FillAndExpand"
+                      Padding="10,0,10,0"
+                      HeightRequest="30"
+                      ChildAdded="AnimatedStack_ChildAdded">
+
+         </StackLayout>
+      </ScrollView>
+   </ContentView.Content>
+</ContentView>
