@@ -5,6 +5,8 @@
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
    xmlns:behaviors="clr-namespace:Climbing.Guide.Forms.Behaviors"
    xmlns:converters="clr-namespace:Climbing.Guide.Forms.Converters"
+   xmlns:forms="clr-namespace:Climbing.Guide.Forms.Forms"
+   xmlns:customviews="clr-namespace:Climbing.Guide.Forms.Views.CustomViews"
    x:Class="Climbing.Guide.Forms.Views.Guide.GuideView"
    x:Name="Page"
    Title="{Binding Title}">
@@ -21,12 +23,12 @@
          <RowDefinition Height="Auto" />
          <RowDefinition Height="*" />
       </Grid.RowDefinitions>
-      <Grid.ColumnDefinitions>
-         <ColumnDefinition Width="Auto" />
-         <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
 
-      <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+      <customviews:Breadcrumb Grid.Row="0" Grid.Column="0"
+                              ItemsSource="{Binding TraversalPath}"
+                              ItemDisplayBinding="{Binding Name}" />
+
+      <ListView Grid.Row="1" Grid.Column="0"
                    ItemsSource="{Binding Items}"
                    SelectionMode="None">
          <ListView.Behaviors>
@@ -35,28 +37,81 @@
                                               Converter="{StaticResource ItemTappedConverter}" />
          </ListView.Behaviors>
          <ListView.ItemTemplate>
-            <DataTemplate>
-               <ViewCell>
-                  <Grid>
-                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                     </Grid.ColumnDefinitions>
-                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                     </Grid.RowDefinitions>
-                     <Label Grid.Column="0" Grid.Row="0" Text="{Binding Name}" />
-                     <Label Grid.Column="0" Grid.Row="1" Text="{Binding Info}" />
+            <forms:GuideDataTemplateSelector>
+               <forms:GuideDataTemplateSelector.AreaTemplate>
+                  <DataTemplate>
+                     <ViewCell>
+                        <Grid Margin="2">
+                           <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" />
+                              <ColumnDefinition Width="*" />
+                              <ColumnDefinition Width="Auto" />
+                           </Grid.ColumnDefinitions>
+                           <Grid.RowDefinitions>
+                              <RowDefinition Height="*" />
+                              <RowDefinition Height="Auto" />
+                           </Grid.RowDefinitions>
 
-                     <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding ., Converter={StaticResource GradeConverter}}" />
-                  </Grid>
-               </ViewCell>
-            </DataTemplate>
+                           <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                                  VerticalOptions="CenterAndExpand"
+                                  FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+                                  Text="{x:Static resources:GlyphNames.MapMarkedAlt }"/>
+
+                           <Label Grid.Column="1" Grid.Row="0"
+                                  Text="{Binding Name}"
+                                  FontAttributes="Bold"
+                                  FontSize="Medium" />
+                           <Label Grid.Column="1" Grid.Row="1"
+                                  Text="{Binding Info}"
+                                  FontAttributes="Italic"
+                                  FontSize="Micro" />
+
+                           <!--<Label Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Text="{Binding ., Converter={StaticResource GradeConverter}}" />-->
+                        </Grid>
+                     </ViewCell>
+                  </DataTemplate>
+               </forms:GuideDataTemplateSelector.AreaTemplate>
+               <forms:GuideDataTemplateSelector.RouteTemplate>
+                  <DataTemplate>
+                     <ViewCell>
+                        <Grid Margin="2">
+                           <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" />
+                              <ColumnDefinition Width="*" />
+                              <ColumnDefinition Width="Auto" />
+                           </Grid.ColumnDefinitions>
+                           <Grid.RowDefinitions>
+                              <RowDefinition Height="*" />
+                              <RowDefinition Height="Auto" />
+                           </Grid.RowDefinitions>
+
+                           <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                                  VerticalOptions="CenterAndExpand"
+                                  FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+                                  Text="{x:Static resources:GlyphNames.Route }"/>
+
+                           <Label Grid.Column="1" Grid.Row="0"
+                                  Text="{Binding Name}"
+                                  FontAttributes="Bold"
+                                  FontSize="Medium" />
+                           <Label Grid.Column="1" Grid.Row="1"
+                                  Text="{Binding Info}"
+                                  FontAttributes="Italic"
+                                  FontSize="Micro" />
+
+                           <Label Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" 
+                                  Text="{Binding ., Converter={StaticResource GradeConverter}}" 
+                                  FontAttributes="Italic"
+                                  FontSize="Large" />
+                        </Grid>
+                     </ViewCell>
+                  </DataTemplate>
+               </forms:GuideDataTemplateSelector.RouteTemplate>
+            </forms:GuideDataTemplateSelector>
          </ListView.ItemTemplate>
       </ListView>
 
-      <StackLayout Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
+      <StackLayout Grid.Column="0" Grid.Row="1"
                    HorizontalOptions="CenterAndExpand"
                    VerticalOptions="EndAndExpand"
                    Orientation="Horizontal">
@@ -69,7 +124,7 @@
                  FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
                  Text="{x:Static resources:GlyphNames.ChevronLeft}"
                  Command="{Binding TraverseBackCommand}" />
-         
+
          <Button WidthRequest="40"
                  HeightRequest="40"
                  BorderRadius="20"
@@ -79,6 +134,6 @@
                  Text="{x:Static resources:GlyphNames.Plus}"
                  Command="{Binding AddItemCommand}"/>
       </StackLayout>
-      
+
    </Grid>
 </ContentPage>
