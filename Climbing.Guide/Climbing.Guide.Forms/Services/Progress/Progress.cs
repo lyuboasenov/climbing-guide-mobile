@@ -36,8 +36,8 @@ namespace Climbing.Guide.Forms.Services.Progress {
       }
 
       internal Task UpdateLoadingProgressAsync(double processed, double total, string message) {
-         EventService.GetEvent<ProgressChangedEvent, Forms.Events.Payload.ProgressChanged>().
-            Publish(new Forms.Events.Payload.ProgressChanged() {
+         EventService.GetEvent<ProgressChangedEvent, Guide.Forms.Events.Payload.ProgressChanged>().
+            Publish(new Guide.Forms.Events.Payload.ProgressChanged() {
                Message = message,
                Processed = processed,
                Total = total

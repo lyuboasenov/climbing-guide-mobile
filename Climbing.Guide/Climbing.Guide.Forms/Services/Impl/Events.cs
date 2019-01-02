@@ -9,11 +9,11 @@ namespace Climbing.Guide.Forms.Services {
          EventAggregator = eventAggregator;
       }
 
-      public TEventType GetEvent<TEventType>() where TEventType : Forms.Events.EventBase, new() {
+      public TEventType GetEvent<TEventType>() where TEventType : Guide.Forms.Events.EventBase, new() {
          return EventAggregator.GetEvent<TEventType>();
       }
 
-      public TEventType GetEvent<TEventType, TPayload>() where TEventType : Forms.Events.EventBase<TPayload>, new() {
+      public TEventType GetEvent<TEventType, TPayload>() where TEventType : Guide.Forms.Events.EventBase<TPayload>, new() {
          return EventAggregator.GetEvent<TEventType>();
       }
    }

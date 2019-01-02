@@ -1,5 +1,4 @@
 ﻿using Climbing.Guide.Forms.Helpers;
-using System;
 using System.Collections;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -139,7 +138,7 @@ namespace Climbing.Guide.Forms.Views {
       private void OnSelectedLocationChanged() {
          if (ShowSelectedLocation) {
             if (null == selectedLocationPin) {
-               selectedLocationPin = new Pin() {Label = Forms.Resources.Strings.Main.Current_Location };
+               selectedLocationPin = new Pin() {Label = Climbing.Guide.Forms.Resources.Strings.Main.Current_Location };
             }
             selectedLocationPin.Position = SelectedLocation;
             if (!Pins.Contains(selectedLocationPin)) {

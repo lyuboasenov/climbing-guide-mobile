@@ -26,9 +26,9 @@ namespace Climbing.Guide.Forms.Services {
          if (null != AlertService) {
             Device.BeginInvokeOnMainThread(async () => {
                await AlertService.DisplayAlertAsync(
-               Forms.Resources.Strings.Main.Error_Title,
-               Forms.Resources.Strings.Main.Error_Mesage,
-               Forms.Resources.Strings.Main.Ok);
+               Guide.Forms.Resources.Strings.Main.Error_Title,
+               Guide.Forms.Resources.Strings.Main.Error_Mesage,
+               Guide.Forms.Resources.Strings.Main.Ok);
             });
          }
 
@@ -50,9 +50,9 @@ namespace Climbing.Guide.Forms.Services {
          if (null != AlertService) {
             Device.BeginInvokeOnMainThread(async () => {
                await AlertService.DisplayAlertAsync(
-               Forms.Resources.Strings.Main.Error_Title,
+               Guide.Forms.Resources.Strings.Main.Error_Title,
                string.Format(errorMessageFormat, errorMessageParams),
-               Forms.Resources.Strings.Main.Ok);
+               Guide.Forms.Resources.Strings.Main.Ok);
             });
          }
 
