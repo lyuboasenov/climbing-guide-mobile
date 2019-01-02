@@ -60,22 +60,17 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
-                  Resources.Strings.Guide.Manage_Region_Name)));
+                  Resources.Strings.Guide.Manage_Area_Name)));
          this.AddRule(nameof(Info),
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
-                  Resources.Strings.Guide.Manage_Region_Info)));
+                  Resources.Strings.Guide.Manage_Area_Info)));
          this.AddRule(nameof(Location),
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
-                  Resources.Strings.Guide.Manage_Region_Map_Title)));
-         this.AddRule(nameof(SelectedArea),
-            new RequiredRule(
-               string.Format(
-                  Resources.Strings.Main.Validation_Required_Field,
-                  Resources.Strings.Guide.Manage_Area_Region)));
+                  Resources.Strings.Guide.Manage_Area_Map_Title)));
       }
 
       public void OnPropertyChanged(string propertyName, object before, object after) {
