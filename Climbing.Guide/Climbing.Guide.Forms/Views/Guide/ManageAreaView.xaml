@@ -20,7 +20,7 @@
                <Picker ItemsSource="{Binding Regions}"
                        SelectedItem="{Binding SelectedRegion}"
                        ItemDisplayBinding="{Binding Name}"
-                       Title="{x:Static strings:Guide.Manage_Area_Region}"/>
+                       Title="{x:Static strings:Guide.Manage_Parent_Area}"/>
                <validations:ErrorLabel ErrorKey="SelectedRegion" />
                <Entry Text="{Binding Name}" Placeholder="{x:Static strings:Guide.Manage_Area_Name}"/>
                <validations:ErrorLabel ErrorKey="Name" />
