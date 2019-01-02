@@ -141,9 +141,6 @@
   <data name="Manage_Area_Name" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="Manage_Area_Region" xml:space="preserve">
-    <value>Region</value>
-  </data>
   <data name="Manage_Area_Restrictions" xml:space="preserve">
     <value>Restrictions</value>
   </data>
@@ -185,9 +182,6 @@
   </data>
   <data name="Manage_Sector_Name" xml:space="preserve">
     <value>Name</value>
-  </data>
-  <data name="Manage_Sector_Region" xml:space="preserve">
-    <value>Region</value>
   </data>
   <data name="Manage_Sector_Restrictions" xml:space="preserve">
     <value>Restrictions</value>
