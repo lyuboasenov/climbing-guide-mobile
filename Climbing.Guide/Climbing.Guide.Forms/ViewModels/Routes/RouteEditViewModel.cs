@@ -1,7 +1,6 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
-using Climbing.Guide.Tasks;
 using System;
 using System.Collections.Generic;
 using Climbing.Guide.Collections.ObjectModel;
@@ -12,10 +11,11 @@ using Xamarin.Forms.Maps;
 
 namespace Climbing.Guide.Forms.ViewModels.Routes {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class RouteEditViewModel : Guide.BaseGuideViewModel {
+   public class RouteEditViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
       private Services.INavigation Navigation { get; }
+      private IExceptionHandler Errors { get; }
 
       public ICommand ViewSchemaCommand { get; set; }
       public ICommand SaveCommand { get; set; }
@@ -40,8 +40,10 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
 
       public RouteEditViewModel(IApiClient client,
          IExceptionHandler errors,
-         Services.INavigation navigation) : base(client, errors) {
+         Services.INavigation navigation) {
          Navigation = navigation;
+         Errors = errors;
+
          Title = VmTitle;
 
          InitializeCommands();
