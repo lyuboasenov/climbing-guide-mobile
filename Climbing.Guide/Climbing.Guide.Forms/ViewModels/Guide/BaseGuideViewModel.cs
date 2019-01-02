@@ -2,6 +2,7 @@
 using Climbing.Guide.Collections.ObjectModel;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
+using Climbing.Guide.Forms.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,31 +13,47 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public ObservableCollection<object> Items { get; set; }
 
       private IApiClient Client { get; }
+      private IMedia Media { get; }
+      private IAlerts Alerts { get; }
+      protected INavigation Navigation { get; }
       protected IExceptionHandler Errors { get; }
 
-      protected Stack<Area> TraversalPath { get; }
+      protected Stack<Area> TraversalStack { get; }
+
+      public ObservableCollection<Area> TraversalPath { get; set; }
 
       public BaseGuideViewModel(
          IApiClient client,
-         IExceptionHandler errors) {
+         IExceptionHandler errors,
+         IMedia media,
+         IAlerts alerts,
+         INavigation navigation) {
          Client = client;
          Errors = errors;
+         Media = media;
+         Alerts = alerts;
+         Navigation = navigation;
 
-         TraversalPath = new Stack<Area>();
+         TraversalStack = new Stack<Area>();
 
          Items = new ObservableCollection<object>();
+         TraversalPath = new ObservableCollection<Area>();
       }
 
       protected async virtual Task TraverseToAsync(Area parentArea) {
-         TraversalPath.Push(parentArea);
+         TraversalStack.Push(parentArea);
+         TraversalPath.Add(parentArea);
          await LoadItemsAsync(parentArea);
       }
 
       protected async virtual Task TraverseBackAsync() {
          // Remove current parent
-         TraversalPath.Pop();
+         TraversalStack.Pop();
+         // Remove last two items
+         TraversalPath.RemoveAt(TraversalPath.Count - 1);
+         TraversalPath.RemoveAt(TraversalPath.Count - 1);
 
-         var parentArea = TraversalPath.Pop();
+         var parentArea = TraversalStack.Pop();
          await TraverseToAsync(parentArea);
       }
 
@@ -101,6 +118,48 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
             await Errors.HandleAsync(ex);
          } catch (AggregateException ex) {
             await Errors.HandleAsync(ex);
+         }
+      }
+
+      protected async Task AddItemAsync() {
+         var options = new List<string>() {
+               Resources.Strings.Routes.Add_Area_Selection_Item
+            };
+
+         if (Media.IsTakePhotoSupported) {
+            options.Add(Resources.Strings.Routes.Add_Route_From_Image_Selection_Item);
+         }
+         if (Media.IsPickPhotoSupported) {
+            options.Add(Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item);
+         }
+
+         var result = await Alerts.DisplayActionSheetAsync(
+            Resources.Strings.Routes.Add_Title,
+            Resources.Strings.Main.Cancel,
+            null,
+            options.ToArray());
+
+         Area parentArea = TraversalStack.Count > 0 ? TraversalStack.Peek() : null;
+
+         if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Area_Selection_Item) == 0) {
+            // show add area
+            var navigationResult = await Navigation.NavigateAsync(
+               Navigation.GetShellNavigationUri(nameof(Views.Guide.ManageAreaView)),
+               parentArea);
+         } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Route_From_Image_Selection_Item) == 0) {
+            var path = await Media.TakePhotoAsync();
+            // take picture and add route
+            var navigationResult = await Navigation.NavigateAsync(
+               Navigation.GetShellNavigationUri(nameof(Views.Routes.RouteEditView)),
+               parentArea, path);
+         } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item) == 0) {
+            var path = await Media.PickPhotoAsync();
+            if (System.IO.File.Exists(path)) {
+               // pick image and add route
+               var navigationResult = await Navigation.NavigateAsync(
+                  Navigation.GetShellNavigationUri(nameof(Views.Routes.RouteEditView)),
+                  parentArea, path);
+            }
          }
       }
    }
