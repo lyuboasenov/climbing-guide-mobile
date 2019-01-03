@@ -26,9 +26,9 @@ namespace Climbing.Guide.Forms.Services.Progress {
 
       protected virtual void Dispose(bool disposing) {
          if (!disposed) {
+            Task.Run(Progress.HideLoadingIndicatorAsync);
             if (disposing) {
                // Free managed resource
-               Task.Run(Progress.HideLoadingIndicatorAsync);
             }
             disposed = true;
          }
