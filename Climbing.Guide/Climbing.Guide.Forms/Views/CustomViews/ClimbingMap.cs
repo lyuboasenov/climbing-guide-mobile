@@ -1,5 +1,7 @@
 ﻿using Climbing.Guide.Forms.Helpers;
+using System;
 using System.Collections;
+using System.Collections.Specialized;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -157,7 +159,23 @@ namespace Climbing.Guide.Forms.Views {
       }
 
       private static void PinsSourceChanged(BindableObject bindable, object oldvalue, object newvalue) {
-         ((ClimbingMap)bindable).ResetPins();
+         var control = (ClimbingMap)bindable;
+
+         var oldNotifyPropertyChanged = oldvalue as INotifyCollectionChanged;
+         if (null != oldNotifyPropertyChanged) {
+            oldNotifyPropertyChanged.CollectionChanged -= control.PinsSourceCollectionChanged;
+         }
+
+         var newNotifyPropertyChanged = newvalue as INotifyCollectionChanged;
+         if (null != newNotifyPropertyChanged) {
+            newNotifyPropertyChanged.CollectionChanged += control.PinsSourceCollectionChanged;
+         }
+
+         control.ResetPins();
+      }
+
+      private void PinsSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+         ResetPins();
       }
 
       private void OnPinLabelDisplayBindingChanged(BindingBase oldValue, BindingBase newValue) {
