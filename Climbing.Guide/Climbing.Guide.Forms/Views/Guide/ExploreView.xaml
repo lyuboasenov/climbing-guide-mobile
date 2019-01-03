@@ -4,8 +4,11 @@
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
    xmlns:converters="clr-namespace:Climbing.Guide.Forms.Converters"
+   xmlns:customviews="clr-namespace:Climbing.Guide.Forms.Views.CustomViews"
+   xmlns:resources="clr-namespace:Climbing.Guide.Forms.Resources"
    x:Class="Climbing.Guide.Forms.Views.Guide.ExploreView"
    Title="{Binding Title}">
+
    <ContentPage.Resources>
       <converters:ToPositionConverter x:Key="ToPositionConverter" />
    </ContentPage.Resources>
@@ -15,14 +18,8 @@
          <RowDefinition Height="Auto" />
          <RowDefinition Height="*" />
       </Grid.RowDefinitions>
-      <Grid.ColumnDefinitions>
-         <ColumnDefinition Width="*" />
-         <ColumnDefinition Width="*" />
-         <ColumnDefinition Width="*" />
-         <ColumnDefinition Width="Auto" />
-      </Grid.ColumnDefinitions>
 
-      <views:ClimbingMap Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="4" x:Name="map" x:Uid="map123"
+      <views:ClimbingMap Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" x:Name="map" x:Uid="map123"
                          MapType="Hybrid"
                          ShowSelectedLocation="False"
                          PinsSource="{Binding Pins}"
@@ -30,18 +27,34 @@
                          PinPositionBinding="{Binding ., Converter={StaticResource ToPositionConverter}}"
                          PinTapped="{Binding PinTappedCommand}"
                          BindableVisibleRegion="{Binding VisibleRegion, Mode=TwoWay}"/>
-      <!--<views:BindableMap Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="4"
-                         IsShowingUser="True"
-                         MapType="Hybrid"
-                         BindablePins="{Binding Pins}"
-                         PinLabelDisplayBinding="{Binding Name}"
-                         BindableVisibleRegion="{Binding VisibleRegion, Mode=TwoWay}"/>-->
 
-      <!--<Picker Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Regions}" SelectedItem="{Binding SelectedRegion}" ItemDisplayBinding="{Binding Name}" />
-      <Picker Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Areas}" SelectedItem="{Binding SelectedArea}" ItemDisplayBinding="{Binding Name}" />
-      <Picker Grid.Column="2" Grid.Row="0" ItemsSource="{Binding Sectors}" SelectedItem="{Binding SelectedSector}" ItemDisplayBinding="{Binding Name}" />
+      <StackLayout Grid.Column="0" Grid.Row="1"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="EndAndExpand"
+                   Orientation="Horizontal">
+         <Button HorizontalOptions="EndAndExpand"
+                 VerticalOptions="EndAndExpand"
+                 WidthRequest="40"
+                 HeightRequest="40"
+                 BorderRadius="20"
+                 Margin="15"
+                 FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+                 Text="{x:Static resources:GlyphNames.ChevronLeft}"
+                 Command="{Binding TraverseBackCommand}" />
 
-      <Button Grid.Column="3" Grid.Row="0" Command="{Binding ClearFilterCommand}" />-->
+         <Button WidthRequest="40"
+                 HeightRequest="40"
+                 BorderRadius="20"
+                 Margin="15"
+                 IsVisible="{Binding Client.AuthenticationManager.IsLoggedIn}"
+                 FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
+                 Text="{x:Static resources:GlyphNames.Plus}"
+                 Command="{Binding AddItemCommand}"/>
+      </StackLayout>
+
+      <customviews:Breadcrumb Grid.Row="0" Grid.Column="0"
+                              ItemsSource="{Binding TraversalPath}"
+                              ItemDisplayBinding="{Binding Name}" />
 
    </Grid>
 </ContentPage>
