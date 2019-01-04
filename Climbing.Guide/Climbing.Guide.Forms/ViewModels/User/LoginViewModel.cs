@@ -31,6 +31,7 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       private IAlerts Alerts { get; }
       private IEvents Events { get; }
       private IValidator Validator { get; }
+      private bool IsInitialized { get; } = false;
 
       public LoginViewModel(IApiClient client,
          IExceptionHandler errors,
@@ -51,15 +52,17 @@ namespace Climbing.Guide.Forms.ViewModels.User {
          SignupCommand = new Command(async () => await Signup());
 
          InitializeValidationRules();
+
+         IsInitialized = true;
       }
 
       public void OnPropertyChanged(string propertyName, object before, object after) {
-         Validator.Validate(this, propertyName, after);
-         // Raise validation errors property changed in order to update validation errors
-         RaisePropertyChanged(nameof(ValidationErrors));
+         if (IsInitialized) {
+            Validator.Validate(this, propertyName, after);
+            // Raise validation errors property changed in order to update validation errors
+            RaisePropertyChanged(nameof(ValidationErrors));
 
-         // Update can execute of the login command
-         if (null != LoginCommand) {
+            // Update can execute of the login command
             (LoginCommand as Command).ChangeCanExecute();
          }
       }

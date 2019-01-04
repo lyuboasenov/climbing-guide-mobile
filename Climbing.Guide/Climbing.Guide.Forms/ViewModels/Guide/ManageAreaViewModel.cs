@@ -9,14 +9,15 @@ using System.Windows.Input;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
+using System;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class ManageAreaViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
-      public IDictionary<string, IEnumerable<string>> ValidationErrors => new Dictionary<string, IEnumerable<string>>();
-      public IDictionary<string, IEnumerable<IRule>> ValidationRules => new Dictionary<string, IEnumerable<IRule>>();
+      public IDictionary<string, IEnumerable<string>> ValidationErrors { get; } = new Dictionary<string, IEnumerable<string>>();
+      public IDictionary<string, IEnumerable<IRule>> ValidationRules { get; } = new Dictionary<string, IEnumerable<IRule>>();
       public bool IsValid { get; set; }
 
       public ObservableCollection<Area> Areas { get; set; }
@@ -35,6 +36,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       private Services.INavigation Navigation { get; }
       private IValidator Validator { get; }
+      private bool IsInitialized { get; } = false;
 
       public ManageAreaViewModel(
          Services.INavigation navigation,
@@ -48,6 +50,8 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
          InitializeValidationRules();
          InitializeCommands();
+
+         IsInitialized = true;
       }
 
       private void InitializeCommands() {
@@ -74,11 +78,13 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       }
 
       public void OnPropertyChanged(string propertyName, object before, object after) {
-         Validator.Validate(this, propertyName, after);
-         // Raise validation errors property changed in order to update validation errors
-         RaisePropertyChanged(nameof(ValidationErrors));
+         if (IsInitialized) {
+            Validator.Validate(this, propertyName, after);
+            // Raise validation errors property changed in order to update validation errors
+            RaisePropertyChanged(nameof(ValidationErrors));
 
-         (SaveCommand as Command).ChangeCanExecute();
+            (SaveCommand as Command).ChangeCanExecute();
+         }
       }
 
       private async Task GoBack() {
