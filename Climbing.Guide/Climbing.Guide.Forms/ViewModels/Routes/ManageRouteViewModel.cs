@@ -11,7 +11,7 @@ using Xamarin.Forms.Maps;
 
 namespace Climbing.Guide.Forms.ViewModels.Routes {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class RouteEditViewModel : BaseViewModel {
+   public class ManageRouteViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
       private Services.INavigation Navigation { get; }
@@ -38,7 +38,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
 
       public Area ParentArea { get; set; }
 
-      public RouteEditViewModel(IApiClient client,
+      public ManageRouteViewModel(IApiClient client,
          IExceptionHandler errors,
          Services.INavigation navigation) {
          Navigation = navigation;
