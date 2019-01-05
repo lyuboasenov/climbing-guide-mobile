@@ -4,7 +4,7 @@
             xmlns:strings="clr-namespace:Climbing.Guide.Forms.Resources.Strings"
             xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
             xmlns:routes="clr-namespace:Climbing.Guide.Forms.Views.Routes"
-            x:Class="Climbing.Guide.Forms.Views.Routes.RouteEditView">
+            x:Class="Climbing.Guide.Forms.Views.Routes.ManageRouteView">
    <TabbedPage.ToolbarItems>
       <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
       <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}"/>

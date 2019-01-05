@@ -9,8 +9,8 @@ using Xamarin.Forms.Xaml;
 
 namespace Climbing.Guide.Forms.Views.Routes {
    [XamlCompilation(XamlCompilationOptions.Compile)]
-   public partial class RouteEditView : TabbedPage {
-      public RouteEditView() {
+   public partial class ManageRouteView : TabbedPage {
+      public ManageRouteView() {
          InitializeComponent();
          Xamarin.Forms.PlatformConfiguration.AndroidSpecific.TabbedPage.SetIsSwipePagingEnabled(this, false);
       }
