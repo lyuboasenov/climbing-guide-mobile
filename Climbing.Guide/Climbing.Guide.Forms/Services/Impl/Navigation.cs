@@ -87,15 +87,9 @@ namespace Climbing.Guide.Forms.Services {
       }
 
       private INavigationParameters GetParameters(params object[] parameters) {
-         Dictionary<Type, int> typeCount = new Dictionary<Type, int>();
          var result = new NavigationParameters();
-         foreach(var parameter in parameters) {
-            var type = parameter.GetType();
-            if (!typeCount.ContainsKey(type)) {
-               typeCount[type] = 0;
-            }
-            typeCount[type] += 1;
-            result.Add(Helpers.UriHelper.GetTypeUri(type, typeCount[type]).ToString(), parameter);
+         for(int i = 0; i <parameters.Length; i++) {
+            result.Add(i.ToString(), parameters[i]);
          }
 
          return result;
