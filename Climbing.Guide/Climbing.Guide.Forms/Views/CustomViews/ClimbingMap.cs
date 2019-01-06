@@ -20,7 +20,7 @@ namespace Climbing.Guide.Forms.Views {
 
       public static readonly BindableProperty SelectedLocationProperty =
          BindableProperty.Create(nameof(SelectedLocation), typeof(Position), typeof(ClimbingMap), new Position(0, 0),
-            propertyChanged: OnSelectedLocationChanged);
+            propertyChanged: (b, o, n) => { ((ClimbingMap)b).OnSelectedLocationChanged(); });
 
       public static readonly BindableProperty PinsSourceProperty =
          BindableProperty.Create(nameof(PinsSource), typeof(IEnumerable), typeof(ClimbingMap), null,
@@ -28,7 +28,7 @@ namespace Climbing.Guide.Forms.Views {
 
       public static readonly BindableProperty BindableVisibleRegionProperty =
          BindableProperty.Create(nameof(BindableVisibleRegion), typeof(MapSpan), typeof(ClimbingMap), null,
-            propertyChanged: OnBindableVisibleRegionChanged);
+            propertyChanged: (b, o, n) => { ((ClimbingMap)b).OnBindableVisibleRegionChanged(); });
 
       public ICommand PinTapped {
          get { return (ICommand)GetValue(PinTappedProperty); }
@@ -121,20 +121,12 @@ namespace Climbing.Guide.Forms.Views {
       
       public void OnVisibleRegionChanged(double latitude, double longitude, double latitudeDegrees, double longitudeDegrees) {
          var center = new Position(latitude, longitude);
-         //CurrentVisibleRegion is saved in order not to move to it
-         //on property changed. This is done because MapSpan is been calculated
-         //on camera move which causes some data lost. which makes the maps to 
-         //move constantly
+         // CurrentVisibleRegion is saved in order not to move to it
+         // on property changed. This is done because MapSpan is been calculated
+         // on camera move which causes some data lost. which makes the maps to 
+         // move constantly
          currentVisibleRegion = new MapSpan(center, latitudeDegrees, longitudeDegrees);
          BindableVisibleRegion = currentVisibleRegion;
-      }
-
-      private static void OnSelectedLocationChanged(BindableObject bindable, object oldvalue, object newvalue) {
-         ((ClimbingMap)bindable).OnSelectedLocationChanged();
-      }
-
-      private static void OnBindableVisibleRegionChanged(BindableObject bindable, object oldvalue, object newvalue) {
-         ((ClimbingMap)bindable).OnBindableVisibleRegionChanged();
       }
 
       private void OnSelectedLocationChanged() {
@@ -150,10 +142,10 @@ namespace Climbing.Guide.Forms.Views {
       }
 
       private void OnBindableVisibleRegionChanged() {
-         //the maps is moved only if the action is initiated from outside
-         //not from the control itself
+         // the maps is moved only if the action is initiated from outside
+         // not from the control itself
          if (BindableVisibleRegion != currentVisibleRegion) {
-            this.MoveToRegion(BindableVisibleRegion);
+            MoveToRegion(BindableVisibleRegion);
             currentVisibleRegion = BindableVisibleRegion;
          }
       }
