@@ -4,7 +4,9 @@
             xmlns:strings="clr-namespace:Climbing.Guide.Forms.Resources.Strings"
             xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
             xmlns:validations="clr-namespace:Climbing.Guide.Forms.Validations"
+            xmlns:customviews="clr-namespace:Climbing.Guide.Forms.Views.CustomViews"
             x:Class="Climbing.Guide.Forms.Views.Guide.ManageAreaView"
+            x:Name="parentPage"
             Title="{Binding Title}">
 
    <TabbedPage.ToolbarItems>
@@ -13,31 +15,30 @@
    </TabbedPage.ToolbarItems>
    
    <!--Pages can be added as references or inline-->
-   <ContentPage Title="{x:Static strings:Guide.Manage_Area_Into_Title}">
+   <ContentPage Title="{x:Static strings:Guide.Manage_Area_Into_Title}"
+                BindingContext="{Binding BindingContext, Source={Reference parentPage}}">
       <ContentPage.Content>
          <ScrollView>
             <StackLayout>
-               <Picker ItemsSource="{Binding Regions}"
-                       SelectedItem="{Binding SelectedRegion}"
-                       ItemDisplayBinding="{Binding Name}"
-                       Title="{x:Static strings:Guide.Manage_Parent_Area}"/>
-               <validations:ErrorLabel ErrorKey="SelectedRegion" />
+               <customviews:Breadcrumb Grid.Row="0" Grid.Column="0"
+                                       ItemsSource="{Binding TraversalPath}"
+                                       ItemDisplayBinding="{Binding Name}" />
                <Entry Text="{Binding Name}" Placeholder="{x:Static strings:Guide.Manage_Area_Name}"/>
                <validations:ErrorLabel ErrorKey="Name" />
                <Editor Text="{Binding Info}" Placeholder="{x:Static strings:Guide.Manage_Area_Info}"/>
                <validations:ErrorLabel ErrorKey="Info" />
                <Editor Text="{Binding Restrictions}" Placeholder="{x:Static strings:Guide.Manage_Area_Restrictions}"/>
-               <Editor Text="{Binding Access}" Placeholder="{x:Static strings:Guide.Manage_Area_Access}"/>
+               <Editor Text="{Binding Approach}" Placeholder="{x:Static strings:Guide.Manage_Area_Approach}"/>
                <Editor Text="{Binding Descent}" Placeholder="{x:Static strings:Guide.Manage_Area_Descent}"/>
                <validations:ErrorLabel ErrorKey="Location" />
             </StackLayout>
          </ScrollView>
       </ContentPage.Content>
    </ContentPage>
-   <ContentPage Title="{x:Static strings:Guide.Manage_Area_Map_Title}">
+   <ContentPage Title="{x:Static strings:Guide.Manage_Area_Map_Title}"
+                BindingContext="{Binding BindingContext, Source={Reference parentPage}}">
       <ContentPage.Content>
          <views:LocationPicker MapType="Hybrid"
-                               IsShowingUser="False"
                                Location="{Binding Location, Mode=TwoWay}"/>
       </ContentPage.Content>
    </ContentPage>
