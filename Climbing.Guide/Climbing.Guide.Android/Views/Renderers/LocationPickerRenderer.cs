@@ -23,7 +23,7 @@ namespace Climbing.Guide.Droid.Views.Renderers {
          base.OnElementChanged(e);
 
          if (e.OldElement != null) {
-            NativeMap.CameraMove -= googleMap_CameraMove;
+            NativeMap.CameraMove -= NativeCameraMove;
             if (null != CenterCircle) {
                CenterCircle.Remove();
                CenterCircle = null;
@@ -43,9 +43,7 @@ namespace Climbing.Guide.Droid.Views.Renderers {
 
       protected override void OnMapReady(Android.Gms.Maps.GoogleMap map) {
          base.OnMapReady(map);
-         
-         NativeMap.CameraMove += googleMap_CameraMove;
-         googleMap_CameraMove(null, null);
+         NativeMap.CameraMove += NativeCameraMove;
       }
 
       private void UpdateCircle() {
@@ -54,6 +52,7 @@ namespace Climbing.Guide.Droid.Views.Renderers {
                LocationPicker.Location.Center.Longitude,
                LocationPicker.Location.Radius.Meters);
       }
+
       private void UpdateCircle(double latitude, double longitude, double radius) {
 
          if (LocationPicker.IsAreaVisible) {
@@ -94,7 +93,7 @@ namespace Climbing.Guide.Droid.Views.Renderers {
          }
       }
 
-      private void googleMap_CameraMove(object sender, EventArgs e) {
+      private void NativeCameraMove(object sender, EventArgs e) {
          var latitude = NativeMap.Projection.VisibleRegion.LatLngBounds.Center.Latitude;
          var longitude = NativeMap.Projection.VisibleRegion.LatLngBounds.Center.Longitude;
          var latitudeDegrees = Math.Abs(NativeMap.Projection.VisibleRegion.LatLngBounds.Southwest.Latitude -
