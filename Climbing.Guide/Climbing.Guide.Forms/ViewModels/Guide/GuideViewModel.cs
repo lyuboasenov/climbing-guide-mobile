@@ -4,6 +4,7 @@ using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Services.Progress;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -14,10 +15,11 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
    public class GuideViewModel : BaseGuideViewModel {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
-      private IProgress Progress { get; }
       public ICommand TraverseBackCommand { get; private set; }
       public ICommand ItemTappedCommand { get; private set; }
       public ICommand AddItemCommand { get; private set; }
+
+      private IProgress Progress { get; }
 
       public GuideViewModel(IApiClient client,
          IExceptionHandler errors,
@@ -35,7 +37,15 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       public async override Task OnNavigatedToAsync(params object[] parameters) {
          await base.OnNavigatedToAsync(parameters);
-         await TraverseToAsync(null);
+         await InitializeData(parameters);
+
+         Area parentArea = null;
+         if (TraversalStack.Count > 0) {
+            parentArea = TraversalStack.Pop();
+            TraversalPath.Remove(parentArea);
+         }
+
+         await TraverseToAsync(parentArea);
       }
 
       protected async override Task TraverseToAsync(Area parentArea) {
@@ -49,6 +59,21 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          TraverseBackCommand = new Command(async () => await OnTraverseBackAsync(), () => TraversalStack.Count > 1);
          ItemTappedCommand = new Command<object>(async (item) => { await OnItemTappedAsync(item); });
          AddItemCommand = new Command(async () => await OnAddAsync());
+      }
+
+      private Task InitializeData(params object[] parameters) {
+         try {
+            var traversalPath = parameters != null && parameters.Length > 0 ? parameters[0] as IEnumerable<Area> : null;
+            if (null != traversalPath) {
+               foreach(var area in traversalPath) {
+                  TraversalStack.Push(area);
+                  TraversalPath.Add(area);
+               }
+            }
+            return Task.CompletedTask;
+         } catch (Exception ex) {
+            return Errors.HandleAsync(ex);
+         }
       }
 
       private async Task OnTraverseBackAsync() {
