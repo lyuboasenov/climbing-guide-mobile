@@ -147,6 +147,12 @@
   <data name="Manage_Area_Save_Error" xml:space="preserve">
     <value>Unable to save area.</value>
   </data>
+  <data name="Manage_Area_Save_Successful_Message" xml:space="preserve">
+    <value>Area successfully saved. It will be available as soon as an admin approve it.</value>
+  </data>
+  <data name="Manage_Area_Save_Successful_Title" xml:space="preserve">
+    <value>Save area</value>
+  </data>
   <data name="Manage_Parent_Area" xml:space="preserve">
     <value>Parent area</value>
   </data>

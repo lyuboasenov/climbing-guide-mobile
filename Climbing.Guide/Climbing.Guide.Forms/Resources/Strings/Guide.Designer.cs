@@ -151,6 +151,24 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Area successfully saved. It will be available as soon as an admin approve it..
+        /// </summary>
+        public static string Manage_Area_Save_Successful_Message {
+            get {
+                return ResourceManager.GetString("Manage_Area_Save_Successful_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save area.
+        /// </summary>
+        public static string Manage_Area_Save_Successful_Title {
+            get {
+                return ResourceManager.GetString("Manage_Area_Save_Successful_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parent area.
         /// </summary>
         public static string Manage_Parent_Area {
