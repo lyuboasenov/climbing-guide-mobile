@@ -79,11 +79,11 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Access info.
+        ///   Looks up a localized string similar to Approach info.
         /// </summary>
-        public static string Manage_Area_Access {
+        public static string Manage_Area_Approach {
             get {
-                return ResourceManager.GetString("Manage_Area_Access", resourceCulture);
+                return ResourceManager.GetString("Manage_Area_Approach", resourceCulture);
             }
         }
         
@@ -138,6 +138,15 @@ namespace Climbing.Guide.Forms.Resources.Strings {
         public static string Manage_Area_Restrictions {
             get {
                 return ResourceManager.GetString("Manage_Area_Restrictions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to save area..
+        /// </summary>
+        public static string Manage_Area_Save_Error {
+            get {
+                return ResourceManager.GetString("Manage_Area_Save_Error", resourceCulture);
             }
         }
         
