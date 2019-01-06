@@ -38,7 +38,7 @@ namespace Climbing.Guide.Forms.Validations {
          if (null != target.ValidationRules) {
             var invalidRules = target.ValidationRules.Values.Sum(vrs => vrs.Count(vr => !vr.IsValid));
 
-            result = invalidRules > 0;
+            result = invalidRules == 0;
          }
 
          target.IsValid = result;
