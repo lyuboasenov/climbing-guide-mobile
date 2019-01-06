@@ -15,8 +15,8 @@ namespace Climbing.Guide.Forms.ViewModels.User {
    public class LoginViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.User.Login_Title;
 
-      public IDictionary<string, IEnumerable<string>> ValidationErrors => new Dictionary<string, IEnumerable<string>>();
-      public IDictionary<string, IEnumerable<IRule>> ValidationRules => new Dictionary<string, IEnumerable<IRule>>();
+      public IDictionary<string, IEnumerable<string>> ValidationErrors { get; } = new Dictionary<string, IEnumerable<string>>();
+      public IDictionary<string, IEnumerable<IRule>> ValidationRules { get; } = new Dictionary<string, IEnumerable<IRule>>();
       public bool IsValid { get; set; }
 
       public string Username { get; set; }
