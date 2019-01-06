@@ -12,15 +12,17 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
    public class BaseGuideViewModel : BaseViewModel {
       public ObservableCollection<object> Items { get; set; }
 
-      private IApiClient Client { get; }
-      private IMedia Media { get; }
-      private IAlerts Alerts { get; }
-      protected INavigation Navigation { get; }
-      protected IExceptionHandler Errors { get; }
+      public  IApiClient Client { get; }
+
+      public ObservableCollection<Area> TraversalPath { get; set; }
 
       protected Stack<Area> TraversalStack { get; }
 
-      public ObservableCollection<Area> TraversalPath { get; set; }
+      protected INavigation Navigation { get; }
+      protected IExceptionHandler Errors { get; }
+
+      private IMedia Media { get; }
+      private IAlerts Alerts { get; }
 
       public BaseGuideViewModel(
          IApiClient client,
@@ -139,28 +141,29 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
             null,
             options.ToArray());
 
-         Area parentArea = TraversalStack.Count > 0 ? TraversalStack.Peek() : null;
-
          if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Area_Selection_Item) == 0) {
-            // show add area
-            var navigationResult = await Navigation.NavigateAsync(
-               Navigation.GetShellNavigationUri(nameof(Views.Guide.ManageAreaView)),
-               parentArea);
+            await NavigateToManageArea();
          } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Route_From_Image_Selection_Item) == 0) {
             var path = await Media.TakePhotoAsync();
-            // take picture and add route
-            var navigationResult = await Navigation.NavigateAsync(
-               Navigation.GetShellNavigationUri(nameof(Views.Routes.RouteEditView)),
-               parentArea, path);
+            await NavigateToManageRoute(path);
          } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item) == 0) {
             var path = await Media.PickPhotoAsync();
             if (System.IO.File.Exists(path)) {
-               // pick image and add route
-               var navigationResult = await Navigation.NavigateAsync(
-                  Navigation.GetShellNavigationUri(nameof(Views.Routes.RouteEditView)),
-                  parentArea, path);
+               await NavigateToManageRoute(path);
             }
          }
+      }
+
+      private async Task NavigateToManageArea() {
+         var navigationResult = await Navigation.NavigateAsync(
+               Navigation.GetShellNavigationUri(nameof(Views.Guide.ManageAreaView)),
+               TraversalPath);
+      }
+
+      private async Task NavigateToManageRoute(string imagePath) {
+         var navigationResult = await Navigation.NavigateAsync(
+               Navigation.GetShellNavigationUri(nameof(Views.Routes.ManageRouteView)),
+               TraversalPath, imagePath);
       }
    }
 }
