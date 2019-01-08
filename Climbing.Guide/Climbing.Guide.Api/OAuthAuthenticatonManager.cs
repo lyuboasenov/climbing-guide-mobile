@@ -32,13 +32,13 @@ namespace Climbing.Guide.Api {
          ClientSecret = clientSecret;
       }
 
-      public void SetCredentials(HttpRequestMessage request) {
+      public async Task SetCredentials(HttpRequestMessage request) {
          // Checks if the user have already logged in and if so
          // and the token have expired, the token is refreshed
          if (!string.IsNullOrEmpty(Token) &&
             !string.IsNullOrEmpty(RefreshToken) &&
             DateTime.Now.CompareTo(TokenExpiration) > 0) {
-            RefreshTokenAsync().RunSynchronously(TaskScheduler.Default);
+            await RefreshTokenAsync();
          }
 
          if (!string.IsNullOrEmpty(Token)) {

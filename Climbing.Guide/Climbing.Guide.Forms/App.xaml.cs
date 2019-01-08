@@ -130,9 +130,10 @@ namespace Climbing.Guide.Forms {
          containerRegistry.RegisterInstance<IApiClientSettings>(
             new ApiClientSettings(() => {
                return new HttpClient(
-                  new RetryingHandler(3,
-                     new CachingHandler(cachingHttpClientManager, responseCache, largeResponseCache))) {
-                  BaseAddress = new Uri(BaseUrl)
+                  new OAuthHandler(authenticationManager,
+                     new RetryingHandler(3,
+                        new CachingHandler(cachingHttpClientManager, responseCache, largeResponseCache)))) {
+                     BaseAddress = new Uri(BaseUrl)
                };
             }, authenticationManager));
       }

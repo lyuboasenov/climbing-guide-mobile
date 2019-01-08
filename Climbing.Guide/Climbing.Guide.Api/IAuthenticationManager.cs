@@ -6,7 +6,7 @@ namespace Climbing.Guide.Api {
       string Username { get; }
       bool IsLoggedIn { get; }
 
-      void SetCredentials(HttpRequestMessage request);
+      Task SetCredentials(HttpRequestMessage request);
 
       Task<bool> LoginAsync(string username, string password);
       Task LogoutAsync();

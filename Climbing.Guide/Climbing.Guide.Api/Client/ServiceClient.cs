@@ -11,11 +11,11 @@ namespace Climbing.Guide.Api.Client {
          Settings = settings ?? throw new ArgumentNullException(nameof(settings));
       }
 
-      protected void PrepareRequest(HttpClient client, HttpRequestMessage request, StringBuilder urlBuilder) {
-         Settings.AuthenticationManager.SetCredentials(request);
+      protected virtual void PrepareRequest(HttpClient client, HttpRequestMessage request, StringBuilder urlBuilder) {
+
       }
 
-      protected void ProcessResponse(HttpClient client, HttpResponseMessage response) {
+      protected virtual void ProcessResponse(HttpClient client, HttpResponseMessage response) {
       }
    }
 }
