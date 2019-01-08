@@ -22,7 +22,14 @@ namespace Climbing.Guide.Forms.Services {
       }
 
       public async Task<string> PickPhotoAsync() {
-         return (await XamarinMedia.PickPhotoAsync()).Path;
+         PickMediaOptions options = new PickMediaOptions() {
+            CompressionQuality = 70,
+            RotateImage = true,
+            SaveMetaData = true,
+            MaxWidthHeight = 2048
+         };
+         var response = await XamarinMedia.PickPhotoAsync(options);
+         return response.Path;
       }
 
       public async Task<string> TakePhotoAsync() {

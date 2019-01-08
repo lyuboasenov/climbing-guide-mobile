@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Climbing.Guide.Console", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Climbing.Guide.UWP", "Climbing.Guide.UWP\Climbing.Guide.UWP.csproj", "{4975A62B-1D26-412F-990C-D2437F9435DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Climbing.Guide.Api", "Climbing.Guide.Api\Climbing.Guide.Api.csproj", "{EFB34829-5279-4F57-B629-102A9057D09A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Climbing.Guide.Api", "Climbing.Guide.Api\Climbing.Guide.Api.csproj", "{EFB34829-5279-4F57-B629-102A9057D09A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

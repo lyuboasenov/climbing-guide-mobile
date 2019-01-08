@@ -3,6 +3,8 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Climbing.Guide.Forms;
+using Plugin.CurrentActivity;
+using Plugin.Permissions;
 
 namespace Climbing.Guide.Droid {
    [Activity(Label = "CG", Icon = "@mipmap/icon", Theme = "@style/splashscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleTop)]
@@ -17,6 +19,7 @@ namespace Climbing.Guide.Droid {
          base.SetTheme(Resource.Style.MainTheme);
 
          base.OnCreate(savedInstanceState);
+         CrossCurrentActivity.Current.Init(this, savedInstanceState);
          Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
          Xamarin.Essentials.Platform.Init(this, savedInstanceState); // add this line to your code
          global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
@@ -24,6 +27,10 @@ namespace Climbing.Guide.Droid {
          // Initialize maps
          Xamarin.FormsMaps.Init(this, savedInstanceState);
          LoadApplication(new App());
+      }
+
+      public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults) {
+         PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
       }
    }
 }
