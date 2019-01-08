@@ -17,6 +17,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public ObservableCollection<Area> TraversalPath { get; set; }
 
       protected Stack<Area> TraversalStack { get; }
+      protected Area ParentArea { get; private set; }
 
       protected INavigation Navigation { get; }
       protected IExceptionHandler Errors { get; }
@@ -45,6 +46,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       protected async virtual Task TraverseToAsync(Area parentArea) {
          TraversalStack.Push(parentArea);
          TraversalPath.Add(parentArea);
+         ParentArea = parentArea;
          await LoadItemsAsync(parentArea);
       }
 
@@ -124,15 +126,19 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       }
 
       protected async Task AddItemAsync() {
-         var options = new List<string>() {
-               Resources.Strings.Routes.Add_Area_Selection_Item
-            };
+         var options = new List<string>();
 
-         if (Media.IsTakePhotoSupported) {
-            options.Add(Resources.Strings.Routes.Add_Route_From_Image_Selection_Item);
+         if (null == ParentArea || !(ParentArea.Has_routes ?? false)) {
+            options.Add(Resources.Strings.Routes.Add_Area_Selection_Item);
          }
-         if (Media.IsPickPhotoSupported) {
-            options.Add(Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item);
+
+         if (null != ParentArea && !(ParentArea.Has_subareas ?? false)) {
+            if (Media.IsTakePhotoSupported) {
+               options.Add(Resources.Strings.Routes.Add_Route_From_Image_Selection_Item);
+            }
+            if (Media.IsPickPhotoSupported) {
+               options.Add(Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item);
+            }
          }
 
          var result = await Alerts.DisplayActionSheetAsync(
