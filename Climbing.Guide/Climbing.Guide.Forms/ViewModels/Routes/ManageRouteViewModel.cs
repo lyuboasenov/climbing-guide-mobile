@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
+using Climbing.Guide.Forms.Helpers;
 
 namespace Climbing.Guide.Forms.ViewModels.Routes {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -32,11 +33,12 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       public double Length { get; set; }
       public string FA { get; set; }
 
-      public ObservableCollection<Point> SchemaRoute { get; set; } = new ObservableCollection<Point>();
-
-      public MapSpan VisibleRegion { get; set; }
-
+      public ObservableCollection<Area> TraversalPath { get; set; }
       public Area ParentArea { get; set; }
+
+      public ObservableCollection<Point> SchemaRoute { get; set; }
+
+      public MapSpan Location { get; set; }
 
       public ManageRouteViewModel(IApiClient client,
          IExceptionHandler errors,
@@ -45,6 +47,9 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
          Errors = errors;
 
          Title = VmTitle;
+
+         TraversalPath = new ObservableCollection<Area>();
+         SchemaRoute = new ObservableCollection<Point>();
 
          InitializeCommands();
       }
@@ -60,7 +65,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       }
 
       private async Task GoBack() {
-         await Navigation.GoBackAsync();
+         await Navigation.GoBackAsync(TraversalPath);
       }
 
       private bool CanSave() {
@@ -74,15 +79,42 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       private async Task InitializeData(params object[] parameters) {
          try {
             await base.OnNavigatedToAsync(parameters);
-            ParentArea = parameters[0] as Area;
+            var traversalPath = parameters != null && parameters.Length > 0 ? parameters[0] as IEnumerable<Area> : null;
+            var imagePath = parameters != null && parameters.Length > 1 ? parameters[1] as string : null;
+
+            if (null == traversalPath) {
+               new ArgumentNullException(nameof(traversalPath));
+            } else {
+               foreach (var area in traversalPath) {
+                  TraversalPath.Add(area);
+                  ParentArea = area;
+                  if (null != area) {
+                     Location = MapSpan.FromCenterAndRadius(
+                        MapHelper.GetPosition(area.Latitude, area.Longitude),
+                        Distance.FromKilometers(area.Size));
+                  }
+               }
+            }
+
+            if (string.IsNullOrEmpty(imagePath)) {
+               new ArgumentNullException(nameof(imagePath));
+            } else {
+               LocalSchemaThumbPath = imagePath;
+            }
+
             LocalSchemaThumbPath = parameters[1] as string;
 
             using (var exifReader = new ExifLib.ExifReader(LocalSchemaThumbPath)) {
+               double[] latitudeArray, longitudeArray;
                double latitude, longitude;
-               exifReader.GetTagValue<double>(ExifLib.ExifTags.GPSLatitude, out latitude);
-               exifReader.GetTagValue<double>(ExifLib.ExifTags.GPSLongitude, out longitude);
 
-               VisibleRegion = MapSpan.FromCenterAndRadius(new Position(latitude, longitude), new Distance(170));
+               exifReader.GetTagValue(ExifLib.ExifTags.GPSLatitude, out latitudeArray);
+               exifReader.GetTagValue(ExifLib.ExifTags.GPSLongitude, out longitudeArray);
+
+               latitude = latitudeArray[0] + latitudeArray[1] / 60 + latitudeArray[2] / 3600;
+               longitude = longitudeArray[0] + longitudeArray[1] / 60 + longitudeArray[2] / 3600;
+
+               Location = MapSpan.FromCenterAndRadius(new Position(latitude, longitude), new Distance(170));
             }
          }catch(Exception ex) {
             await Errors.HandleAsync(ex);
