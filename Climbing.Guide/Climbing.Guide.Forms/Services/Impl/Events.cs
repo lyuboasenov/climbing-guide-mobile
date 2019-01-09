@@ -1,7 +1,7 @@
 ﻿using Prism.Events;
 
-namespace Climbing.Guide.Forms.Services {
-   public class Events : IEvents {
+namespace Climbing.Guide.Forms.Services.Impl {
+   public class Events : Services.Events {
 
       private IEventAggregator EventAggregator { get; set; }
 

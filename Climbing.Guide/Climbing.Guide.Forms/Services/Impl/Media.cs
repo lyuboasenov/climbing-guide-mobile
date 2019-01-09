@@ -1,8 +1,8 @@
 ﻿using Plugin.Media.Abstractions;
 using System.Threading.Tasks;
 
-namespace Climbing.Guide.Forms.Services {
-   public class Media : IMedia {
+namespace Climbing.Guide.Forms.Services.Impl {
+   public class Media : Services.Media {
       private Plugin.Media.Abstractions.IMedia XamarinMedia { get; set; }
 
       public bool IsTakePhotoSupported {

@@ -3,7 +3,7 @@ using System;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.Services {
-   public interface INavigation {
+   public interface Navigation {
       Uri GetNavigationUri(string absolutePath);
       Uri GetShellNavigationUri(string relativePath);
 

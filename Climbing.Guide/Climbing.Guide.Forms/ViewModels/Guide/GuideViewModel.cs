@@ -19,14 +19,14 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public ICommand ItemTappedCommand { get; private set; }
       public ICommand AddItemCommand { get; private set; }
 
-      private IProgress Progress { get; }
+      private Progress Progress { get; }
 
       public GuideViewModel(IApiClient client,
          IExceptionHandler errors,
-         Services.INavigation navigation,
-         IAlerts alerts, 
-         IMedia media,
-         IProgress progress) :
+         Services.Navigation navigation,
+         Alerts alerts, 
+         Media media,
+         Progress progress) :
          base(client, errors, media, alerts, navigation) {
          Progress = progress;
 

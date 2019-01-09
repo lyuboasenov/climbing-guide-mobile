@@ -4,13 +4,13 @@ using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Climbing.Guide.Forms.Services {
+namespace Climbing.Guide.Forms.Services.Impl {
    public class FormsExceptionHandler : IExceptionHandler {
 
-      private IAlerts AlertService { get; set; }
+      private Alerts AlertService { get; set; }
       private ILogger LoggingService { get; set; }
 
-      public FormsExceptionHandler(IAlerts alertService, ILogger loggingService) {
+      public FormsExceptionHandler(Alerts alertService, ILogger loggingService) {
          AlertService = alertService;
          LoggingService = loggingService;
       }

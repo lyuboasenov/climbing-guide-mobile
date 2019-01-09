@@ -28,13 +28,13 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       protected IExceptionHandler Errors { get; }
 
       private IApiClient Client { get; }
-      private Services.INavigation Navigation { get; }
+      private Services.Navigation Navigation { get; }
       private IValidator Validator { get; }
       private bool IsInitialized { get; } = false;
 
       public SignupViewModel(IApiClient client,
          IExceptionHandler errors,
-         Services.INavigation navigation,
+         Services.Navigation navigation,
          IValidator validator) {
          Client = client;
          Errors = errors;

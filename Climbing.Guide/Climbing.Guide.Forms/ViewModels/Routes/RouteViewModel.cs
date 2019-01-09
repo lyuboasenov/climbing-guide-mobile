@@ -16,14 +16,14 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
       private IApiClient Client { get; }
-      private IEnvironment Environment { get; }
+      private Services.Environment Environment { get; }
 
       public Route Route { get; set; }
       public ICommand ViewSchemaCommand { get; set; }
       public string LocalSchemaThumbPath { get; set; }
       public ObservableCollection<Point> SchemaRoute { get; set; }
 
-      public RouteViewModel(IApiClient client, IEnvironment environment) {
+      public RouteViewModel(IApiClient client, Services.Environment environment) {
          Client = client;
          Environment = environment;
 

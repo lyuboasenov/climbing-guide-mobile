@@ -1,7 +1,7 @@
 ﻿using Xamarin.Essentials;
 
-namespace Climbing.Guide.Forms.Services {
-   public class Preferences : IPreferences {
+namespace Climbing.Guide.Forms.Services.Impl {
+   public class Preferences : Services.Preferences {
 
       public int BoulderingGradeSystem {
          get { return Get(GetSettingKey("system/grades/bouldering"), 2); }

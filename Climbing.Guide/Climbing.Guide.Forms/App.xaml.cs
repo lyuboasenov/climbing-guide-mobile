@@ -14,6 +14,7 @@ using Climbing.Guide.Api;
 using Climbing.Guide.Http;
 using System.Net.Http;
 using Climbing.Guide.Forms.Services.Progress;
+using Climbing.Guide.Forms.Services.GeoLocation;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Forms {
@@ -33,7 +34,7 @@ namespace Climbing.Guide.Forms {
 
          // HACK: register Prism.Navigation.INavigationService in order to be used in
          // NavigationService creation
-         (Container as IContainerExtension).RegisterInstance<Prism.Navigation.INavigationService>(NavigationService);
+         (Container as IContainerExtension).RegisterInstance(NavigationService);
 
          await NavigationService.NavigateAsync(
             Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav, $"{nameof(Views.Shell)}/NavigationPage/{nameof(Views.HomeView)}"));
@@ -82,20 +83,21 @@ namespace Climbing.Guide.Forms {
 
       private void RegisterServices(IContainerRegistry containerRegistry) {
          // Register services
-         containerRegistry.Register<IEvents, Services.Events>();
-         containerRegistry.Register<IPreferences, Preferences>();
-         containerRegistry.Register<IExceptionHandler, FormsExceptionHandler>();
-         containerRegistry.Register<IAlerts, Alerts>();
-         containerRegistry.Register<IMedia, Media>();
-         containerRegistry.Register<IAsyncTaskRunner, FormsTaskRunner>();
-         containerRegistry.Register<ISyncTaskRunner, FormsTaskRunner>();
-         containerRegistry.Register<IMainThreadTaskRunner, FormsTaskRunner>();
+         containerRegistry.Register<Services.Events, Services.Impl.Events>();
+         containerRegistry.Register<Preferences, Services.Impl.Preferences>();
+         containerRegistry.Register<IExceptionHandler, Services.Impl.FormsExceptionHandler>();
+         containerRegistry.Register<Alerts, Services.Impl.Alerts>();
+         containerRegistry.Register<Media, Services.Impl.Media>();
+         containerRegistry.Register<IAsyncTaskRunner, Services.Impl.FormsTaskRunner>();
+         containerRegistry.Register<ISyncTaskRunner, Services.Impl.FormsTaskRunner>();
+         containerRegistry.Register<IMainThreadTaskRunner, Services.Impl.FormsTaskRunner>();
          containerRegistry.Register<ICache, Cache>();
          containerRegistry.Register<ICacheRepository, Caching.Sqlite.SqliteCacheRepository>();
-         containerRegistry.Register<IResource, Services.Resources>();
+         containerRegistry.Register<Resource, Services.Impl.Resources>();
          containerRegistry.Register<ISerializer, JsonSerializer>();
-         containerRegistry.Register<IEnvironment, Services.Environment>();
-         containerRegistry.Register<IProgress, Progress>();
+         containerRegistry.Register<Services.Environment, Services.Impl.Environment>();
+         containerRegistry.Register<Progress, Services.Progress.Impl.Progress>();
+         containerRegistry.Register<GeoLocation, Services.GeoLocation.Impl.GeoLocation>();
 
 #if DEBUG
          containerRegistry.Register<Logging.ILogger, Logging.DebugLogger>();
@@ -105,7 +107,7 @@ namespace Climbing.Guide.Forms {
 
          // Register instances
          containerRegistry.RegisterSingleton<IApiClient, ApiClient>();
-         containerRegistry.RegisterSingleton<Services.INavigation, Navigation>();
+         containerRegistry.RegisterSingleton<Navigation, Services.Impl.Navigation>();
          containerRegistry.RegisterSingleton<Validations.IValidator, Validations.Validator>();
 
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
@@ -139,14 +141,14 @@ namespace Climbing.Guide.Forms {
       }
 
       private ICacheSettings GetCacheSettings() {
-         var environment = IoC.Container.Get<IEnvironment>();
+         var environment = IoC.Container.Get<Services.Environment>();
 
          var cacheLocation = System.IO.Path.Combine(environment.CachePath, "sqlite/");
          return new CacheSettings(cacheLocation);
       }
 
       private ICacheSettings GetLargeCacheSettings() {
-         var environment = IoC.Container.Get<IEnvironment>();
+         var environment = IoC.Container.Get<Services.Environment>();
 
          var cacheLocation = System.IO.Path.Combine(environment.CachePath, "files/");
          return new CacheSettings(cacheLocation);

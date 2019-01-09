@@ -38,18 +38,18 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public ICommand CancelCommand { get; set; }
 
       private IApiClient Client { get; }
-      private Services.INavigation Navigation { get; }
+      private Services.Navigation Navigation { get; }
       private IValidator Validator { get; }
       private IExceptionHandler Errors { get; }
-      private IAlerts Alerts { get; }
+      private Alerts Alerts { get; }
       private bool IsInitialized { get; } = false;
 
       public ManageAreaViewModel(
          IApiClient client,
-         Services.INavigation navigation,
+         Services.Navigation navigation,
          IValidator validator,
          IExceptionHandler exceptionHandler,
-         IAlerts alerts) {
+         Alerts alerts) {
          Client = client;
          Navigation = navigation;
          Validator = validator;

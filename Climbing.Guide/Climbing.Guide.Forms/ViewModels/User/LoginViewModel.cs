@@ -27,17 +27,17 @@ namespace Climbing.Guide.Forms.ViewModels.User {
 
       private IApiClient Client { get; }
       private IExceptionHandler Errors { get; }
-      private Services.INavigation Navigation { get; }
-      private IAlerts Alerts { get; }
-      private IEvents Events { get; }
+      private Navigation Navigation { get; }
+      private Alerts Alerts { get; }
+      private Services.Events Events { get; }
       private IValidator Validator { get; }
       private bool IsInitialized { get; } = false;
 
       public LoginViewModel(IApiClient client,
          IExceptionHandler errors,
-         Services.INavigation navigation, 
-         IAlerts alerts, 
-         IEvents events,
+         Navigation navigation, 
+         Alerts alerts,
+         Services.Events events,
          IValidator validator) {
          Client = client;
          Errors = errors;

@@ -13,8 +13,8 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
       public static string VmTitle { get; } = Resources.Strings.Settings.Settings_Title;
 
       private IExceptionHandler Errors { get; }
-      private IResource ResourceService { get; set; }
-      private IPreferences PreferenceService { get; set; }
+      private Resource ResourceService { get; set; }
+      private Preferences PreferenceService { get; set; }
       private Caching.ICache Cache { get; set; }
 
       public Language SelectedLanguage { get; set; }
@@ -33,7 +33,7 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
 
       public long CacheSize { get; set; }
 
-      public SettingsViewModel(IExceptionHandler errors, IResource resourceService, IPreferences preferenceService, Caching.ICache cache) {
+      public SettingsViewModel(IExceptionHandler errors, Resource resourceService, Preferences preferenceService, Caching.ICache cache) {
          Errors = errors;
          ResourceService = resourceService;
          PreferenceService = preferenceService;

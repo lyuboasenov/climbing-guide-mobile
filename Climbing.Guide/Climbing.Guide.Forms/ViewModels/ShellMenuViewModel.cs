@@ -14,9 +14,9 @@ namespace Climbing.Guide.Forms.ViewModels {
    public class ShellMenuViewModel : BaseViewModel {
       private IApiClient Client { get; }
       private IExceptionHandler Errors { get; }
-      private INavigation Navigation { get; }
-      private IEvents Events { get; }
-      private IProgress Progress { get; }
+      private Navigation Navigation { get; }
+      private Services.Events Events { get; }
+      private Progress Progress { get; }
 
       public ObservableCollection<MenuItemModel> MenuItems { get; set; }
       public MenuItemModel SelectedMenuItem { get; set; }
@@ -27,9 +27,9 @@ namespace Climbing.Guide.Forms.ViewModels {
 
       public ShellMenuViewModel(IApiClient client,
          IExceptionHandler errors,
-         INavigation navigation,
-         IEvents events,
-         IProgress progress) {
+         Navigation navigation,
+         Services.Events events,
+         Progress progress) {
          Client = client;
          Errors = errors;
          Navigation = navigation;

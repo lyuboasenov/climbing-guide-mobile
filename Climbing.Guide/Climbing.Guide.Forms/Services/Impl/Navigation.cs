@@ -6,8 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Climbing.Guide.Forms.Services {
-   public class Navigation : INavigation {
+namespace Climbing.Guide.Forms.Services.Impl {
+   public class Navigation : Services.Navigation {
 
       private const int NAVIGATION_STACK_SIZE = 10;
 

@@ -7,8 +7,8 @@ using Climbing.Guide.Caching;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
 
-namespace Climbing.Guide.Forms.Services {
-   public class Resources : IResource {
+namespace Climbing.Guide.Forms.Services.Impl {
+   public class Resources : Resource {
       private IApiClient ApiClient { get; set; }
       private ICache Cache { get; set; }
       private Http.ICachingHttpClientManager CachingHttpClientManager { get; set; }
@@ -20,46 +20,6 @@ namespace Climbing.Guide.Forms.Services {
          CachingHttpClientManager = cachingHttpClientManager;
          ExceptionHandler = exceptionHandler;
       }
-
-      //public async Task<IEnumerable<Region>> GetRegionsAsync() {
-      //   ObservableCollection<Region> regions = new ObservableCollection<Region>();
-
-      //   await LoadRegionsAsync(regions);
-
-      //   return regions;
-      //}
-
-      //private async Task LoadRegionsAsync(ObservableCollection<Region> regions) {
-      //   using (var cachingSession = CachingHttpClientManager.CreateCacheSession(TimeSpan.FromHours(1))) {
-      //      int retry = 5;
-
-      //      for (int page = 1; ; page++) {
-      //         try {
-      //            cachingSession.Commit();
-      //            // Returned regions get added to the collection
-      //            var pagedRegions = await ApiClient.RegionsClient.ListAsync(page: page);
-      //            foreach(var region in pagedRegions.Results) {
-      //               regions.Add(region);
-      //            }
-
-      //            // If no next page exists no more calls are made
-      //            if (null == pagedRegions.Next) {
-      //               break;
-      //            }
-      //         } catch (ApiCallException ex) {
-      //            cachingSession.Invalidate();
-      //            if (retry > 0) {
-      //               retry--;
-      //               page--;
-      //               await Task.Delay(1000);
-      //            } else {
-      //               await ExceptionHandler.HandleAsync(ex);
-      //               throw;
-      //            }
-      //         }
-      //      }
-      //   }
-      //}
 
       public async Task<IEnumerable<Grade>> GetGradeSystemAsync(int gradeSystemId, bool force = false) {
          string GRADE_SYSTEM_CACHE_KEY = Helpers.UriHelper.Get(Helpers.UriHelper.Schema.cache, $"/system/grades/system/{gradeSystemId}").ToString();

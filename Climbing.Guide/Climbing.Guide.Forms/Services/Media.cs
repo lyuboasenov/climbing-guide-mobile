@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.Services {
-   public interface IMedia {
+   public interface Media {
 
       /// <summary>
       /// Gets if ability to take photos supported on the device

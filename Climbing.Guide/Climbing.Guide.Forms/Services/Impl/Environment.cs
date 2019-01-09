@@ -1,7 +1,7 @@
 ﻿using System.IO;
 
-namespace Climbing.Guide.Forms.Services {
-   public class Environment : IEnvironment {
+namespace Climbing.Guide.Forms.Services.Impl {
+   public class Environment : Services.Environment {
       public string ApplicationDataPath { get; private set; }
       public string CachePath { get; private set; }
       public string TempPath { get; private set; }
