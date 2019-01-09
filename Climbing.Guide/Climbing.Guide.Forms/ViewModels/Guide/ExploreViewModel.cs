@@ -1,25 +1,21 @@
 ﻿using Climbing.Guide.Forms.Helpers;
 using Xamarin.Forms.Maps;
-using Xamarin.Essentials;
 using System.Threading.Tasks;
 using System.Collections;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Climbing.Guide.Api.Schemas;
-using System;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services.Progress;
 using Climbing.Guide.Forms.Services;
-using Climbing.Guide.Tasks;
+using Climbing.Guide.Forms.Services.GeoLocation;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class ExploreViewModel : BaseGuideViewModel {
       public static string VmTitle { get; } = Resources.Strings.Guide.Explore_Title;
       private static int[] ZoomLevel { get; } = new int[] { 5000000, 5000000, 22000, 1400, 170, 170, 170 };
-
-      private IProgress Progress { get; }
 
       public ICommand PinTappedCommand { get; private set; }
       public ICommand TraverseBackCommand { get; private set; }
@@ -28,13 +24,18 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public MapSpan VisibleRegion { get; set; }
       public Position SelectedLocation { get; set; }
 
+      private Progress Progress { get; }
+      private GeoLocation GeoLocation { get; }
+
       public ExploreViewModel(IApiClient client,
          IExceptionHandler errors,
-         Services.INavigation navigation,
-         IAlerts alerts,
-         IMedia media,
-         IProgress progress) : base(client, errors, media, alerts, navigation) {
+         Services.Navigation navigation,
+         Alerts alerts,
+         Media media,
+         Progress progress,
+         GeoLocation geoLocation) : base(client, errors, media, alerts, navigation) {
          Progress = progress;
+         GeoLocation = geoLocation;
 
          Title = VmTitle;
 
@@ -55,7 +56,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
             decimal latitude, longitude;
             if (null == parentArea) {
-               var location = await GetCurrentLocation();
+               var location = await GeoLocation.GetCurrentOrDefaultAsync();
                latitude = (decimal)location.Latitude;
                longitude = (decimal)location.Longitude;
             } else {
@@ -74,38 +75,6 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          PinTappedCommand = new Command(async (data) => { await OnPinTapped(data); } );
          TraverseBackCommand = new Command(async () => await OnTraverseBackAsync(), () => TraversalPath.Count > 1);
          AddItemCommand = new Command(async () => await OnAddAsync());
-      }
-
-      private async Task<Location> GetCurrentLocation() {
-         try {
-            return await Geolocation.GetLocationAsync().TimeoutAfter(TimeSpan.FromSeconds(5));
-         } catch (FeatureNotSupportedException fnsEx) {
-            await Errors.HandleAsync(fnsEx,
-               Resources.Strings.Main.Permission_Exception_Format,
-               Resources.Strings.Main.Location_Permissino);
-         } catch (PermissionException pEx) {
-            await Errors.HandleAsync(pEx,
-               Resources.Strings.Main.Permission_Exception_Format,
-               Resources.Strings.Main.Location_Permissino);
-         } catch (TimeoutException ex) {
-            await Errors.HandleAsync(ex,
-               Resources.Strings.Main.Permission_Exception_Format,
-               Resources.Strings.Main.Location_Permissino);
-         } catch (Exception ex) {
-            await Errors.HandleAsync(ex,
-               Resources.Strings.Main.Permission_Exception_Format,
-               Resources.Strings.Main.Location_Permissino);
-         }
-
-         try {
-            return await Geolocation.GetLastKnownLocationAsync().TimeoutAfter(TimeSpan.FromSeconds(5));
-         } catch (Exception ex) {
-            await Errors.HandleAsync(ex,
-               Resources.Strings.Main.Permission_Exception_Format,
-               Resources.Strings.Main.Location_Permissino);
-         }
-
-         return new Location(42.6735598, 23.3626882);
       }
 
       private async Task OnPinTapped(object data) {
