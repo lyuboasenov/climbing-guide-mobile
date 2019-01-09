@@ -5,6 +5,7 @@ using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide {
@@ -17,20 +18,20 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public ObservableCollection<Area> TraversalPath { get; set; }
 
       protected Stack<Area> TraversalStack { get; }
-      protected Area ParentArea { get; private set; }
+      protected Area CurrentArea { get; private set; }
 
-      protected INavigation Navigation { get; }
+      protected Navigation Navigation { get; }
       protected IExceptionHandler Errors { get; }
 
-      private IMedia Media { get; }
-      private IAlerts Alerts { get; }
+      private Media Media { get; }
+      private Alerts Alerts { get; }
 
       public BaseGuideViewModel(
          IApiClient client,
          IExceptionHandler errors,
-         IMedia media,
-         IAlerts alerts,
-         INavigation navigation) {
+         Media media,
+         Alerts alerts,
+         Navigation navigation) {
          Client = client;
          Errors = errors;
          Media = media;
@@ -43,11 +44,11 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          TraversalPath = new ObservableCollection<Area>();
       }
 
-      protected async virtual Task TraverseToAsync(Area parentArea) {
-         TraversalStack.Push(parentArea);
-         TraversalPath.Add(parentArea);
-         ParentArea = parentArea;
-         await LoadItemsAsync(parentArea);
+      protected async virtual Task TraverseToAsync(Area area) {
+         TraversalStack.Push(area);
+         TraversalPath.Add(area);
+         CurrentArea = area;
+         await LoadItemsAsync(area);
       }
 
       protected async virtual Task TraverseBackAsync() {
@@ -57,119 +58,184 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          TraversalPath.RemoveAt(TraversalPath.Count - 1);
          TraversalPath.RemoveAt(TraversalPath.Count - 1);
 
-         var parentArea = TraversalStack.Pop();
-         await TraverseToAsync(parentArea);
+         var area = TraversalStack.Pop();
+         await TraverseToAsync(area);
       }
 
-      private async Task LoadItemsAsync(Area parentArea) {
+      private async Task LoadItemsAsync(Area area) {
          Items.Clear();
 
-         if (null == parentArea || (parentArea.Has_subareas??false)) {
-            await LoadAreasAsync(parentArea);
-         } else if (null != parentArea && (parentArea.Has_routes ?? false)) {
-            await LoadRoutesAsync(parentArea);
+         if (null == area || (area.Has_subareas??false)) {
+            await LoadAreasAsync(area);
+         } else if (null != area && (area.Has_routes ?? false)) {
+            await LoadRoutesAsync(area);
          }
       }
 
-      private async Task LoadAreasAsync(Area parentArea) {
+      private async Task LoadAreasAsync(Area area) {
          try {
-            for(int page = 1; ; page++) {
-               bool isLastPage = true;
-               IEnumerable<Area> areas = null;
-               if (null == parentArea) {
-                  var pagedAreas = await Client.AreasClient.ListAsync(page: page);
-                  areas = pagedAreas.Results;
-                  isLastPage = pagedAreas.Next == null;
-               } else {
-                  var pagedAreas = await Client.AreasClient.ListAsync(id: parentArea.Id.Value, page: page);
-                  areas = pagedAreas.Results;
-                  isLastPage = pagedAreas.Next == null;
-               }
-
-               foreach (var area in areas) {
-                  Items.Add(area);
-               }
-
-               if (isLastPage) {
-                  break;
-               }
-            }
+            await LoadPagedAreasAsync(area);
          } catch (ApiCallException ex) {
             await Errors.HandleAsync(ex);
-            return;
          } catch (AggregateException ex) {
             await Errors.HandleAsync(ex);
          }
       }
 
-      private async Task LoadRoutesAsync(Area parentArea) {
-         if (null == parentArea) {
-            throw new ArgumentNullException(nameof(parentArea));
+      private async Task LoadPagedAreasAsync(Area area) {
+         bool hasMorePages = true;
+         for (int page = 1; hasMorePages; page++) {
+            IEnumerable<Area> areas = null;
+            if (null == area) {
+               var pagedAreas = await Client.AreasClient.ListAsync(page: page);
+               areas = pagedAreas.Results;
+               hasMorePages = pagedAreas.Next != null;
+            } else {
+               var pagedAreas = await Client.AreasClient.ListAsync(id: area.Id.Value, page: page);
+               areas = pagedAreas.Results;
+               hasMorePages = pagedAreas.Next != null;
+            }
+
+            foreach (var subArea in areas) {
+               Items.Add(subArea);
+            }
+         }
+      }
+
+      private async Task LoadRoutesAsync(Area area) {
+         if (null == area) {
+            throw new ArgumentNullException(nameof(area));
          }
 
          try {
-            for(int page = 1; ; page++) {
-               var pagedRoutes = await Client.RoutesClient.ListAsync(parentArea.Id.Value, page);
-               foreach (var route in pagedRoutes.Results) {
-                  Items.Add(route);
-               }
-
-               if (null == pagedRoutes.Next) {
-                  break;
-               }
-            }
+            await LoadPagedRoutesAsync(area);
          } catch (ApiCallException ex) {
             await Errors.HandleAsync(ex);
          } catch (AggregateException ex) {
             await Errors.HandleAsync(ex);
+         }
+      }
+
+      private async Task LoadPagedRoutesAsync(Area area) {
+         bool hasMorePages = true;
+         for (int page = 1; hasMorePages; page++) {
+            var pagedRoutes = await Client.RoutesClient.ListAsync(area.Id.Value, page);
+            foreach (var route in pagedRoutes.Results) {
+               Items.Add(route);
+            }
+
+            hasMorePages = null != pagedRoutes.Next;
          }
       }
 
       protected async Task AddItemAsync() {
-         var options = new List<string>();
+         var options = GetAddItemAvailableOptions();
 
-         if (null == ParentArea || !(ParentArea.Has_routes ?? false)) {
-            options.Add(Resources.Strings.Routes.Add_Area_Selection_Item);
-         }
-
-         if (null != ParentArea && !(ParentArea.Has_subareas ?? false)) {
-            if (Media.IsTakePhotoSupported) {
-               options.Add(Resources.Strings.Routes.Add_Route_From_Image_Selection_Item);
-            }
-            if (Media.IsPickPhotoSupported) {
-               options.Add(Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item);
-            }
-         }
-
-         var result = await Alerts.DisplayActionSheetAsync(
+         var selectedOption = await Alerts.DisplayActionSheetAsync(
             Resources.Strings.Routes.Add_Title,
             Resources.Strings.Main.Cancel,
             null,
+            (item) => item.Option,
             options.ToArray());
 
-         if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Area_Selection_Item) == 0) {
-            await NavigateToManageArea();
-         } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Route_From_Image_Selection_Item) == 0) {
-            var path = await Media.TakePhotoAsync();
-            await NavigateToManageRoute(path);
-         } else if (string.CompareOrdinal(result, Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item) == 0) {
-            var path = await Media.PickPhotoAsync();
-            if (System.IO.File.Exists(path)) {
-               await NavigateToManageRoute(path);
+         if (null != selectedOption) {
+            await selectedOption.ExecuteAsync();
+         }
+      }
+
+      private IEnumerable<AddItem> GetAddItemAvailableOptions() {
+         var options = new List<AddItem>();
+
+         if (null == CurrentArea || !(CurrentArea.Has_routes ?? false)) {
+            options.Add(new AddArea(Navigation, TraversalPath));
+         }
+
+         if (null != CurrentArea && !(CurrentArea.Has_subareas ?? false)) {
+            if (Media.IsTakePhotoSupported) {
+               options.Add(new AddRouteFromCameraPhoto(Navigation, Media, TraversalPath));
+            }
+            if (Media.IsPickPhotoSupported) {
+               options.Add(new AddRouteFromGalleryImage(Navigation, Media, TraversalPath));
+            }
+         }
+
+         return options;
+      }
+
+      private abstract class AddItem {
+         public abstract string Option { get; }
+
+         protected Navigation Navigation { get; }
+         protected ObservableCollection<Area> TraversalPath { get; }
+
+         public AddItem(Navigation navigation, ObservableCollection<Area> traversalPath) {
+            Navigation = navigation;
+            TraversalPath = traversalPath;
+         }
+         public abstract Task ExecuteAsync();
+      }
+
+      private class AddArea : AddItem {
+         public override string Option => Resources.Strings.Routes.Add_Area_Selection_Item;
+
+         public AddArea(Navigation navigation, ObservableCollection<Area> traversalPath) : 
+            base(navigation, traversalPath) { }
+
+         public override async Task ExecuteAsync() {
+            var navigationResult = await Navigation.NavigateAsync(
+               Navigation.GetShellNavigationUri(nameof(Views.Guide.ManageAreaView)),
+               TraversalPath);
+
+            if (!navigationResult.Result) {
+               throw navigationResult.Exception;
             }
          }
       }
 
-      private async Task NavigateToManageArea() {
-         var navigationResult = await Navigation.NavigateAsync(
-               Navigation.GetShellNavigationUri(nameof(Views.Guide.ManageAreaView)),
-               TraversalPath);
+      private abstract class AddRoute : AddItem {
+         protected Media Media { get; }
+
+         public AddRoute(Navigation navigation, Media media, ObservableCollection<Area> traversalPath) :
+            base(navigation, traversalPath) {
+            Media = media;
+         }
+
+         protected abstract Task<string> GetImagePath();
+
+         public override async Task ExecuteAsync() {
+            var path = await GetImagePath();
+            if (System.IO.File.Exists(path)) {
+               var navigationResult = await Navigation.NavigateAsync(
+                  Navigation.GetShellNavigationUri(nameof(Views.Routes.ManageRouteView)),
+                  TraversalPath, path);
+
+               if (!navigationResult.Result) {
+                  throw navigationResult.Exception;
+               }
+            }
+         }
       }
 
-      private async Task NavigateToManageRoute(string imagePath) {
-         var navigationResult = await Navigation.NavigateAsync(
-               Navigation.GetShellNavigationUri(nameof(Views.Routes.ManageRouteView)),
-               TraversalPath, imagePath);
+      private class AddRouteFromGalleryImage : AddRoute {
+         public override string Option => Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item;
+
+         public AddRouteFromGalleryImage(Navigation navigation, Media media, ObservableCollection<Area> traversalPath) :
+            base(navigation, media, traversalPath) { }
+
+         protected override async Task<string> GetImagePath() {
+            return await Media.PickPhotoAsync();
+         }
+      }
+
+      private class AddRouteFromCameraPhoto : AddRoute {
+         public override string Option => Resources.Strings.Routes.Add_Route_From_Image_Selection_Item;
+
+         public AddRouteFromCameraPhoto(Navigation navigation, Media media, ObservableCollection<Area> traversalPath) :
+            base(navigation, media, traversalPath) { }
+
+         protected override async Task<string> GetImagePath() {
+            return await Media.TakePhotoAsync();
+         }
       }
    }
 }
