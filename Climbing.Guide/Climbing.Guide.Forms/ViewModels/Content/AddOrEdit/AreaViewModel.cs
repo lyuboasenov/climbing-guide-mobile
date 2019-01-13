@@ -1,6 +1,5 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Forms.Services;
-using System.Collections.Generic;
 using Climbing.Guide.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -14,13 +13,14 @@ using Climbing.Guide.Core.Api;
 using Climbing.Guide.Forms.Services.Navigation;
 using Alat.Validation;
 using Alat.Validation.Rules;
+using System.Collections.Generic;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class AreaViewModel : BaseViewModel, Validatable {
+   public class AreaViewModel : ParametrisedBaseViewModel<AreaViewModel.Parameters>, Validatable {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
-      public static NavigationRequest GetNavigationRequest(Navigation navigation, ViewModelParameters parameters) {
+      public static NavigationRequest GetNavigationRequest(Navigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.AreaView), parameters);
       }
 
@@ -66,11 +66,6 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
          ValidationContext = validationContextFactory.GetContextFor(this, true);
       }
 
-      public async override Task OnNavigatedToAsync(params object[] parameters) {
-         await base.OnNavigatedToAsync(parameters);
-         await InitializeData(parameters);
-      }
-
       public void InitializeValidationRules(ValidationContext context) {
          context.AddRule<AreaViewModel, string>(t => t.Name,
             new RequiredRule(
@@ -96,16 +91,20 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
          (SaveCommand as Command).ChangeCanExecute();
       }
 
+      protected async override Task OnNavigatedToAsync(Parameters parameters) {
+         await base.OnNavigatedToAsync(parameters);
+         await InitializeData(parameters);
+      }
+
       private void InitializeCommands() {
          SaveCommand = new Command(async () => await Save(), () => ValidationContext.IsValid);
          CancelCommand = new Command(async () => await GoBack());
       }
 
-      private Task InitializeData(params object[] parameters) {
+      private Task InitializeData(Parameters parameters) {
          try {
-            var traversalPath = parameters != null && parameters.Length > 0 ? parameters[0] as IEnumerable<Area> : null;
-            if (null != traversalPath) {
-               foreach(var area in traversalPath) {
+            if (null != parameters.TraversalPath) {
+               foreach(var area in parameters.TraversalPath) {
                   TraversalPath.Add(area);
                   ParentArea = area;
                   if (null != area) {
@@ -161,7 +160,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
          }
       }
 
-      public class ViewModelParameters {
+      public class Parameters {
          public IEnumerable<Area> TraversalPath { get; set; }
       }
    }

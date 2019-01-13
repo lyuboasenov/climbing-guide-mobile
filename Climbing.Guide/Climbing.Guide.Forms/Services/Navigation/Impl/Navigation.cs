@@ -67,8 +67,9 @@ namespace Climbing.Guide.Forms.Services.Navigation.Impl {
       }
 
       private INavigationParameters GetParameters(object parameters) {
-         var result = new NavigationParameters();
-         result.Add(NAVIGATION_PARAMETERS_KEY, parameters);
+         var result = new NavigationParameters {
+            { NAVIGATION_PARAMETERS_KEY, parameters }
+         };
 
          return result;
       }

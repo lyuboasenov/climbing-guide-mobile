@@ -12,17 +12,18 @@ using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Services.GeoLocation;
 using Climbing.Guide.Forms.Services.Navigation;
 using System.Collections.Generic;
+using System;
 
 namespace Climbing.Guide.Forms.ViewModels.Content.List {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class MapGuideViewModel : BaseGuideViewModel {
+   public class MapGuideViewModel : BaseGuideViewModel<MapGuideViewModel.Parameters> {
       public static string VmTitle { get; } = Resources.Strings.Guide.Explore_Title;
 
       public static NavigationRequest GetNavigationRequest(Navigation navigation) {
-         return GetNavigationRequest(navigation, new ViewModelParameters());
+         return GetNavigationRequest(navigation, new Parameters());
       }
 
-      public static NavigationRequest GetNavigationRequest(Navigation navigation, ViewModelParameters parameters) {
+      public static NavigationRequest GetNavigationRequest(Navigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.List.MapGuideView), parameters);
       }
 
@@ -53,9 +54,17 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
          InitializeCommands();
       }
 
-      public async override Task OnNavigatedToAsync(params object[] parameters) {
+      protected async override Task OnNavigatedToAsync(Parameters parameters) {
          await base.OnNavigatedToAsync(parameters);
-         await TraverseToAsync(null);
+         await InitializeData(parameters);
+
+         Area parentArea = null;
+         if (TraversalStack.Count > 0) {
+            parentArea = TraversalStack.Pop();
+            TraversalPath.Remove(parentArea);
+         }
+
+         await TraverseToAsync(parentArea);
       }
 
       protected async override Task TraverseToAsync(Area parentArea) {
@@ -88,6 +97,20 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
          AddItemCommand = new Command(async () => await OnAddAsync());
       }
 
+      private Task InitializeData(Parameters parameters) {
+         try {
+            if (null != parameters.TraversalPath) {
+               foreach (var area in parameters.TraversalPath) {
+                  TraversalStack.Push(area);
+                  TraversalPath.Add(area);
+               }
+            }
+            return Task.CompletedTask;
+         } catch (Exception ex) {
+            return Errors.HandleAsync(ex);
+         }
+      }
+
       private async Task OnPinTapped(object data) {
          if (data is Area) {
             await TraverseToAsync(data as Area);
@@ -110,13 +133,13 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
             await Navigation.NavigateAsync(
                View.RouteViewModel.GetNavigationRequest(
                   Navigation,
-                  new View.RouteViewModel.ViewModelParameters() {
+                  new View.RouteViewModel.Parameters() {
                      Route = route
                   }));
          }
       }
 
-      public class ViewModelParameters {
+      public class Parameters {
          public IEnumerable<Area> TraversalPath { get; set; }
       }
    }

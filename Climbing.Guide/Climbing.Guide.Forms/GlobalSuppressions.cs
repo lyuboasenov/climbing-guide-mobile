@@ -6,4 +6,7 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>", Scope = "type", Target = "~T:Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove.AreaViewModel.ViewModelParameters")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>", Scope = "type", Target = "~T:Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove.RouteViewModel.ViewModelParameters")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>", Scope = "type", Target = "~T:Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove.AreaViewModel.Parameters")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>", Scope = "type", Target = "~T:Climbing.Guide.Forms.ViewModels.Content.List.ListGuideViewModel.Parameters")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>", Scope = "type", Target = "~T:Climbing.Guide.Forms.ViewModels.Content.List.MapGuideViewModel.Parameters")]
 

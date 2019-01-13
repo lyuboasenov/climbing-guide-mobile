@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.ViewModels.Content.List {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class BaseGuideViewModel : BaseViewModel {
+   public class BaseGuideViewModel<TParameters> : ParametrisedBaseViewModel<TParameters> where TParameters : class {
       public ObservableCollection<object> Items { get; set; }
 
       public  IApiClient Client { get; }
@@ -186,7 +186,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
             await Navigation.NavigateAsync(
                Guide.Content.AddOrRemove.AreaViewModel.GetNavigationRequest(
                   Navigation, 
-                  new Guide.Content.AddOrRemove.AreaViewModel.ViewModelParameters() {
+                  new Guide.Content.AddOrRemove.AreaViewModel.Parameters() {
                      TraversalPath = TraversalPath
                   }));
          }
@@ -208,7 +208,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
                await Navigation.NavigateAsync(
                   Routes.Content.AddOrRemove.RouteViewModel.GetNavigationRequest(
                      Navigation,
-                     new Routes.Content.AddOrRemove.RouteViewModel.ViewModelParameters() {
+                     new Routes.Content.AddOrRemove.RouteViewModel.Parameters() {
                         TraversalPath = TraversalPath,
                         ImagePath = path
                      }));

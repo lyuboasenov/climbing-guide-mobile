@@ -16,10 +16,10 @@ using Alat.Validation.Rules;
 
 namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class RouteViewModel : BaseViewModel, Validatable {
+   public class RouteViewModel : ParametrisedBaseViewModel<RouteViewModel.Parameters>, Validatable {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
-      public static NavigationRequest GetNavigationRequest(Navigation navigation, ViewModelParameters parameters) {
+      public static NavigationRequest GetNavigationRequest(Navigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.RouteView), parameters);
       }
 
@@ -68,7 +68,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
          ValidationContext = validationContextFactory.GetContextFor(this, true);
       }
 
-      public async override Task OnNavigatedToAsync(params object[] parameters) {
+      protected async override Task OnNavigatedToAsync(Parameters parameters) {
          await InitializeData(parameters);
       }
 
@@ -111,16 +111,14 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
          await Navigation.GoBackAsync();
       }
 
-      private async Task InitializeData(params object[] parameters) {
+      private async Task InitializeData(Parameters parameters) {
          try {
             await base.OnNavigatedToAsync(parameters);
-            var traversalPath = parameters != null && parameters.Length > 0 ? parameters[0] as IEnumerable<Area> : null;
-            var imagePath = parameters != null && parameters.Length > 1 ? parameters[1] as string : null;
 
-            if (null == traversalPath) {
-               new ArgumentNullException(nameof(traversalPath));
+            if (null == parameters.TraversalPath) {
+               new ArgumentNullException(nameof(parameters.TraversalPath));
             } else {
-               foreach (var area in traversalPath) {
+               foreach (var area in parameters.TraversalPath) {
                   TraversalPath.Add(area);
                   ParentArea = area;
                   if (null != area) {
@@ -131,10 +129,10 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
                }
             }
 
-            if (string.IsNullOrEmpty(imagePath)) {
-               new ArgumentNullException(nameof(imagePath));
+            if (string.IsNullOrEmpty(parameters.ImagePath)) {
+               new ArgumentNullException(nameof(parameters.ImagePath));
             } else {
-               LocalSchemaThumbPath = imagePath;
+               LocalSchemaThumbPath = parameters.ImagePath;
             }
 
             await InitializeLocationAsync();
@@ -178,7 +176,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
          return Task.CompletedTask;
       }
 
-      public class ViewModelParameters {
+      public class Parameters {
          public IEnumerable<Area> TraversalPath { get; set; }
          public string ImagePath { get; set; }
       }

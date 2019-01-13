@@ -13,14 +13,14 @@ using Xamarin.Forms;
 
 namespace Climbing.Guide.Forms.ViewModels.Content.List {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class ListGuideViewModel : BaseGuideViewModel {
+   public class ListGuideViewModel : BaseGuideViewModel<ListGuideViewModel.Parameters> {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
       public static NavigationRequest GetNavigationRequest(Navigation navigation) {
-         return GetNavigationRequest(navigation, new ViewModelParameters());
+         return GetNavigationRequest(navigation, new Parameters());
       }
 
-      public static NavigationRequest GetNavigationRequest(Navigation navigation, ViewModelParameters parameters) {
+      public static NavigationRequest GetNavigationRequest(Navigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.List.ListGuideView), parameters);
       }
 
@@ -44,7 +44,20 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
          InitializeCommands();
       }
 
-      public async override Task OnNavigatedToAsync(params object[] parameters) {
+      protected async override Task OnNavigatedToAsync() {
+         await base.OnNavigatedToAsync();
+         await InitializeData(new Parameters());
+
+         Area parentArea = null;
+         if (TraversalStack.Count > 0) {
+            parentArea = TraversalStack.Pop();
+            TraversalPath.Remove(parentArea);
+         }
+
+         await TraverseToAsync(parentArea);
+      }
+
+      protected async override Task OnNavigatedToAsync(Parameters parameters) {
          await base.OnNavigatedToAsync(parameters);
          await InitializeData(parameters);
 
@@ -70,11 +83,10 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
          AddItemCommand = new Command(async () => await OnAddAsync());
       }
 
-      private Task InitializeData(params object[] parameters) {
+      private Task InitializeData(Parameters parameters) {
          try {
-            var traversalPath = parameters != null && parameters.Length > 0 ? parameters[0] as IEnumerable<Area> : null;
-            if (null != traversalPath) {
-               foreach(var area in traversalPath) {
+            if (null != parameters.TraversalPath) {
+               foreach(var area in parameters.TraversalPath) {
                   TraversalStack.Push(area);
                   TraversalPath.Add(area);
                }
@@ -108,12 +120,12 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
          await Navigation.NavigateAsync(
             View.RouteViewModel.GetNavigationRequest(
                Navigation,
-               new View.RouteViewModel.ViewModelParameters() {
+               new View.RouteViewModel.Parameters() {
                   Route = route
                }));
       }
 
-      public class ViewModelParameters {
+      public class Parameters {
          public IEnumerable<Area> TraversalPath { get; set; }
       }
    }

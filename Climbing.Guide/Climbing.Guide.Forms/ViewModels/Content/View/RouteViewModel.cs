@@ -13,10 +13,10 @@ using Climbing.Guide.Forms.Services.Navigation;
 
 namespace Climbing.Guide.Forms.ViewModels.Content.View {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class RouteViewModel : BaseViewModel, IDestructible {
+   public class RouteViewModel : ParametrisedBaseViewModel<RouteViewModel.Parameters>, IDestructible {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
-      public static NavigationRequest GetNavigationRequest(Navigation navigation, ViewModelParameters parameters) {
+      public static NavigationRequest GetNavigationRequest(Navigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.View.RouteView), parameters);
       }
 
@@ -35,10 +35,9 @@ namespace Climbing.Guide.Forms.ViewModels.Content.View {
          Title = VmTitle;
       }
       
-      public async override Task OnNavigatedToAsync(params object[] parameters) {
+      protected async override Task OnNavigatedToAsync(Parameters parameters) {
          await base.OnNavigatedToAsync(parameters);
-         Route = parameters[0] as Route;
-         await Initialize(Route);
+         await Initialize(parameters.Route);
       }
 
       private async Task Initialize(Route route) {
@@ -68,7 +67,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.View {
          CleanUp();
       }
 
-      public class ViewModelParameters {
+      public class Parameters {
          public Route Route { get; set; }
       }
    }
