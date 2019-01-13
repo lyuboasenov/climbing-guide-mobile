@@ -12,6 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModels\Guide\**" />
+    <EmbeddedResource Remove="ViewModels\Guide\**" />
+    <None Remove="ViewModels\Guide\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ExifLib.Standard" Version="1.7.0" />
     <PackageReference Include="Prism.Forms" Version="7.1.0.431" />
     <PackageReference Include="Prism.Unity.Forms" Version="7.1.0.431" />
@@ -227,6 +233,5 @@
 
   <ItemGroup>
     <Folder Include="ViewModels\Content\View\" />
-    <Folder Include="ViewModels\Guide\" />
   </ItemGroup>
 </Project>
