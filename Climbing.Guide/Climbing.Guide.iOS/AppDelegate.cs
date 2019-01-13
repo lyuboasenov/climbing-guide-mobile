@@ -19,6 +19,9 @@ namespace Climbing.Guide.iOS {
          Rg.Plugins.Popup.Popup.Init();
          global::Xamarin.Forms.Forms.Init();
          // Initialize maps
+         Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeRegularModule())
+                               .With(new Plugin.Iconize.Fonts.FontAwesomeSolidModule())
+                               .With(new Plugin.Iconize.Fonts.FontAwesomeBrandsModule());
          Xamarin.FormsMaps.Init();
          LoadApplication(new App());
 

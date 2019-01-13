@@ -8,7 +8,6 @@
    <Application.Resources>
       <ResourceDictionary>
          <ResourceDictionary.MergedDictionaries>
-            <resources:FontFileResources />
             <baseTheme:Colors />
             <baseTheme:Base />
          </ResourceDictionary.MergedDictionaries>

@@ -77,9 +77,6 @@
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <BundleResource Include="Resources\fa-brands-regular-400.otf" />
-    <BundleResource Include="Resources\fa-regular-400.otf" />
-    <BundleResource Include="Resources\fa-solid-900.otf" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">

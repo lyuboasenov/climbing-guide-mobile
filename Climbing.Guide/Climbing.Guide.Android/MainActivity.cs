@@ -19,10 +19,14 @@ namespace Climbing.Guide.Droid {
          base.SetTheme(Resource.Style.MainTheme);
 
          base.OnCreate(savedInstanceState);
+         Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeRegularModule())
+                               .With(new Plugin.Iconize.Fonts.FontAwesomeSolidModule())
+                               .With(new Plugin.Iconize.Fonts.FontAwesomeBrandsModule());
+         Plugin.Iconize.Iconize.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
          CrossCurrentActivity.Current.Init(this, savedInstanceState);
          Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
          Xamarin.Essentials.Platform.Init(this, savedInstanceState); // add this line to your code
-         global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+         Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
          // Initialize maps
          Xamarin.FormsMaps.Init(this, savedInstanceState);
