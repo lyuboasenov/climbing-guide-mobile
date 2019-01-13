@@ -163,6 +163,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Alat.Xamarin.Forms.Validation\Alat.Xamarin.Forms.Validation.csproj" />
     <ProjectReference Include="..\Climbing.Guide.Api\Climbing.Guide.Api.csproj" />
     <ProjectReference Include="..\Climbing.Guide\Climbing.Guide.csproj" />
   </ItemGroup>

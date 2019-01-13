@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Climbing.Guide.Forms.Validations.Rules {
-   public class RegExRule : IRule {
+namespace Alat.Validation.Rules {
+   public class RegExRule : Rule {
       private string RegExPattern { get; set; }
       public string ErrorMessage { get; private set; }
       public bool IsValid { get; private set; }

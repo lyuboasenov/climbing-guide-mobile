@@ -1,7 +1,7 @@
 ﻿using System;
 
-namespace Climbing.Guide.Forms.Validations.Rules {
-   public class RequiredRule : IRule {
+namespace Alat.Validation.Rules {
+   public class RequiredRule : Rule {
       public string ErrorMessage { get; private set; }
       public bool IsValid { get; private set; }
 

@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Alat.Validation;
+using System;
 using System.Globalization;
-using System.Linq;
 using Xamarin.Forms;
 
-namespace Climbing.Guide.Forms.Validations {
+namespace Alat.Xamarin.Forms.Validation {
    public class StringToVisibilityConverter : IValueConverter {
       public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-         var validationErrors = value as IDictionary<string, IEnumerable<string>>;
-         
-         return null != validationErrors &&
-            validationErrors.ContainsKey((string)parameter) &&
-            validationErrors[(string)parameter].Count() > 0;
+         var validationContext = value as ValidationContext;
+         var propertyName = parameter as string;
+
+         return null != validationContext &&
+            !string.IsNullOrEmpty(propertyName) &&
+            validationContext.HasErrors((string)parameter);
       }
 
       public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {

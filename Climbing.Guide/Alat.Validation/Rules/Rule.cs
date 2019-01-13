@@ -1,5 +1,5 @@
-﻿namespace Climbing.Guide.Forms.Validations.Rules {
-   public interface IRule {
+﻿namespace Alat.Validation.Rules {
+   public interface Rule {
       string ErrorMessage { get; }
       bool IsValid { get; }
       void Validate(string key, object value);

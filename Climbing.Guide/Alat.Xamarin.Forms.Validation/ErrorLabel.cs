@@ -1,6 +1,6 @@
-﻿using Xamarin.Forms;
+﻿using global::Xamarin.Forms;
 
-namespace Climbing.Guide.Forms.Validations {
+namespace Alat.Xamarin.Forms.Validation {
    public class ErrorLabel : Label {
 
       private static ValidationErrorConverter ValidationErrorConverter { get; } = new ValidationErrorConverter();
@@ -19,10 +19,18 @@ namespace Climbing.Guide.Forms.Validations {
       }
 
       private void OnErrorKeyChanged() {
-         var textBinding = new Binding("ValidationErrors", BindingMode.OneWay, converter: ValidationErrorConverter, converterParameter: ErrorKey);
+         var textBinding = new Binding("ValidationContext", 
+            BindingMode.OneWay, 
+            converter: ValidationErrorConverter, 
+            converterParameter: ErrorKey);
+
          SetBinding(TextProperty, textBinding);
 
-         var visibilityBinding = new Binding("ValidationErrors", BindingMode.OneWay, converter: StringToVisibilityConverter, converterParameter: ErrorKey);
+         var visibilityBinding = new Binding("ValidationContext", 
+            BindingMode.OneWay, 
+            converter: StringToVisibilityConverter, 
+            converterParameter: ErrorKey);
+
          SetBinding(IsVisibleProperty, visibilityBinding);
       }
    }

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Climbing.Guide.Forms.Validations.Rules {
-   public class CompareRule : IRule {
+namespace Alat.Validation.Rules {
+   public class CompareRule : Rule {
       public string ErrorMessage { get; private set; }
       public bool IsValid { get; private set; }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 
-namespace Climbing.Guide.Forms.Validations.Rules {
-   public class CustomRule : IRule {
+namespace Alat.Validation.Rules {
+   public class CustomRule : Rule {
       public string ErrorMessage { get; private set; }
       public bool IsValid { get; private set; }
       private Func<string, object, bool> ValidateDelegate { get; set; }

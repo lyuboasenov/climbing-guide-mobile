@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Alat.Validation;
+using System;
 using System.Globalization;
 using Xamarin.Forms;
 
-namespace Climbing.Guide.Forms.Validations {
+namespace Alat.Xamarin.Forms.Validation {
    public class ValidationErrorConverter : IValueConverter {
       public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+         var validationContext = value as ValidationContext;
+         var propertyName = parameter as string;
+
          string result = null;
-         var validationErrors = value as IDictionary<string, IEnumerable<string>>;
          
-         if (null != validationErrors &&
-            validationErrors.ContainsKey((string)parameter)) {
-            result = string.Join(Environment.NewLine, validationErrors[(string)parameter]);
+         if (null != validationContext &&
+            !string.IsNullOrEmpty(propertyName) &&
+            validationContext.HasErrors(propertyName)) {
+            result = string.Join(Environment.NewLine, validationContext.GetErrors(propertyName));
          }
 
          return result;
