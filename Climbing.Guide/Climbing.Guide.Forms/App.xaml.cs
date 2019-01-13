@@ -16,6 +16,7 @@ using System.Net.Http;
 using Climbing.Guide.Forms.Services.Progress;
 using Climbing.Guide.Forms.Services.GeoLocation;
 using Alat.Validation;
+using Plugin.Iconize;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Forms {
@@ -38,7 +39,7 @@ namespace Climbing.Guide.Forms {
          (Container as IContainerExtension).RegisterInstance(NavigationService);
 
          await NavigationService.NavigateAsync(
-            Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav, $"{nameof(Views.Shell)}/NavigationPage/{nameof(Views.HomeView)}"));
+            Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav, $"{nameof(Views.Shell)}/IconNavigationPage/{nameof(Views.HomeView)}"));
       }
 
       protected override IContainerExtension CreateContainerExtension() {
@@ -75,6 +76,8 @@ namespace Climbing.Guide.Forms {
 
       private void RegisterNavigation(IContainerRegistry containerRegistry) {
          containerRegistry.RegisterForNavigation<NavigationPage>();
+         containerRegistry.RegisterForNavigation<IconNavigationPage>();
+
          foreach (var type in System.Reflection.Assembly.GetExecutingAssembly().GetTypes()) {
             if (type.FullName.Contains(".Views.") && type.IsSubclassOf(typeof(Page))) {
                containerRegistry.RegisterForNavigation(type, type.Name);

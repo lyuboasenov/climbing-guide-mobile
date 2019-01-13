@@ -143,7 +143,7 @@ namespace Climbing.Guide.Forms.ViewModels {
          return new MenuItemModel() {
             Title = title,
             Group = group,
-            NavigationRequest = Navigation.GetNavigationRequest("NavigationPage", navigationRequest)
+            NavigationRequest = Navigation.GetNavigationRequest("IconNavigationPage", navigationRequest)
          };
       }
    }
