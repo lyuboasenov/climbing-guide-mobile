@@ -19,6 +19,7 @@
     <PackageReference Include="Rg.Plugins.Popup" Version="1.1.5.180" />
     <PackageReference Include="SkiaSharp.Views" Version="1.68.0" />
     <PackageReference Include="SkiaSharp.Views.Forms" Version="1.68.0" />
+    <PackageReference Include="Xam.Plugin.Iconize.FontAwesome" Version="3.4.0.103" />
     <PackageReference Include="Xam.Plugin.Media" Version="4.1.1.8-beta" />
     <PackageReference Include="Xamarin.Essentials" Version="1.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="3.4.0.1009999" />
@@ -55,14 +56,8 @@
     <Compile Update="Themes\Colors.xaml.cs">
       <DependentUpon>Colors.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Guide\ManageSectorView.xaml.cs">
-      <DependentUpon>ManageSectorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Guide\ManageAreaView.xaml.cs">
-      <DependentUpon>ManageAreaView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Guide\ManageRegionView.xaml.cs">
-      <DependentUpon>ManageRegionView.xaml</DependentUpon>
+    <Compile Update="Views\Content\AddOrEdit\AreaView.xaml.cs">
+      <DependentUpon>AreaView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\ProgressView.xaml.cs">
       <DependentUpon>ProgressView.xaml</DependentUpon>
@@ -70,8 +65,8 @@
     <Compile Update="Views\LoadingView.xaml.cs">
       <DependentUpon>LoadingView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Routes\ManageRouteView.xaml.cs">
-      <DependentUpon>ManageRouteView.xaml</DependentUpon>
+    <Compile Update="Views\Content\AddOrEdit\RouteView.xaml.cs">
+      <DependentUpon>RouteView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\Routes\SchemaEditorView.xaml.cs">
       <DependentUpon>SchemaEditorView.xaml</DependentUpon>
@@ -85,20 +80,17 @@
     <Compile Update="Views\Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Routes\RouteView.xaml.cs">
+    <Compile Update="Views\Content\View\RouteView.xaml.cs">
       <DependentUpon>RouteView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Guide\SearchView.xaml.cs">
-      <DependentUpon>SearchView.xaml</DependentUpon>
+    <Compile Update="Views\Content\List\MapGuideView.xaml.cs">
+      <DependentUpon>MapGuideView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Guide\ExploreView.xaml.cs">
-      <DependentUpon>ExploreView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Guide\GuideView.xaml.cs">
-      <DependentUpon>GuideView.xaml</DependentUpon>
+    <Compile Update="Views\Content\List\ListGuideView.xaml.cs">
+      <DependentUpon>ListGuideView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
@@ -118,9 +110,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources\FontFileResources.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Strings\Guide.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Guide.Designer.cs</LastGenOutput>
@@ -153,7 +142,7 @@
     <EmbeddedResource Update="Views\LoadingView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Routes\ManageRouteView.xaml">
+    <EmbeddedResource Update="Views\Content\AddOrEdit\RouteView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Routes\SchemaEditorView.xaml">
@@ -192,15 +181,6 @@
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="Views\AboutView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\Guide\ExploreView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\Guide\GuideView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\Guide\SearchView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="Views\HomeView.xaml">
@@ -242,5 +222,10 @@
     <None Update="Views\User\SignupView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\Content\View\" />
+    <Folder Include="ViewModels\Guide\" />
   </ItemGroup>
 </Project>
