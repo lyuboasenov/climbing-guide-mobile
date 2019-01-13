@@ -1,12 +1,8 @@
 ﻿using Climbing.Guide.Tasks;
-using System;
 using System.Threading.Tasks;
 
-namespace Climbing.Guide.Forms.Services {
+namespace Climbing.Guide.Forms.Services.Navigation {
    public interface Navigation {
-      Uri GetNavigationUri(string absolutePath);
-      Uri GetShellNavigationUri(string relativePath);
-
       //
       // Summary:
       //     Navigates to the most recent entry in the back navigation history by popping
@@ -14,7 +10,7 @@ namespace Climbing.Guide.Forms.Services {
       //
       // Returns:
       //     If true a go back operation was successful. If false the go back operation failed.
-      Task<ITaskResult<bool>> GoBackAsync();
+      Task GoBackAsync();
       //
       // Summary:
       //     Navigates to the most recent entry in the back navigation history by popping
@@ -26,9 +22,10 @@ namespace Climbing.Guide.Forms.Services {
       //
       // Returns:
       //     If true a go back operation was successful. If false the go back operation failed.
-      Task<ITaskResult<bool>> GoBackAsync(params object[] parameters);
+      Task NavigateAsync(NavigationRequest request);
 
-      Task<ITaskResult<bool>> NavigateAsync(Uri uri);
-      Task<ITaskResult<bool>> NavigateAsync(Uri uri, params object[] parameters);
+      NavigationRequest GetNavigationRequest(string path, NavigationRequest baseRequest = null);
+
+      NavigationRequest GetNavigationRequest<TParameters>(string path, TParameters parameters, NavigationRequest baseRequest = null);
    }
 }
