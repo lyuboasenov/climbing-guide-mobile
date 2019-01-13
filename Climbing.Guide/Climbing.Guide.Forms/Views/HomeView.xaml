@@ -33,12 +33,6 @@
                   </FormattedString>
                </Label.FormattedText>
             </Label>
-            <Label FontFamily="{x:Static resources:FontFileResources.FontAwesomeRegular}" Text="{x:Static resources:GlyphNames.Plus}"/>
-            <Label FontFamily="{x:Static resources:FontFileResources.FontAwesomeBrands}" Text="{x:Static resources:GlyphNames._500Px}"/>
-            <Label FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}" Text="{x:Static resources:GlyphNames.Plus}"/>
-            <Label Style="{x:StaticResource FontAwesomeRegular}" Text="{x:Static resources:GlyphNames.Plus}"/>
-            <Label Style="{x:StaticResource FontAwesomeBrands}" Text="{x:Static resources:GlyphNames._500Px}"/>
-            <Label Style="{x:StaticResource FontAwesomeSolid}" Text="{x:Static resources:GlyphNames.Plus}"/>
             <Label>
                <Label.FormattedText>
                   <FormattedString>
