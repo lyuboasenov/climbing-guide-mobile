@@ -13,11 +13,14 @@ namespace Climbing.Guide.Forms.Services.Navigation.Impl {
 
       public Uri GetNavigationUri() {
          string childPath = string.Empty;
+         string leadingAbsolutePath = $"{nameof(Views.Shell)}/";
+
          if (null != ChildNavigationRequest) {
-            childPath = $"/{ChildNavigationRequest.GetNavigationUri().AbsolutePath}";
+            // Child path without the leading absolute path
+            childPath = $"/{ChildNavigationRequest.GetNavigationUri().AbsolutePath.Substring(leadingAbsolutePath.Length)}";
          }
 
-         return Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav, $"{nameof(Views.Shell)}/{Path}{childPath}");
+         return Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav, $"{leadingAbsolutePath}{Path}{childPath}");
       }
 
       public object GetParameters() {
