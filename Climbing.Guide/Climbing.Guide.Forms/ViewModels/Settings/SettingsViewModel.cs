@@ -6,11 +6,15 @@ using Climbing.Guide.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Climbing.Guide.Forms.Services.Navigation;
 
 namespace Climbing.Guide.Forms.ViewModels.Settings {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class SettingsViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Settings.Settings_Title;
+      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+         return navigation.GetNavigationRequest(nameof(Views.Settings.SettingsView));
+      }
 
       private IExceptionHandler Errors { get; }
       private Resource ResourceService { get; set; }

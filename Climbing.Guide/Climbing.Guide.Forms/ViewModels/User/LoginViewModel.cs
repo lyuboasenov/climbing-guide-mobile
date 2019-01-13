@@ -2,6 +2,7 @@
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Forms.Services.Navigation;
 using Climbing.Guide.Forms.Validations;
 using Climbing.Guide.Forms.Validations.Rules;
 using System.Collections.Generic;
@@ -14,6 +15,9 @@ namespace Climbing.Guide.Forms.ViewModels.User {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class LoginViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.User.Login_Title;
+      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+         return navigation.GetNavigationRequest(nameof(Views.User.LoginView));
+      }
 
       public IDictionary<string, IEnumerable<string>> ValidationErrors { get; } = new Dictionary<string, IEnumerable<string>>();
       public IDictionary<string, IEnumerable<IRule>> ValidationRules { get; } = new Dictionary<string, IEnumerable<IRule>>();
@@ -81,7 +85,8 @@ namespace Climbing.Guide.Forms.ViewModels.User {
             await Alerts.DisplayAlertAsync(Resources.Strings.User.Login_Invalid_Title, Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
          } else {
             Events.GetEvent<Events.ShellMenuInvalidatedEvent>().Publish();
-            await Navigation.NavigateAsync(Navigation.GetShellNavigationUri(nameof(Views.HomeView)));
+            await Navigation.NavigateAsync(
+               HomeViewModel.GetNavigationRequest(Navigation));
          }
       }
 
@@ -100,11 +105,8 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       }
 
       private async Task Signup() {
-         var navigationResult = await Navigation.NavigateAsync(Navigation.GetShellNavigationUri(nameof(Views.User.SignupView)));
-         if (!navigationResult.Result) {
-            await Errors.HandleAsync(navigationResult.Exception,
-               Resources.Strings.Main.Shell_Navigation_Error_Message, SignupViewModel.VmTitle);
-         }
+         await Navigation.NavigateAsync(
+            SignupViewModel.GetNavigationRequest(Navigation));
       }
    }
 }

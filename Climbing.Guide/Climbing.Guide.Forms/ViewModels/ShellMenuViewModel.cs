@@ -1,13 +1,12 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
-using Climbing.Guide.Forms.Helpers;
 using Climbing.Guide.Forms.Models;
-using Climbing.Guide.Forms.Services;
 using System;
 using Climbing.Guide.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Climbing.Guide.Forms.Services.Progress;
+using Climbing.Guide.Forms.Services.Navigation;
 
 namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -21,9 +20,10 @@ namespace Climbing.Guide.Forms.ViewModels {
       public ObservableCollection<MenuItemModel> MenuItems { get; set; }
       public MenuItemModel SelectedMenuItem { get; set; }
 
-      private Uri LogoutUri { get; } = UriHelper.Get(UriHelper.Schema.act, "Logout");
-      private Uri TestUri { get; } = UriHelper.Get(UriHelper.Schema.act, "Test");
-      
+      private MenuItemModel LogoutMenuItem { get; } = 
+         new MenuItemModel() { Title = Resources.Strings.User.Logout_Title };
+      private MenuItemModel TestMenuItem { get; } = new MenuItemModel() { Title = "Test initiation" };
+
 
       public ShellMenuViewModel(IApiClient client,
          IExceptionHandler errors,
@@ -50,18 +50,12 @@ namespace Climbing.Guide.Forms.ViewModels {
       public async Task OnSelectedMenuItemChangedAsync() {
          try {
             if (null != SelectedMenuItem) {
-               if (SelectedMenuItem.NavigationUri == LogoutUri) {
+               if (SelectedMenuItem == LogoutMenuItem) {
                   await LogoutAsync();
-               } else if (SelectedMenuItem.NavigationUri == TestUri) {
+               } else if (SelectedMenuItem == TestMenuItem) {
                   await TestAsync();
                } else {
-                  var result = Navigation.NavigateAsync(SelectedMenuItem.NavigationUri);
-                  result.Wait();
-                  if (!result.Result.Result) {
-                     await Errors.HandleAsync(result.Exception,
-                        Resources.Strings.Main.Shell_Navigation_Error_Message,
-                        SelectedMenuItem.Title);
-                  }
+                  await Navigation.NavigateAsync(SelectedMenuItem.NavigationRequest);
                }
             } else if (MenuItems.Count > 0) {
                SelectedMenuItem = MenuItems[0];
@@ -79,44 +73,38 @@ namespace Climbing.Guide.Forms.ViewModels {
          var userLoggedIn = Client.AuthenticationManager.IsLoggedIn;
 
          MenuItems.Add(GetMenuItem(HomeViewModel.VmTitle,
-            Navigation.GetShellNavigationUri(nameof(Views.HomeView))));
+            HomeViewModel.GetNavigationRequest(Navigation)));
 
-         MenuItems.Add(GetMenuItem(Guide.GuideViewModel.VmTitle,
-            Navigation.GetShellNavigationUri(nameof(Views.Guide.GuideView)),
+         MenuItems.Add(GetMenuItem(Content.List.ListGuideViewModel.VmTitle,
+            Content.List.ListGuideViewModel.GetNavigationRequest(Navigation),
             Resources.Strings.Guide.Section_Title));
 
-         MenuItems.Add(GetMenuItem(Guide.ExploreViewModel.VmTitle,
-            Navigation.GetShellNavigationUri(nameof(Views.Guide.ExploreView)),
-            Resources.Strings.Guide.Section_Title));
-
-         MenuItems.Add(GetMenuItem(Guide.SearchViewModel.VmTitle,
-            Navigation.GetShellNavigationUri(nameof(Views.Guide.SearchView)),
+         MenuItems.Add(GetMenuItem(Content.List.MapGuideViewModel.VmTitle,
+            Content.List.MapGuideViewModel.GetNavigationRequest(Navigation),
             Resources.Strings.Guide.Section_Title));
 
          if (userLoggedIn) {
             MenuItems.Add(GetMenuItem(User.ProfileViewModel.VmTitle,
-               Navigation.GetShellNavigationUri(nameof(Views.User.ProfileView)),
+               User.ProfileViewModel.GetNavigationRequest(Navigation),
                Resources.Strings.User.Section_Title));
          } else {
             MenuItems.Add(GetMenuItem(User.LoginViewModel.VmTitle,
-               Navigation.GetShellNavigationUri(nameof(Views.User.LoginView)),
+               User.LoginViewModel.GetNavigationRequest(Navigation),
                Resources.Strings.User.Section_Title));
          }
 
          MenuItems.Add(GetMenuItem(Settings.SettingsViewModel.VmTitle,
-            Navigation.GetShellNavigationUri(nameof(Views.Settings.SettingsView)),
+            Settings.SettingsViewModel.GetNavigationRequest(Navigation),
             Resources.Strings.User.Section_Title));
 
          MenuItems.Add(GetMenuItem(AboutViewModel.VmTitle,
-            Navigation.GetShellNavigationUri(nameof(Views.AboutView))));
+            AboutViewModel.GetNavigationRequest(Navigation)));
 
          if (userLoggedIn) {
-            MenuItems.Add(GetMenuItem(Resources.Strings.User.Logout_Title,
-               LogoutUri));
+            MenuItems.Add(LogoutMenuItem);
          }
 #if DEBUG
-         MenuItems.Add(GetMenuItem("Test initiation",
-            TestUri));
+         MenuItems.Add(TestMenuItem);
 #endif
       }
 
@@ -148,14 +136,14 @@ namespace Climbing.Guide.Forms.ViewModels {
 
          InitializeMenuItems();
 
-         await Navigation.NavigateAsync(Navigation.GetShellNavigationUri(nameof(Views.HomeView)));
+         await Navigation.NavigateAsync(HomeViewModel.GetNavigationRequest(Navigation));
       }
 
-      private MenuItemModel GetMenuItem(string title, Uri navigationUri, string group = null) {
+      private MenuItemModel GetMenuItem(string title, NavigationRequest navigationRequest, string group = null) {
          return new MenuItemModel() {
             Title = title,
             Group = group,
-            NavigationUri = navigationUri
+            NavigationRequest = navigationRequest
          };
       }
    }

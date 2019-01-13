@@ -1,4 +1,5 @@
 ﻿using Climbing.Guide.Forms.Resources;
+using Climbing.Guide.Forms.Services.Navigation;
 using System;
 using System.Windows.Input;
 
@@ -8,6 +9,9 @@ namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class AboutViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Main.About_Title;
+      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+         return navigation.GetNavigationRequest(nameof(Views.AboutView));
+      }
 
       public AboutViewModel() {
          Title = VmTitle;

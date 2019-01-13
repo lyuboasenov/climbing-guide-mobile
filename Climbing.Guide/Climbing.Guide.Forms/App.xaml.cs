@@ -107,7 +107,7 @@ namespace Climbing.Guide.Forms {
 
          // Register instances
          containerRegistry.RegisterSingleton<IApiClient, ApiClient>();
-         containerRegistry.RegisterSingleton<Navigation, Services.Impl.Navigation>();
+         containerRegistry.RegisterSingleton<Services.Navigation.Navigation, Services.Navigation.Impl.Navigation>();
          containerRegistry.RegisterSingleton<Validations.IValidator, Validations.Validator>();
 
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);

@@ -1,5 +1,6 @@
 ﻿using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
+using Climbing.Guide.Forms.Services.Navigation;
 using Climbing.Guide.Forms.Validations;
 using Climbing.Guide.Forms.Validations.Rules;
 using System.Collections.Generic;
@@ -13,6 +14,9 @@ namespace Climbing.Guide.Forms.ViewModels.User {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class SignupViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.User.Signup_Title;
+      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+         return navigation.GetNavigationRequest(nameof(Views.User.SignupView));
+      }
 
       public IDictionary<string, IEnumerable<string>> ValidationErrors { get; } = new Dictionary<string, IEnumerable<string>>();
       public IDictionary<string, IEnumerable<IRule>> ValidationRules { get; } = new Dictionary<string, IEnumerable<IRule>>();
@@ -28,13 +32,13 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       protected IExceptionHandler Errors { get; }
 
       private IApiClient Client { get; }
-      private Services.Navigation Navigation { get; }
+      private Navigation Navigation { get; }
       private IValidator Validator { get; }
       private bool IsInitialized { get; } = false;
 
       public SignupViewModel(IApiClient client,
          IExceptionHandler errors,
-         Services.Navigation navigation,
+         Navigation navigation,
          IValidator validator) {
          Client = client;
          Errors = errors;
@@ -100,7 +104,8 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       }
 
       private async Task NavigateToLogin() {
-         await Navigation.NavigateAsync(Navigation.GetShellNavigationUri(nameof(Views.User.LoginView)));
+         await Navigation.NavigateAsync(
+            LoginViewModel.GetNavigationRequest(Navigation));
       }
    }
 }

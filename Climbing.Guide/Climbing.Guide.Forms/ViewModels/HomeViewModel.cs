@@ -1,4 +1,4 @@
-﻿using Climbing.Guide.Forms.Resources;
+﻿using Climbing.Guide.Forms.Services.Navigation;
 using System;
 using System.Windows.Input;
 
@@ -8,6 +8,9 @@ namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class HomeViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Main.Home_Title;
+      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+         return navigation.GetNavigationRequest(nameof(Views.HomeView));
+      }
 
       public HomeViewModel() {
          Title = VmTitle;
@@ -17,4 +20,6 @@ namespace Climbing.Guide.Forms.ViewModels {
 
       public ICommand OpenWebCommand { get; }
    }
+
+
 }
