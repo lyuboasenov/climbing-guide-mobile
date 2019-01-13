@@ -1,4 +1,4 @@
-﻿namespace Climbing.Guide.Logging {
+﻿namespace Alat.Logging {
    public enum Category {
       /// <summary>
       /// Debug category.

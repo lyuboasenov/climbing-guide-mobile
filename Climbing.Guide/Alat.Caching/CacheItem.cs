@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 
-namespace Climbing.Guide.Caching {
-   public interface ICacheItem {
+namespace Alat.Caching {
+   public interface CacheItem {
       string Key { get; set; }
 
       /// <summary>

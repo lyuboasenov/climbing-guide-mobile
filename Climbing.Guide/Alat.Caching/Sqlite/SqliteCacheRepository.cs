@@ -1,24 +1,25 @@
-﻿using Climbing.Guide.Serialization;
+﻿using Alat.Caching;
+using Alat.Caching.Serialization;
 using SQLite;
 using System;
 using System.IO;
 
 namespace Climbing.Guide.Caching.Sqlite {
-   public class SqliteCacheRepository : ICacheRepository {
+   public class SqliteCacheRepository : CacheRepository {
 
-      private ISerializer Serializer { get; set; }
+      private Serializer Serializer { get; set; }
       private readonly object dblock = new object();
       private SQLiteConnection DB { get; set; }
       private string DbFilePath { get; set; }
-      private ICacheSettings CacheSettings { get; set; }
+      private CacheSettings CacheSettings { get; set; }
 
-      public SqliteCacheRepository(ICacheSettings settings, ISerializer serializer) {
+      public SqliteCacheRepository(CacheSettings settings, Serializer serializer) {
          CacheSettings = settings;
          Serializer = serializer;
 
-         DbFilePath = Path.Combine(CacheSettings.Location, "climbing.guide.cache.db");
-         if (!Directory.Exists(CacheSettings.Location)) {
-            Directory.CreateDirectory(CacheSettings.Location);
+         DbFilePath = Path.Combine((string)CacheSettings.Location, "climbing.guide.cache.db");
+         if (!Directory.Exists((string)CacheSettings.Location)) {
+            Directory.CreateDirectory((string)CacheSettings.Location);
          }
 
          DB = new SQLiteConnection(DbFilePath);
@@ -58,13 +59,13 @@ namespace Climbing.Guide.Caching.Sqlite {
          return DB.Find<SqliteCacheItem>(key) != null;
       }
 
-      public long Count() {
+      public bool IsEmpty() {
          lock (dblock) {
-            return DB.Table<SqliteCacheItem>().Count();
+            return DB.Table<SqliteCacheItem>().Count() == 0;
          }
       }
 
-      public ICacheItem Get(string key) {
+      public CacheItem Find(string key) {
          SqliteCacheItem item;
          lock (dblock) {
             item = DB.Find<SqliteCacheItem>(key);
@@ -78,8 +79,8 @@ namespace Climbing.Guide.Caching.Sqlite {
          return item;
       }
 
-      public void Refresh(string key, DateTime expireAt) {
-         var item = Get(key);
+      public void Reset(string key, DateTime expireAt) {
+         var item = Find(key);
          item.ExpirationDate = expireAt;
          lock (dblock) {
             DB.Update(item);

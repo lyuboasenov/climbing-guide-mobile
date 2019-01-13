@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Alat.Caching.Serialization;
+using Newtonsoft.Json;
 using System.IO;
 using System.Text;
 
 namespace Climbing.Guide.Serialization {
-   public class JsonSerializer : ISerializer {
+   public class JsonSerializer : Serializer {
 
       private JsonSerializerSettings JsonSettings { get; set; } = new JsonSerializerSettings {
          ObjectCreationHandling = ObjectCreationHandling.Replace,

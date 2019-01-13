@@ -17,6 +17,8 @@ using Climbing.Guide.Forms.Services.Progress;
 using Climbing.Guide.Forms.Services.GeoLocation;
 using Alat.Validation;
 using Plugin.Iconize;
+using Alat.Caching;
+using Alat.Caching.Serialization;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Forms {
@@ -95,18 +97,18 @@ namespace Climbing.Guide.Forms {
          containerRegistry.Register<IAsyncTaskRunner, Services.Impl.FormsTaskRunner>();
          containerRegistry.Register<ISyncTaskRunner, Services.Impl.FormsTaskRunner>();
          containerRegistry.Register<IMainThreadTaskRunner, Services.Impl.FormsTaskRunner>();
-         containerRegistry.Register<ICache, Cache>();
-         containerRegistry.Register<ICacheRepository, Caching.Sqlite.SqliteCacheRepository>();
+         containerRegistry.Register<Cache, Alat.Caching.Impl.Cache>();
+         containerRegistry.Register<CacheRepository, Caching.Sqlite.SqliteCacheRepository>();
          containerRegistry.Register<Resource, Services.Impl.Resources>();
-         containerRegistry.Register<ISerializer, JsonSerializer>();
+         containerRegistry.Register<Serializer, JsonSerializer>();
          containerRegistry.Register<Services.Environment, Services.Impl.Environment>();
          containerRegistry.Register<Progress, Services.Progress.Impl.Progress>();
          containerRegistry.Register<GeoLocation, Services.GeoLocation.Impl.GeoLocation>();
 
 #if DEBUG
-         containerRegistry.Register<Logging.ILogger, Logging.DebugLogger>();
+         containerRegistry.Register<Alat.Logging.Logger, Alat.Logging.DebugLogger>();
 #elif RELEASE
-         containerRegistry.Register<Logging.ILogger, Logging.VoidLoggingService>();
+         containerRegistry.Register<Alat.Logging.Logger, Alat.Logging.VoidLogger>();
 #endif
 
          // Register instances
@@ -123,8 +125,8 @@ namespace Climbing.Guide.Forms {
 
       private void GetApiClientSettings(IContainerRegistry containerRegistry) {
 
-         ICache responseCache = this.Container.Resolve<ICache>();
-         ICache largeResponseCache = new Cache(new FileSystemCacheRepository(GetLargeCacheSettings()), new JsonSerializer());
+         Cache responseCache = this.Container.Resolve<Cache>();
+         Cache largeResponseCache = new Alat.Caching.Impl.Cache(new FileSystemCacheRepository(GetLargeCacheSettings()), new JsonSerializer());
 
          var cachingHttpClientManager = new Http.CachingHttpClientManager();
          containerRegistry.RegisterInstance<Http.ICachingHttpClientManager>(cachingHttpClientManager);
@@ -144,14 +146,14 @@ namespace Climbing.Guide.Forms {
             }, authenticationManager));
       }
 
-      private ICacheSettings GetCacheSettings() {
+      private CacheSettings GetCacheSettings() {
          var environment = IoC.Container.Get<Services.Environment>();
 
          var cacheLocation = System.IO.Path.Combine(environment.CachePath, "sqlite/");
          return new CacheSettings(cacheLocation);
       }
 
-      private ICacheSettings GetLargeCacheSettings() {
+      private CacheSettings GetLargeCacheSettings() {
          var environment = IoC.Container.Get<Services.Environment>();
 
          var cacheLocation = System.IO.Path.Combine(environment.CachePath, "files/");

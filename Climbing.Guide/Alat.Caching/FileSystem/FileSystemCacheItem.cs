@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Alat.Caching;
+using System;
 using System.IO;
 
 namespace Climbing.Guide.Caching.FileSystem {
-   public class FileSystemCacheItem : ICacheItem {
+   public class FileSystemCacheItem : CacheItem {
       public string Key { get; set; }
       public string Tag { get; set; }
       public Stream Content { get; set; }

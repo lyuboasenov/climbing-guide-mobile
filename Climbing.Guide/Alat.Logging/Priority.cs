@@ -1,4 +1,4 @@
-﻿namespace Climbing.Guide.Logging {
+﻿namespace Alat.Logging {
    public enum Priority {
       /// <summary>
       /// No priority specified.

@@ -1,8 +1,9 @@
-﻿using System.IO;
+﻿using Alat.Caching.Serialization;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Climbing.Guide.Serialization {
-   public class BinarySerializer : ISerializer {
+   public class BinarySerializer : Serializer {
       private BinaryFormatter Formatter { get; } = new BinaryFormatter();
 
       public T Deserialize<T>(Stream stream) {

@@ -1,4 +1,4 @@
-﻿using Climbing.Guide.Caching;
+﻿using Alat.Caching;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
@@ -8,31 +8,32 @@ namespace Climbing.Guide.Http {
    public class CachingHandler : DelegatingHandler {
 
       private ICachingHttpClientManager CachingHttpClientManager { get; set; }
-      private ICache ResponseCache { get; set; }
-      private ICache LargeResponseCache { get; set; }
+      private Cache ResponseCache { get; set; }
+      private Cache LargeResponseCache { get; set; }
 
       public CachingHandler(ICachingHttpClientManager cachingHttpClientManager,
-         ICache responseCache,
-         ICache largeResponseCache) : 
+         Cache responseCache,
+         Cache largeResponseCache) : 
          this(cachingHttpClientManager, responseCache, largeResponseCache, new HttpClientHandler()) {
       }
 
       public CachingHandler(ICachingHttpClientManager cachingHttpClientManager,
-         ICache responseCache,
-         ICache largeResponseCache,
+         Cache responseCache,
+         Cache largeResponseCache,
          HttpMessageHandler innerHandler) : base(innerHandler) {
          Initialize(cachingHttpClientManager, responseCache, largeResponseCache);
       }
 
       private void Initialize(ICachingHttpClientManager cachingHttpClientManager,
-         ICache responseCache,
-         ICache largeResponseCache) {
+         Cache responseCache,
+         Cache largeResponseCache) {
          CachingHttpClientManager = cachingHttpClientManager;
          ResponseCache = responseCache;
          LargeResponseCache = largeResponseCache;
       }
 
-      protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
+      protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, 
+         CancellationToken cancellationToken) {
          HttpResponseMessage response = null;
 
          RemoveInvalidatedRequests();
@@ -74,9 +75,9 @@ namespace Climbing.Guide.Http {
          Stream stream = null;
 
          if (ResponseCache.Contains(requestUri)) {
-            stream = ResponseCache.Get<Stream>(requestUri);
+            stream = ResponseCache.FindData<Stream>(requestUri);
          } else if (LargeResponseCache.Contains(requestUri)) {
-            stream = LargeResponseCache.Get<Stream>(requestUri);
+            stream = LargeResponseCache.FindData<Stream>(requestUri);
          }
 
          if (null != stream) {
@@ -89,7 +90,7 @@ namespace Climbing.Guide.Http {
 
       private async Task CacheResponseAsync(string requestUri, HttpResponseMessage response) {
          using (var contentStream = await response.Content.ReadAsStreamAsync()) {
-            ICache cache = ResponseCache;
+            Cache cache = ResponseCache;
             if ((response.Content.Headers.ContentLength ?? long.MaxValue) > 500000) {
                cache = LargeResponseCache;
             }

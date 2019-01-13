@@ -1,9 +1,10 @@
-﻿using SQLite;
+﻿using Alat.Caching;
+using SQLite;
 using System;
 using System.IO;
 
 namespace Climbing.Guide.Caching.Sqlite {
-   public class SqliteCacheItem : ICacheItem {
+   public class SqliteCacheItem : CacheItem {
       [PrimaryKey]
       public string Key { get; set; }
       public string Tag { get; set; }

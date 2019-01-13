@@ -2,20 +2,65 @@
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using Climbing.Guide.Serialization;
+using Alat.Caching.Serialization;
 
-namespace Climbing.Guide.Caching {
-   public class Cache : ICache {
-      private ISerializer Serializer { get; set; }
-      private ICacheRepository CacheRepository { get; set; }
+namespace Alat.Caching.Impl {
+   public class Cache : Caching.Cache {
+      private Serializer Serializer { get; set; }
+      private CacheRepository CacheRepository { get; set; }
       private Timer Timer { get; set; }
       public TimeSpan CleanInterval { get; set; }
 
-      public Cache(ICacheRepository cacheRepository, ISerializer serializer) {
+      public Cache(CacheRepository cacheRepository, Serializer serializer) : 
+         this(cacheRepository, serializer, TimeSpan.FromMinutes(5)) { }
+
+      public Cache(CacheRepository cacheRepository, Serializer serializer, TimeSpan cleanInterval) {
          CacheRepository = cacheRepository;
          Serializer = serializer;
-         Timer = new Timer(Clean);
+         Timer = new Timer((state) => Clean());
          StartAutoClean();
+      }
+
+      public bool Contains(string key) {
+         if (string.IsNullOrWhiteSpace(key)) {
+            throw new ArgumentException("Key can not be null or empty.", nameof(key));
+         }
+
+         return CacheRepository.Contains(key);
+      }
+
+      public T FindData<T>(string key) {
+         if (string.IsNullOrWhiteSpace(key))
+            throw new ArgumentException("Key can not be null or empty.", nameof(key));
+
+         CacheItem item = CacheRepository.Find(key);
+
+         T result = default(T);
+         if (item != null) {
+            if (typeof(Stream).GetTypeInfo().IsAssignableFrom(typeof(T).Ge‌​tTypeInfo())) {
+               object boxed = item.Content;
+               result = (T)boxed;
+            } else {
+               result = Serializer.Deserialize<T>(item.Content);
+            }
+
+         }
+
+         return result;
+      }
+
+      public string FindTag(string key) {
+         if (string.IsNullOrWhiteSpace(key)) {
+            throw new ArgumentException("Key can not be null or empty.", nameof(key));
+         }
+
+         var cacheItem = CacheRepository.Find(key);
+         string result = string.Empty;
+         if (cacheItem != null) {
+            result = cacheItem.Tag;
+         }
+
+         return result;
       }
 
       public void Add<T>(string key, T data, TimeSpan expireIn, string tag = null) {
@@ -44,79 +89,32 @@ namespace Climbing.Guide.Caching {
          }
       }
 
-      public bool Contains(string key) {
+      public void Remove(params string[] key) {
+         if (null == key || key.Length == 0)
+            throw new ArgumentException("Key can not be null or empty.", nameof(key));
+
+         CacheRepository.Remove(key);
+      }
+
+      public void Reset(string key, TimeSpan expireIn) {
          if (string.IsNullOrWhiteSpace(key)) {
             throw new ArgumentException("Key can not be null or empty.", nameof(key));
          }
 
-         return CacheRepository.Contains(key);
+         CacheRepository.Reset(key, GetExpiration(expireIn));
       }
 
-      public T Get<T>(string key) {
-         if (string.IsNullOrWhiteSpace(key))
-            throw new ArgumentException("Key can not be null or empty.", nameof(key));
-
-         ICacheItem item = CacheRepository.Get(key);
-
-         T result = default(T);
-         if(item != null) {
-            if (typeof(Stream).GetTypeInfo().IsAssignableFrom(typeof(T).Ge‌​tTypeInfo())) {
-               object boxed = item.Content;
-               result = (T)boxed;
-            } else {
-               result = Serializer.Deserialize<T>(item.Content);
-            }
-            
-         }
-
-         return result;
-      }
-
-      public DateTime? GetExpiration(string key) {
-         if (string.IsNullOrWhiteSpace(key)) {
-            throw new ArgumentException("Key can not be null or empty.", nameof(key));
-         }
-
-         var cacheItem = CacheRepository.Get(key);
-         DateTime? result = null;
-
-         if (cacheItem != null)
-            result = cacheItem.ExpirationDate;
-
-         return result;
-      }
-
-      public string GetTag(string key) {
-         if (string.IsNullOrWhiteSpace(key)) {
-            throw new ArgumentException("Key can not be null or empty.", nameof(key));
-         }
-
-         var cacheItem = CacheRepository.Get(key);
-         string result = string.Empty;
-         if (cacheItem != null) {
-            result = cacheItem.Tag;
-         }
-
-         return result;
+      public void Clean() {
+         CacheRepository.Clean();
+         StartAutoClean();
       }
 
       public void Invalidate() {
          CacheRepository.RemoveAll();
       }
 
-      public void Refresh(string key, TimeSpan expireIn) {
-         if (string.IsNullOrWhiteSpace(key)) {
-            throw new ArgumentException("Key can not be null or empty.", nameof(key));
-         }
-
-         CacheRepository.Refresh(key, GetExpiration(expireIn));
-      }
-
-      public void Remove(params string[] key) {
-         if (null == key || key.Length == 0)
-            throw new ArgumentException("Key can not be null or empty.", nameof(key));
-
-         CacheRepository.Remove(key);
+      public long GetCacheSize() {
+         return CacheRepository.GetSize();
       }
 
       private static bool IsString<T>(T data) {
@@ -136,20 +134,11 @@ namespace Climbing.Guide.Caching {
          return result;
       }
 
-      private void Clean(object state) {
-         CacheRepository.Clean();
-         StartAutoClean();
-      }
-
       private void StartAutoClean() {
-         if (CacheRepository.Count() > 0) {
+         if (!CacheRepository.IsEmpty()) {
             int dueTime = CleanInterval.Milliseconds == 0 ? Timeout.Infinite : CleanInterval.Milliseconds;
             Timer.Change(dueTime, Timeout.Infinite);
          }
-      }
-
-      public long GetCacheSize() {
-         return CacheRepository.GetSize();
       }
    }
 }
