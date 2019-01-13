@@ -1,7 +1,5 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Forms.Services;
-using Climbing.Guide.Forms.Validations;
-using Climbing.Guide.Forms.Validations.Rules;
 using System.Collections.Generic;
 using Climbing.Guide.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -14,19 +12,19 @@ using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Helpers;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Forms.Services.Navigation;
+using Alat.Validation;
+using Alat.Validation.Rules;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class AreaViewModel : BaseViewModel, IValidatable {
+   public class AreaViewModel : BaseViewModel, Validatable {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
       public static NavigationRequest GetNavigationRequest(Navigation navigation, ViewModelParameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.AreaView), parameters);
       }
 
-      public IDictionary<string, IEnumerable<string>> ValidationErrors { get; } = new Dictionary<string, IEnumerable<string>>();
-      public IDictionary<string, IEnumerable<IRule>> ValidationRules { get; } = new Dictionary<string, IEnumerable<IRule>>();
-      public bool IsValid { get; set; }
+      public ValidationContext ValidationContext { get; }
 
       public string Name { get; set; }
       public string Info { get; set; }
@@ -44,20 +42,17 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
 
       private IApiClient Client { get; }
       private Navigation Navigation { get; }
-      private IValidator Validator { get; }
       private IExceptionHandler Errors { get; }
       private Alerts Alerts { get; }
-      private bool IsInitialized { get; } = false;
 
       public AreaViewModel(
          IApiClient client,
          Navigation navigation,
-         IValidator validator,
          IExceptionHandler exceptionHandler,
-         Alerts alerts) {
+         Alerts alerts,
+         ValidationContextFactory validationContextFactory) {
          Client = client;
          Navigation = navigation;
-         Validator = validator;
          Errors = exceptionHandler;
          Alerts = alerts;
 
@@ -65,10 +60,10 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
 
          TraversalPath = new ObservableCollection<Area>();
 
-         InitializeValidationRules();
          InitializeCommands();
 
-         IsInitialized = true;
+         // ValidationContext should be initialized after all other initialization is done
+         ValidationContext = validationContextFactory.GetContextFor(this, true);
       }
 
       public async override Task OnNavigatedToAsync(params object[] parameters) {
@@ -76,27 +71,34 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
          await InitializeData(parameters);
       }
 
-      private void InitializeCommands() {
-         SaveCommand = new Command(async () => await Save(), () => IsValid);
-         CancelCommand = new Command(async () => await GoBack());
-      }
-
-      private void InitializeValidationRules() {
-         this.AddRule(nameof(Name),
+      public void InitializeValidationRules(ValidationContext context) {
+         context.AddRule<AreaViewModel, string>(t => t.Name,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Name)));
-         this.AddRule(nameof(Info),
+         context.AddRule<AreaViewModel, string>(t => t.Info,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Info)));
-         this.AddRule(nameof(Location),
+         context.AddRule<AreaViewModel, MapSpan>(t => t.Location,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Map_Title)));
+      }
+
+      public void OnValidationContextChanged() {
+         // Raise validation context property changed in order to update validation errors
+         RaisePropertyChanged(nameof(ValidationContext));
+
+         (SaveCommand as Command).ChangeCanExecute();
+      }
+
+      private void InitializeCommands() {
+         SaveCommand = new Command(async () => await Save(), () => ValidationContext.IsValid);
+         CancelCommand = new Command(async () => await GoBack());
       }
 
       private Task InitializeData(params object[] parameters) {
@@ -116,16 +118,6 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
             return Task.CompletedTask;
          } catch (Exception ex) {
             return Errors.HandleAsync(ex);
-         }
-      }
-
-      public void OnPropertyChanged(string propertyName, object before, object after) {
-         if (IsInitialized) {
-            Validator.Validate(this, propertyName, after);
-            // Raise validation errors property changed in order to update validation errors
-            RaisePropertyChanged(nameof(ValidationErrors));
-
-            (SaveCommand as Command).ChangeCanExecute();
          }
       }
 

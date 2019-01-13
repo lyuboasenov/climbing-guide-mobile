@@ -15,6 +15,7 @@ using Climbing.Guide.Http;
 using System.Net.Http;
 using Climbing.Guide.Forms.Services.Progress;
 using Climbing.Guide.Forms.Services.GeoLocation;
+using Alat.Validation;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Forms {
@@ -108,7 +109,7 @@ namespace Climbing.Guide.Forms {
          // Register instances
          containerRegistry.RegisterSingleton<IApiClient, ApiClient>();
          containerRegistry.RegisterSingleton<Services.Navigation.Navigation, Services.Navigation.Impl.Navigation>();
-         containerRegistry.RegisterSingleton<Validations.IValidator, Validations.Validator>();
+         containerRegistry.RegisterSingleton<ValidationContextFactory, Alat.Validation.Impl.ValidationContextFactory>();
 
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
 

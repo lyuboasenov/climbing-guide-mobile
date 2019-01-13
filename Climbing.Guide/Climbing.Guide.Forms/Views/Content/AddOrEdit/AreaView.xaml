@@ -3,7 +3,7 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:strings="clr-namespace:Climbing.Guide.Forms.Resources.Strings"
             xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
-            xmlns:validations="clr-namespace:Climbing.Guide.Forms.Validations"
+            xmlns:validation="clr-namespace:Alat.Xamarin.Forms.Validation;assembly=Alat.Xamarin.Forms.Validation"
             xmlns:customviews="clr-namespace:Climbing.Guide.Forms.Views.CustomViews"
             x:Class="Climbing.Guide.Forms.Views.Content.AddOrEdit.AreaView"
             x:Name="parentPage"
@@ -24,13 +24,13 @@
                                        ItemsSource="{Binding TraversalPath}"
                                        ItemDisplayBinding="{Binding Name}" />
                <Entry Text="{Binding Name}" Placeholder="{x:Static strings:Guide.Manage_Area_Name}"/>
-               <validations:ErrorLabel ErrorKey="Name" />
+               <validation:ErrorLabel ErrorKey="Name" />
                <Editor Text="{Binding Info}" Placeholder="{x:Static strings:Guide.Manage_Area_Info}"/>
-               <validations:ErrorLabel ErrorKey="Info" />
+               <validation:ErrorLabel ErrorKey="Info" />
                <Editor Text="{Binding Restrictions}" Placeholder="{x:Static strings:Guide.Manage_Area_Restrictions}"/>
                <Editor Text="{Binding Approach}" Placeholder="{x:Static strings:Guide.Manage_Area_Approach}"/>
                <Editor Text="{Binding Descent}" Placeholder="{x:Static strings:Guide.Manage_Area_Descent}"/>
-               <validations:ErrorLabel ErrorKey="Location" />
+               <validation:ErrorLabel ErrorKey="Location" />
             </StackLayout>
          </ScrollView>
       </ContentPage.Content>

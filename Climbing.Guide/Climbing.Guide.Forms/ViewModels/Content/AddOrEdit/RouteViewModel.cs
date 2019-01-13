@@ -10,18 +10,20 @@ using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using Climbing.Guide.Forms.Helpers;
 using Climbing.Guide.Forms.Services.GeoLocation;
-using Climbing.Guide.Forms.Validations;
-using Climbing.Guide.Forms.Validations.Rules;
 using Climbing.Guide.Forms.Services.Navigation;
+using Alat.Validation;
+using Alat.Validation.Rules;
 
 namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class RouteViewModel : BaseViewModel, IValidatable {
+   public class RouteViewModel : BaseViewModel, Validatable {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
       public static NavigationRequest GetNavigationRequest(Navigation navigation, ViewModelParameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.RouteView), parameters);
       }
+
+      public ValidationContext ValidationContext { get; }
 
       public ICommand ViewSchemaCommand { get; set; }
       public ICommand SaveCommand { get; set; }
@@ -42,10 +44,6 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
       public ObservableCollection<Point> SchemaRoute { get; set; }
       public MapSpan Location { get; set; }
 
-      public IDictionary<string, IEnumerable<string>> ValidationErrors { get; } = new Dictionary<string, IEnumerable<string>>();
-      public IDictionary<string, IEnumerable<IRule>> ValidationRules { get; } = new Dictionary<string, IEnumerable<IRule>>();
-      public bool IsValid { get; set; }
-
       private Navigation Navigation { get; }
       private IExceptionHandler Errors { get; }
       private GeoLocation GeoLocation { get; }
@@ -53,7 +51,8 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
       public RouteViewModel(IApiClient client,
          IExceptionHandler errors,
          Navigation navigation,
-         GeoLocation geoLocation) {
+         GeoLocation geoLocation,
+         ValidationContextFactory validationContextFactory) {
          Navigation = navigation;
          Errors = errors;
          GeoLocation = geoLocation;
@@ -63,26 +62,35 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
          TraversalPath = new ObservableCollection<Area>();
          SchemaRoute = new ObservableCollection<Point>();
 
-         InitializeValidationRules();
          InitializeCommands();
+
+         // ValidationContext should be initialized after all other initialization is done
+         ValidationContext = validationContextFactory.GetContextFor(this, true);
       }
 
       public async override Task OnNavigatedToAsync(params object[] parameters) {
          await InitializeData(parameters);
       }
 
-      private void InitializeValidationRules() {
-         this.AddRule(nameof(Name),
+      public void OnValidationContextChanged() {
+         // Raise validation context property changed in order to update validation errors
+         RaisePropertyChanged(nameof(ValidationContext));
+
+         (SaveCommand as Command).ChangeCanExecute();
+      }
+
+      public void InitializeValidationRules(ValidationContext context) {
+         context.AddRule<RouteViewModel, string>(t => t.Name,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Name)));
-         this.AddRule(nameof(Info),
+         context.AddRule<RouteViewModel, string>(t => t.Info,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Info)));
-         this.AddRule(nameof(Location),
+         context.AddRule<RouteViewModel, MapSpan>(t => t.Location,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
@@ -91,7 +99,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
 
       private void InitializeCommands() {
          ViewSchemaCommand = new Command(async () => await ViewSchema());
-         SaveCommand = new Command(async () => await Save(), () => IsValid);
+         SaveCommand = new Command(async () => await Save(), () => ValidationContext.IsValid);
          CancelCommand = new Command(async () => await GoBack());
       }
 

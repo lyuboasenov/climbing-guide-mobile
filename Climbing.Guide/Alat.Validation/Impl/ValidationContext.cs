@@ -74,13 +74,13 @@ namespace Alat.Validation.Impl {
             ValidateProperty(key);
          }
 
-         Target.OnValidationChanged();
+         Target.OnValidationContextChanged();
       }
 
       public void Validate(string propertyName) {
          ValidateProperty(propertyName);
 
-         Target.OnValidationChanged();
+         Target.OnValidationContextChanged();
       }
 
       public bool HasErrors(string propertyName) {

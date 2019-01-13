@@ -1,9 +1,8 @@
-﻿using Climbing.Guide.Core.Api;
+﻿using Alat.Validation;
+using Alat.Validation.Rules;
+using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services.Navigation;
-using Climbing.Guide.Forms.Validations;
-using Climbing.Guide.Forms.Validations.Rules;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,15 +11,13 @@ using Xamarin.Forms;
 
 namespace Climbing.Guide.Forms.ViewModels.User {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class SignupViewModel : BaseViewModel, IValidatable {
+   public class SignupViewModel : BaseViewModel, Validatable {
       public static string VmTitle { get; } = Resources.Strings.User.Signup_Title;
       public static NavigationRequest GetNavigationRequest(Navigation navigation) {
          return navigation.GetNavigationRequest(nameof(Views.User.SignupView));
       }
 
-      public IDictionary<string, IEnumerable<string>> ValidationErrors { get; } = new Dictionary<string, IEnumerable<string>>();
-      public IDictionary<string, IEnumerable<IRule>> ValidationRules { get; } = new Dictionary<string, IEnumerable<IRule>>();
-      public bool IsValid { get; set; }
+      public ValidationContext ValidationContext { get; }
 
       public string Username { get; set; }
       public string Password { get; set; }
@@ -33,47 +30,37 @@ namespace Climbing.Guide.Forms.ViewModels.User {
 
       private IApiClient Client { get; }
       private Navigation Navigation { get; }
-      private IValidator Validator { get; }
-      private bool IsInitialized { get; } = false;
 
       public SignupViewModel(IApiClient client,
          IExceptionHandler errors,
          Navigation navigation,
-         IValidator validator) {
+         ValidationContextFactory validationContextFactory) {
          Client = client;
          Errors = errors;
          Navigation = navigation;
-         Title = VmTitle;
-         Validator = validator;
 
-         InitializeValidationRules();
+         Title = VmTitle;
+
          InitializeCommands();
 
-         IsInitialized = true;
+         // ValidationContext should be initialized after all other initialization is done
+         ValidationContext = validationContextFactory.GetContextFor(this, true);
       }
 
-      public void OnPropertyChanged(string propertyName, object before, object after) {
-         if (IsInitialized) {
-            Validator.Validate(this, propertyName, after);
-            // Raise validation errors property changed in order to update validation errors
-            RaisePropertyChanged(nameof(ValidationErrors));
+      public void OnValidationContextChanged() {
+         // Raise validation context property changed in order to update validation errors
+         RaisePropertyChanged(nameof(ValidationContext));
 
-            (SignupCommand as Command).ChangeCanExecute();
-         }
+         (SignupCommand as Command).ChangeCanExecute();
       }
 
-      private void InitializeCommands() {
-         SignupCommand = new Command(async () => await SignUp(), () => IsValid);
-         LoginCommand = new Command(async () => await NavigateToLogin());
-      }
-
-      private void InitializeValidationRules() {
-         this.AddRule(nameof(Username), 
+      public void InitializeValidationRules(ValidationContext context) {
+         context.AddRule<SignupViewModel, string>(t => t.Username,
             new RequiredRule(Resources.Strings.User.Username_Validation_Error),
             new EmailRule(Resources.Strings.User.Username_Validation_Error));
 
          var passwordComparer = new CompareRule(Resources.Strings.User.Confirm_Password_Validation_Error);
-         this.AddRule(nameof(Password),
+         context.AddRule<SignupViewModel, string>(t => t.Password,
             new CustomRule(Resources.Strings.User.Password_Validation_Error,
                (key, value) => {
                   var password = value as string;
@@ -83,8 +70,13 @@ namespace Climbing.Guide.Forms.ViewModels.User {
                   password.Any(char.IsLetter);
                }),
             passwordComparer);
-         this.AddRule(nameof(ConfirmPassword),
+         context.AddRule<SignupViewModel, string>(t => t.ConfirmPassword,
             passwordComparer);
+      }
+
+      private void InitializeCommands() {
+         SignupCommand = new Command(async () => await SignUp(), () => ValidationContext.IsValid);
+         LoginCommand = new Command(async () => await NavigateToLogin());
       }
 
       private async Task SignUp() {
