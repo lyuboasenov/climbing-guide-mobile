@@ -6,7 +6,8 @@
    xmlns:converters="clr-namespace:Climbing.Guide.Forms.Converters"
    xmlns:customviews="clr-namespace:Climbing.Guide.Forms.Views.CustomViews"
    xmlns:resources="clr-namespace:Climbing.Guide.Forms.Resources"
-   x:Class="Climbing.Guide.Forms.Views.Guide.ExploreView"
+   xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+   x:Class="Climbing.Guide.Forms.Views.Content.List.MapGuideView"
    Title="{Binding Title}">
 
    <ContentPage.Resources>
@@ -32,24 +33,23 @@
                    HorizontalOptions="CenterAndExpand"
                    VerticalOptions="EndAndExpand"
                    Orientation="Horizontal">
-         <Button HorizontalOptions="EndAndExpand"
-                 VerticalOptions="EndAndExpand"
-                 WidthRequest="40"
-                 HeightRequest="40"
-                 BorderRadius="20"
-                 Margin="15"
-                 FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
-                 Text="{x:Static resources:GlyphNames.ChevronLeft}"
-                 Command="{Binding TraverseBackCommand}" />
-
-         <Button WidthRequest="40"
-                 HeightRequest="40"
-                 BorderRadius="20"
-                 Margin="15"
-                 IsVisible="{Binding Client.AuthenticationManager.IsLoggedIn}"
-                 FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
-                 Text="{x:Static resources:GlyphNames.Plus}"
-                 Command="{Binding AddItemCommand}"/>
+         <iconize:IconButton HorizontalOptions="EndAndExpand"
+                             VerticalOptions="EndAndExpand"
+                             WidthRequest="40"
+                             HeightRequest="40"
+                             BorderRadius="20"
+                             Margin="15"
+                             Text="fas-chevron-left"
+                             Command="{Binding TraverseBackCommand}" />
+         <iconize:IconButton HorizontalOptions="EndAndExpand"
+                             VerticalOptions="EndAndExpand"
+                             WidthRequest="40"
+                             HeightRequest="40"
+                             BorderRadius="20"
+                             Margin="15"
+                             Text="fas-plus"
+                             IsVisible="{Binding Client.AuthenticationManager.IsLoggedIn}"
+                             Command="{Binding AddItemCommand}" />
       </StackLayout>
 
       <customviews:Breadcrumb Grid.Row="0" Grid.Column="0"

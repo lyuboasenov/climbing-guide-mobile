@@ -4,7 +4,8 @@
             xmlns:strings="clr-namespace:Climbing.Guide.Forms.Resources.Strings"
             xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
             xmlns:routes="clr-namespace:Climbing.Guide.Forms.Views.Routes"
-            x:Class="Climbing.Guide.Forms.Views.Routes.ManageRouteView">
+            xmlns:customviews="clr-namespace:Climbing.Guide.Forms.Views.CustomViews"
+            x:Class="Climbing.Guide.Forms.Views.Content.AddOrEdit.RouteView">
    <TabbedPage.ToolbarItems>
       <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
       <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}"/>
@@ -15,6 +16,9 @@
       <ContentPage.Content>
          <ScrollView>
             <StackLayout>
+               <customviews:Breadcrumb Grid.Row="0" Grid.Column="0"
+                                       ItemsSource="{Binding TraversalPath}"
+                                       ItemDisplayBinding="{Binding Name}" />
                <Entry Text="{Binding Name}" Placeholder="{x:Static strings:Routes.Route_Edit_Name}"/>
                <Editor Text="{Binding Info}" Placeholder="{x:Static strings:Routes.Route_Edit_Info}"/>
                <Picker ItemsSource="{Binding Difficulty}"
@@ -27,18 +31,6 @@
                        IsVisible="False"/>
                <Entry Text="{Binding Length}" Placeholder="{x:Static strings:Routes.Route_Edit_Length}"/>
                <Entry Text="{Binding FA}" Placeholder="{x:Static strings:Routes.Route_Edit_FA}"/>
-               <Picker ItemsSource="{Binding Regions}"
-                       SelectedItem="{Binding SelectedRegion}"
-                       ItemDisplayBinding="{Binding Name}"
-                       Title="{x:Static strings:Routes.Route_Edit_Region}"/>
-               <Picker ItemsSource="{Binding Areas}"
-                       SelectedItem="{Binding SelectedArea}"
-                       ItemDisplayBinding="{Binding Name}"
-                       Title="{x:Static strings:Routes.Route_Edit_Area}"/>
-               <Picker ItemsSource="{Binding Sectors}"
-                       SelectedItem="{Binding SelectedSector}"
-                       ItemDisplayBinding="{Binding Name}"
-                       Title="{x:Static strings:Routes.Route_Edit_Sector}"/>
             </StackLayout>
          </ScrollView>
       </ContentPage.Content>
@@ -53,7 +45,7 @@
          <views:LocationPicker MapType="Hybrid"
                                IsShowingUser="False"
                                IsAreaVisible="False"
-                               Location="{Binding VisibleRegion, Mode=TwoWay}"/>
+                               Location="{Binding Location, Mode=TwoWay}"/>
       </ContentPage.Content>
    </ContentPage>
 </TabbedPage>

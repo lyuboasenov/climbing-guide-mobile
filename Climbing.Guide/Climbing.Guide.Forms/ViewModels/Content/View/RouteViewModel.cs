@@ -9,11 +9,16 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Xamarin.Forms;
+using Climbing.Guide.Forms.Services.Navigation;
 
-namespace Climbing.Guide.Forms.ViewModels.Routes {
+namespace Climbing.Guide.Forms.ViewModels.Content.View {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class RouteViewModel : BaseViewModel, IDestructible {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
+
+      public static NavigationRequest GetNavigationRequest(Navigation navigation, ViewModelParameters parameters) {
+         return navigation.GetNavigationRequest(nameof(Views.Content.View.RouteView), parameters);
+      }
 
       private IApiClient Client { get; }
       private Services.Environment Environment { get; }
@@ -61,6 +66,10 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
 
       public void Destroy() {
          CleanUp();
+      }
+
+      public class ViewModelParameters {
+         public Route Route { get; set; }
       }
    }
 }

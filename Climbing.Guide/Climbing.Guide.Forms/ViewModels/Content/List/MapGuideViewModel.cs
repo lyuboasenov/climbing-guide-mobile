@@ -10,11 +10,22 @@ using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services.Progress;
 using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Services.GeoLocation;
+using Climbing.Guide.Forms.Services.Navigation;
+using System.Collections.Generic;
 
-namespace Climbing.Guide.Forms.ViewModels.Guide {
+namespace Climbing.Guide.Forms.ViewModels.Content.List {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class ExploreViewModel : BaseGuideViewModel {
+   public class MapGuideViewModel : BaseGuideViewModel {
       public static string VmTitle { get; } = Resources.Strings.Guide.Explore_Title;
+
+      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+         return GetNavigationRequest(navigation, new ViewModelParameters());
+      }
+
+      public static NavigationRequest GetNavigationRequest(Navigation navigation, ViewModelParameters parameters) {
+         return navigation.GetNavigationRequest(nameof(Views.Content.List.MapGuideView), parameters);
+      }
+
       private static int[] ZoomLevel { get; } = new int[] { 5000000, 5000000, 22000, 1400, 170, 170, 170 };
 
       public ICommand PinTappedCommand { get; private set; }
@@ -27,9 +38,9 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       private Progress Progress { get; }
       private GeoLocation GeoLocation { get; }
 
-      public ExploreViewModel(IApiClient client,
+      public MapGuideViewModel(IApiClient client,
          IExceptionHandler errors,
-         Services.Navigation navigation,
+         Navigation navigation,
          Alerts alerts,
          Media media,
          Progress progress,
@@ -96,14 +107,17 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
 
       private async Task ViewRoute(Route route) {
          if (null != route) {
-            var navigationResult = await Navigation.NavigateAsync(
-               Navigation.GetShellNavigationUri(nameof(Views.Routes.RouteView)),
-               route);
-            if (!navigationResult.Result) {
-               await Errors.HandleAsync(navigationResult.Exception,
-                  Resources.Strings.Routes.Route_View_Error_Message, route.Name);
-            }
+            await Navigation.NavigateAsync(
+               View.RouteViewModel.GetNavigationRequest(
+                  Navigation,
+                  new View.RouteViewModel.ViewModelParameters() {
+                     Route = route
+                  }));
          }
+      }
+
+      public class ViewModelParameters {
+         public IEnumerable<Area> TraversalPath { get; set; }
       }
    }
 }

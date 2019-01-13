@@ -5,7 +5,7 @@
             xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
             xmlns:validations="clr-namespace:Climbing.Guide.Forms.Validations"
             xmlns:customviews="clr-namespace:Climbing.Guide.Forms.Views.CustomViews"
-            x:Class="Climbing.Guide.Forms.Views.Guide.ManageAreaView"
+            x:Class="Climbing.Guide.Forms.Views.Content.AddOrEdit.AreaView"
             x:Name="parentPage"
             Title="{Binding Title}">
 

@@ -3,12 +3,13 @@ using Climbing.Guide.Collections.ObjectModel;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Forms.Services.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Climbing.Guide.Forms.ViewModels.Guide {
+namespace Climbing.Guide.Forms.ViewModels.Content.List {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class BaseGuideViewModel : BaseViewModel {
       public ObservableCollection<object> Items { get; set; }
@@ -182,13 +183,12 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
             base(navigation, traversalPath) { }
 
          public override async Task ExecuteAsync() {
-            var navigationResult = await Navigation.NavigateAsync(
-               Navigation.GetShellNavigationUri(nameof(Views.Guide.ManageAreaView)),
-               TraversalPath);
-
-            if (!navigationResult.Result) {
-               throw navigationResult.Exception;
-            }
+            await Navigation.NavigateAsync(
+               Guide.Content.AddOrRemove.AreaViewModel.GetNavigationRequest(
+                  Navigation, 
+                  new Guide.Content.AddOrRemove.AreaViewModel.ViewModelParameters() {
+                     TraversalPath = TraversalPath
+                  }));
          }
       }
 
@@ -205,13 +205,13 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          public override async Task ExecuteAsync() {
             var path = await GetImagePath();
             if (System.IO.File.Exists(path)) {
-               var navigationResult = await Navigation.NavigateAsync(
-                  Navigation.GetShellNavigationUri(nameof(Views.Routes.ManageRouteView)),
-                  TraversalPath, path);
-
-               if (!navigationResult.Result) {
-                  throw navigationResult.Exception;
-               }
+               await Navigation.NavigateAsync(
+                  Routes.Content.AddOrRemove.RouteViewModel.GetNavigationRequest(
+                     Navigation,
+                     new Routes.Content.AddOrRemove.RouteViewModel.ViewModelParameters() {
+                        TraversalPath = TraversalPath,
+                        ImagePath = path
+                     }));
             }
          }
       }

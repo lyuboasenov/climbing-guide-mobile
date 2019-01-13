@@ -13,11 +13,16 @@ using System;
 using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Helpers;
 using Climbing.Guide.Core.Api;
+using Climbing.Guide.Forms.Services.Navigation;
 
-namespace Climbing.Guide.Forms.ViewModels.Guide {
+namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class ManageAreaViewModel : BaseViewModel, IValidatable {
+   public class AreaViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
+
+      public static NavigationRequest GetNavigationRequest(Navigation navigation, ViewModelParameters parameters) {
+         return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.AreaView), parameters);
+      }
 
       public IDictionary<string, IEnumerable<string>> ValidationErrors { get; } = new Dictionary<string, IEnumerable<string>>();
       public IDictionary<string, IEnumerable<IRule>> ValidationRules { get; } = new Dictionary<string, IEnumerable<IRule>>();
@@ -38,15 +43,15 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       public ICommand CancelCommand { get; set; }
 
       private IApiClient Client { get; }
-      private Services.Navigation Navigation { get; }
+      private Navigation Navigation { get; }
       private IValidator Validator { get; }
       private IExceptionHandler Errors { get; }
       private Alerts Alerts { get; }
       private bool IsInitialized { get; } = false;
 
-      public ManageAreaViewModel(
+      public AreaViewModel(
          IApiClient client,
-         Services.Navigation navigation,
+         Navigation navigation,
          IValidator validator,
          IExceptionHandler exceptionHandler,
          Alerts alerts) {
@@ -125,7 +130,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
       }
 
       private async Task GoBack() {
-         await Navigation.GoBackAsync(TraversalPath);
+         await Navigation.GoBackAsync();
       }
 
       private async Task Save() {
@@ -162,6 +167,10 @@ namespace Climbing.Guide.Forms.ViewModels.Guide {
          } catch (Exception ex) {
             await Errors.HandleAsync(ex, Resources.Strings.Guide.Manage_Area_Save_Error);
          }
+      }
+
+      public class ViewModelParameters {
+         public IEnumerable<Area> TraversalPath { get; set; }
       }
    }
 }

@@ -7,7 +7,8 @@
    xmlns:converters="clr-namespace:Climbing.Guide.Forms.Converters"
    xmlns:forms="clr-namespace:Climbing.Guide.Forms.Forms"
    xmlns:customviews="clr-namespace:Climbing.Guide.Forms.Views.CustomViews"
-   x:Class="Climbing.Guide.Forms.Views.Guide.GuideView"
+   xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+   x:Class="Climbing.Guide.Forms.Views.Content.List.ListGuideView"
    x:Name="Page"
    Title="{Binding Title}">
 
@@ -52,10 +53,9 @@
                               <RowDefinition Height="Auto" />
                            </Grid.RowDefinitions>
 
-                           <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
-                                  VerticalOptions="CenterAndExpand"
-                                  FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
-                                  Text="{x:Static resources:GlyphNames.MapMarkedAlt }"/>
+                           <iconize:IconLabel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                                              VerticalOptions="CenterAndExpand"
+                                              Text="fas-map-marked-alt"/>
 
                            <Label Grid.Column="1" Grid.Row="0"
                                   Text="{Binding Name}"
@@ -65,8 +65,6 @@
                                   Text="{Binding Info}"
                                   FontAttributes="Italic"
                                   FontSize="Micro" />
-
-                           <!--<Label Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Text="{Binding ., Converter={StaticResource GradeConverter}}" />-->
                         </Grid>
                      </ViewCell>
                   </DataTemplate>
@@ -85,10 +83,9 @@
                               <RowDefinition Height="Auto" />
                            </Grid.RowDefinitions>
 
-                           <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
-                                  VerticalOptions="CenterAndExpand"
-                                  FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
-                                  Text="{x:Static resources:GlyphNames.Route }"/>
+                           <iconize:IconLabel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                                              VerticalOptions="CenterAndExpand"
+                                              Text="fas-route"/>
 
                            <Label Grid.Column="1" Grid.Row="0"
                                   Text="{Binding Name}"
@@ -115,24 +112,23 @@
                    HorizontalOptions="CenterAndExpand"
                    VerticalOptions="EndAndExpand"
                    Orientation="Horizontal">
-         <Button HorizontalOptions="EndAndExpand"
-                 VerticalOptions="EndAndExpand"
-                 WidthRequest="40"
-                 HeightRequest="40"
-                 BorderRadius="20"
-                 Margin="15"
-                 FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
-                 Text="{x:Static resources:GlyphNames.ChevronLeft}"
-                 Command="{Binding TraverseBackCommand}" />
-
-         <Button WidthRequest="40"
-                 HeightRequest="40"
-                 BorderRadius="20"
-                 Margin="15"
-                 IsVisible="{Binding Client.AuthenticationManager.IsLoggedIn}"
-                 FontFamily="{x:Static resources:FontFileResources.FontAwesomeSolid}"
-                 Text="{x:Static resources:GlyphNames.Plus}"
-                 Command="{Binding AddItemCommand}"/>
+         <iconize:IconButton HorizontalOptions="EndAndExpand"
+                             VerticalOptions="EndAndExpand"
+                             WidthRequest="40"
+                             HeightRequest="40"
+                             BorderRadius="20"
+                             Margin="15"
+                             Text="fas-chevron-left"
+                             Command="{Binding TraverseBackCommand}" />
+         <iconize:IconButton HorizontalOptions="EndAndExpand"
+                             VerticalOptions="EndAndExpand"
+                             WidthRequest="40"
+                             HeightRequest="40"
+                             BorderRadius="20"
+                             Margin="15"
+                             Text="fas-plus"
+                             IsVisible="{Binding Client.AuthenticationManager.IsLoggedIn}"
+                             Command="{Binding AddItemCommand}" />
       </StackLayout>
 
    </Grid>

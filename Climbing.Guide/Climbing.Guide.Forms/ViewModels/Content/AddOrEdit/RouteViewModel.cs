@@ -12,11 +12,16 @@ using Climbing.Guide.Forms.Helpers;
 using Climbing.Guide.Forms.Services.GeoLocation;
 using Climbing.Guide.Forms.Validations;
 using Climbing.Guide.Forms.Validations.Rules;
+using Climbing.Guide.Forms.Services.Navigation;
 
-namespace Climbing.Guide.Forms.ViewModels.Routes {
+namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class ManageRouteViewModel : BaseViewModel, IValidatable {
+   public class RouteViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
+
+      public static NavigationRequest GetNavigationRequest(Navigation navigation, ViewModelParameters parameters) {
+         return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.RouteView), parameters);
+      }
 
       public ICommand ViewSchemaCommand { get; set; }
       public ICommand SaveCommand { get; set; }
@@ -41,13 +46,13 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       public IDictionary<string, IEnumerable<IRule>> ValidationRules { get; } = new Dictionary<string, IEnumerable<IRule>>();
       public bool IsValid { get; set; }
 
-      private Services.Navigation Navigation { get; }
+      private Navigation Navigation { get; }
       private IExceptionHandler Errors { get; }
       private GeoLocation GeoLocation { get; }
 
-      public ManageRouteViewModel(IApiClient client,
+      public RouteViewModel(IApiClient client,
          IExceptionHandler errors,
-         Services.Navigation navigation,
+         Navigation navigation,
          GeoLocation geoLocation) {
          Navigation = navigation;
          Errors = errors;
@@ -91,11 +96,11 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       }
 
       private async Task GoBack() {
-         await Navigation.GoBackAsync(TraversalPath);
+         await Navigation.GoBackAsync();
       }
 
       private async Task Save() {
-         await Navigation.GoBackAsync(TraversalPath);
+         await Navigation.GoBackAsync();
       }
 
       private async Task InitializeData(params object[] parameters) {
@@ -163,6 +168,11 @@ namespace Climbing.Guide.Forms.ViewModels.Routes {
       private Task ViewSchema() {
          //await CurrentPage.DisplayAlert("View schema", "SCHEMA!!!!", Resources.Strings.Main.Ok);
          return Task.CompletedTask;
+      }
+
+      public class ViewModelParameters {
+         public IEnumerable<Area> TraversalPath { get; set; }
+         public string ImagePath { get; set; }
       }
    }
 }

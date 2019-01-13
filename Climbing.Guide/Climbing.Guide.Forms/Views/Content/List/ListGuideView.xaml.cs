@@ -3,10 +3,10 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Climbing.Guide.Forms.Views.Guide {
+namespace Climbing.Guide.Forms.Views.Content.List {
    [XamlCompilation(XamlCompilationOptions.Compile)]
-   public partial class GuideView : ContentPage {
-      public GuideView() {
+   public partial class ListGuideView : ContentPage {
+      public ListGuideView() {
          InitializeComponent();
       }
    }

@@ -1,10 +1,10 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Climbing.Guide.Forms.Views.Guide {
+namespace Climbing.Guide.Forms.Views.Content.List {
    [XamlCompilation(XamlCompilationOptions.Compile)]
-   public partial class ExploreView : ContentPage {
-      public ExploreView() {
+   public partial class MapGuideView : ContentPage {
+      public MapGuideView() {
          InitializeComponent();
       }
    }
