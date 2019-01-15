@@ -2,11 +2,11 @@
 using System;
 
 namespace Alat.Logging.Appenders {
-   public class VoidAppender : LoggerAppender {
+   public class VoidAppender : Appender {
       public LogEntryFormatter LogEntryFormatter { get; }
 
-      public VoidAppender(LogEntryFormatter logEntryFormatter) {
-         LogEntryFormatter = logEntryFormatter ?? throw new ArgumentNullException(nameof(logEntryFormatter));
+      public VoidAppender() {
+
       }
 
       public void Write(LogEntry entry) {

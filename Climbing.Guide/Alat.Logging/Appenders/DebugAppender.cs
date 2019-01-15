@@ -2,7 +2,7 @@
 using System;
 
 namespace Alat.Logging.Appenders {
-   public class DebugAppender : LoggerAppender {
+   public class DebugAppender : Appender {
       public LogEntryFormatter LogEntryFormatter { get; }
 
       public DebugAppender(LogEntryFormatter logEntryFormatter) {
