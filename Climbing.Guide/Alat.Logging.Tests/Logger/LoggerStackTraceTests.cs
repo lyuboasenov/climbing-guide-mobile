@@ -21,8 +21,8 @@ namespace Alat.Logging.Tests.Logger {
          Assert.False(string.IsNullOrEmpty(logEntry.StackTrace));
       }
 
-      protected override Logging.LoggerSettings GetLoggerSettings(Appender appender) {
-         return Logging.LoggerSettings.FromAppender(Level.All, appender, true);
+      protected override Logging.Settings GetLoggerSettings(Appender appender) {
+         return Logging.Settings.FromAppender(Level.All, appender, true);
       }
    }
 }

@@ -8,9 +8,9 @@ namespace Climbing.Guide.Forms.Services.Impl {
    public class FormsExceptionHandler : IExceptionHandler {
 
       private Alerts AlertService { get; set; }
-      private ILogger LoggingService { get; set; }
+      private Logger LoggingService { get; set; }
 
-      public FormsExceptionHandler(Alerts alertService, ILogger loggingService) {
+      public FormsExceptionHandler(Alerts alertService, Logger loggingService) {
          AlertService = alertService;
          LoggingService = loggingService;
       }

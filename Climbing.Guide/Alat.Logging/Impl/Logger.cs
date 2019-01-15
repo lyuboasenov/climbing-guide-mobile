@@ -15,7 +15,7 @@ namespace Alat.Logging.Impl {
       private Level Level { get; }
       private bool IncludeStackTrace { get; }
 
-      public Logger(LoggerSettings settings) {
+      public Logger(Settings settings) {
          if (null == settings) {
             throw new ArgumentNullException(nameof(settings));
          }

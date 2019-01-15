@@ -16,7 +16,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
 
       [Fact]
       public void DisableLogging() {
-         var settings = Logging.LoggerSettings.DisableLogging();
+         var settings = Logging.Settings.DisableLogging();
 
          Assert.Equal(Level.Off, settings.Level);
          Assert.Single(settings.Appenders, (appender) => appender is VoidAppender);
@@ -26,7 +26,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
 
       [Fact]
       public void FromAppender() {
-         var settings = Logging.LoggerSettings.FromAppender(Level, new MemorySavingAppender());
+         var settings = Logging.Settings.FromAppender(Level, new MemorySavingAppender());
 
          Assert.Equal(Level, settings.Level);
          Assert.Single(settings.Appenders, (appender) => appender is MemorySavingAppender);
@@ -36,7 +36,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
 
       [Fact]
       public void FromAppenderIncludeStack() {
-         var settings = Logging.LoggerSettings.FromAppender(Level, new MemorySavingAppender(), true);
+         var settings = Logging.Settings.FromAppender(Level, new MemorySavingAppender(), true);
 
          Assert.Equal(Level, settings.Level);
          Assert.Single(settings.Appenders, (appender) => appender is MemorySavingAppender);
@@ -46,7 +46,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
 
       [Fact]
       public void FromAppenderConverter() {
-         var settings = Logging.LoggerSettings.FromAppender(Level,
+         var settings = Logging.Settings.FromAppender(Level,
             new MemorySavingAppender(),
             new KeyValuePair<Type, DataConverter>[] {
                new KeyValuePair<Type, DataConverter>(typeof(string), new DataConverters.ExceptionDataConverter())
@@ -61,23 +61,23 @@ namespace Alat.Logging.Tests.LoggerSettings {
       [Fact]
       public void FromAppenderNullLevel() {
          Assert.Throws<ArgumentNullException>(() => 
-            Logging.LoggerSettings.FromAppender(null, new MemorySavingAppender()));
+            Logging.Settings.FromAppender(null, new MemorySavingAppender()));
       }
 
       [Fact]
       public void FromAppenderNullAppender() {
-         Assert.Throws<ArgumentNullException>(() => Logging.LoggerSettings.FromAppender(Level, null));
+         Assert.Throws<ArgumentNullException>(() => Logging.Settings.FromAppender(Level, null));
       }
 
       [Fact]
       public void FromAppenderNullConverters() {
          Assert.Throws<ArgumentNullException>(() => 
-            Logging.LoggerSettings.FromAppender(Level, new MemorySavingAppender(), null));
+            Logging.Settings.FromAppender(Level, new MemorySavingAppender(), null));
       }
 
       [Fact]
       public void FromAppenders() {
-         var settings = Logging.LoggerSettings.FromAppenders(Level,
+         var settings = Logging.Settings.FromAppenders(Level,
             new Appender[] { new MemorySavingAppender() });
 
          Assert.Equal(Level, settings.Level);
@@ -88,7 +88,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
 
       [Fact]
       public void FromAppendersIncludeStack() {
-         var settings = Logging.LoggerSettings.FromAppenders(Level,
+         var settings = Logging.Settings.FromAppenders(Level,
             new Appender[] { new MemorySavingAppender() },
             true);
 
@@ -100,7 +100,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
 
       [Fact]
       public void FromAppendersToEntryConverter() {
-         var settings = Logging.LoggerSettings.FromAppenders(Level,
+         var settings = Logging.Settings.FromAppenders(Level,
             new Appender[] { new MemorySavingAppender() },
             Array.Empty<KeyValuePair<Type, DataConverter>>());
 
@@ -112,7 +112,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
 
       [Fact]
       public void FromAppendersMultipleProviders() {
-         var settings = Logging.LoggerSettings.FromAppenders(Level,
+         var settings = Logging.Settings.FromAppenders(Level,
             new Appender[] { new MemorySavingAppender(), new VoidAppender() });
 
          Assert.Equal(Level, settings.Level);
@@ -126,7 +126,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
 
       [Fact]
       public void FromAppendersIncludeStackMultipleProviders() {
-         var settings = Logging.LoggerSettings.FromAppenders(Level,
+         var settings = Logging.Settings.FromAppenders(Level,
             new Appender[] { new MemorySavingAppender(), new VoidAppender() },
             true);
 
@@ -141,7 +141,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
 
       [Fact]
       public void FromAppendersToEntryConverterMultipleProviders() {
-         var settings = Logging.LoggerSettings.FromAppenders(Level,
+         var settings = Logging.Settings.FromAppenders(Level,
             new Appender[] { new MemorySavingAppender(), new VoidAppender() },
             new KeyValuePair<Type, DataConverter>[] {
                new KeyValuePair<Type, DataConverter>(typeof(string), new DataConverters.ExceptionDataConverter())
@@ -159,23 +159,23 @@ namespace Alat.Logging.Tests.LoggerSettings {
       [Fact]
       public void FromAppendersNullLevel() {
          Assert.Throws<ArgumentNullException>(() => 
-            Logging.LoggerSettings.FromAppenders(null, new Appender[] { new MemorySavingAppender() }));
+            Logging.Settings.FromAppenders(null, new Appender[] { new MemorySavingAppender() }));
       }
 
       [Fact]
       public void FromAppendersNullAppender() {
-         Assert.Throws<ArgumentNullException>(() => Logging.LoggerSettings.FromAppenders(Level, null));
+         Assert.Throws<ArgumentNullException>(() => Logging.Settings.FromAppenders(Level, null));
       }
 
       [Fact]
       public void FromAppendersNullConverters() {
          Assert.Throws<ArgumentNullException>(() => 
-            Logging.LoggerSettings.FromAppenders(Level, new Appender[] { new MemorySavingAppender()}, null));
+            Logging.Settings.FromAppenders(Level, new Appender[] { new MemorySavingAppender()}, null));
       }
 
       [Fact]
       public void FromAppendersDuplicateConverters() {
-         Assert.Throws<ArgumentException>(() => Logging.LoggerSettings.FromAppenders(
+         Assert.Throws<ArgumentException>(() => Logging.Settings.FromAppenders(
             Level, 
             new Appender[] { new MemorySavingAppender() },
             new List<KeyValuePair<Type, DataConverter>> {
@@ -187,7 +187,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
       [Fact]
       public void FromAppendersEmptyAppenders() {
          Assert.Throws<ArgumentException>(() => 
-            Logging.LoggerSettings.FromAppenders(Level, new Appender[] { }, null));
+            Logging.Settings.FromAppenders(Level, new Appender[] { }, null));
       }
 
       [Fact]
@@ -200,7 +200,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
             new KeyValuePair<Type, DataConverter>(typeof(string), new DataConverters.ExceptionDataConverter())
          };
 
-         var settings = Logging.LoggerSettings.FromAppenders(Level,
+         var settings = Logging.Settings.FromAppenders(Level,
             appenders,
             converters);
 

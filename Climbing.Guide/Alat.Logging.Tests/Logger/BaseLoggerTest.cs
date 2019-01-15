@@ -105,12 +105,12 @@ namespace Alat.Logging.Tests.Logger {
          return GetLogger(GetLoggerSettings(Appender));
       }
 
-      protected virtual Logging.Logger GetLogger(Logging.LoggerSettings settings) {
+      protected virtual Logging.Logger GetLogger(Logging.Settings settings) {
          return new Impl.Logger(settings);
       }
 
-      protected virtual Logging.LoggerSettings GetLoggerSettings(Appender appender) {
-         return Logging.LoggerSettings.FromAppender(Level.All, appender);
+      protected virtual Logging.Settings GetLoggerSettings(Appender appender) {
+         return Logging.Settings.FromAppender(Level.All, appender);
       }
 
       protected static MemorySavingAppender GetAppenderMock() {
