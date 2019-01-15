@@ -5,21 +5,15 @@ using System;
 using System.IO;
 
 namespace Climbing.Guide.Caching.Sqlite {
-   public class SqliteCacheRepository : CacheRepository {
-
-      private Serializer Serializer { get; set; }
+   public class SqliteCacheStore : CacheStore {
       private readonly object dblock = new object();
-      private SQLiteConnection DB { get; set; }
-      private string DbFilePath { get; set; }
-      private CacheSettings CacheSettings { get; set; }
+      private SQLiteConnection DB { get; }
+      private string DbFilePath { get; }
 
-      public SqliteCacheRepository(CacheSettings settings, Serializer serializer) {
-         CacheSettings = settings;
-         Serializer = serializer;
-
-         DbFilePath = Path.Combine((string)CacheSettings.Location, "climbing.guide.cache.db");
-         if (!Directory.Exists((string)CacheSettings.Location)) {
-            Directory.CreateDirectory((string)CacheSettings.Location);
+      public SqliteCacheStore(Settings settings) {
+         DbFilePath = Path.Combine(settings.Location, "climbing.guide.cache.db");
+         if (!Directory.Exists(settings.Location)) {
+            Directory.CreateDirectory(settings.Location);
          }
 
          DB = new SQLiteConnection(DbFilePath);
@@ -59,9 +53,9 @@ namespace Climbing.Guide.Caching.Sqlite {
          return DB.Find<SqliteCacheItem>(key) != null;
       }
 
-      public bool IsEmpty() {
+      public bool Any() {
          lock (dblock) {
-            return DB.Table<SqliteCacheItem>().Count() == 0;
+            return DB.Table<SqliteCacheItem>().Count() > 0;
          }
       }
 

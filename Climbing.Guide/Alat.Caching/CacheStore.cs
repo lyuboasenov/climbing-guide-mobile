@@ -2,7 +2,7 @@
 using System.IO;
 
 namespace Alat.Caching {
-   public interface CacheRepository {
+   public interface CacheStore {
       bool Contains(string key);
 
       CacheItem Find(string key);
@@ -15,7 +15,7 @@ namespace Alat.Caching {
 
       void Clean();
 
-      bool IsEmpty();
+      bool Any();
 
       long GetSize();
    }

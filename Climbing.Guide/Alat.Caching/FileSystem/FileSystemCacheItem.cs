@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace Climbing.Guide.Caching.FileSystem {
+namespace Alat.Caching.FileSystem {
    public class FileSystemCacheItem : CacheItem {
       public string Key { get; set; }
       public string Tag { get; set; }

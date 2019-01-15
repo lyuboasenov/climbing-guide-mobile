@@ -4,20 +4,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Climbing.Guide.Caching.FileSystem {
-   public class FileSystemCacheRepository : CacheRepository {
+namespace Alat.Caching.FileSystem {
+   public class FileSystemCacheStore : CacheStore {
       private const string ITEMS_DIRECTORY = "items";
       private readonly object lockObj = new object();
-      private CacheSettings CacheSettings { get; set; }
-      private string IndexFilePath { get; set; }
-      private IList<FileSystemCacheItem> Items { get; set; } = new List<FileSystemCacheItem>();
+      private string IndexFilePath { get; }
+      private string Location { get; }
+      private IList<FileSystemCacheItem> Items { get; } = new List<FileSystemCacheItem>();
 
-      public FileSystemCacheRepository(CacheSettings settings) {
-         CacheSettings = settings;
-
-         IndexFilePath = Path.Combine((string)CacheSettings.Location, "climbing.guide.cache.index");
-         if (!Directory.Exists((string)CacheSettings.Location)) {
-            Directory.CreateDirectory((string)CacheSettings.Location);
+      public FileSystemCacheStore(Settings settings) {
+         Location = settings.Location;
+         IndexFilePath = Path.Combine(Location, "climbing.guide.cache.index");
+         if (!Directory.Exists(Location)) {
+            Directory.CreateDirectory(Location);
          }
       }
 
@@ -29,7 +28,7 @@ namespace Climbing.Guide.Caching.FileSystem {
                Tag = tag
             };
 
-            var filePath = Path.Combine((string)CacheSettings.Location,
+            var filePath = Path.Combine(Location,
                   ITEMS_DIRECTORY,
                   key.GetHashCode().ToString());
 
@@ -66,8 +65,8 @@ namespace Climbing.Guide.Caching.FileSystem {
          return Items.Count(i => i.Key.Equals(key, StringComparison.Ordinal)) > 0;
       }
 
-      public bool IsEmpty() {
-         return Items.Count == 0;
+      public bool Any() {
+         return Items.Count > 0;
       }
 
       public CacheItem Find(string key) {
@@ -79,7 +78,7 @@ namespace Climbing.Guide.Caching.FileSystem {
                Key = item.Key,
                ExpirationDate = item.ExpirationDate,
                Tag = item.Tag,
-               Content = File.OpenRead(Path.Combine((string)CacheSettings.Location, ITEMS_DIRECTORY, key.GetHashCode().ToString()))
+               Content = File.OpenRead(Path.Combine(Location, ITEMS_DIRECTORY, key.GetHashCode().ToString()))
             };
          }
 
@@ -112,11 +111,11 @@ namespace Climbing.Guide.Caching.FileSystem {
             Items.Clear();
          }
 
-         Directory.Delete(Path.Combine((string)CacheSettings.Location, ITEMS_DIRECTORY), true);
+         Directory.Delete(Path.Combine(Location, ITEMS_DIRECTORY), true);
       }
 
       public long GetSize() {
-         return Directory.GetFiles(CacheSettings.Location, "*", SearchOption.AllDirectories).Sum(t => (new FileInfo(t).Length));
+         return Directory.GetFiles(Location, "*", SearchOption.AllDirectories).Sum(t => (new FileInfo(t).Length));
       }
 
       private void LoadIndex() {
@@ -124,7 +123,11 @@ namespace Climbing.Guide.Caching.FileSystem {
             new System.Xml.Serialization.XmlSerializer(typeof(IList<CacheItem>));
 
          using (var indexFile = File.Open(IndexFilePath, FileMode.Open, FileAccess.Read)) {
-            Items = (IList<FileSystemCacheItem>)reader.Deserialize(indexFile);
+            Items.Clear();
+            var loadedItems = (IList<FileSystemCacheItem>)reader.Deserialize(indexFile);
+            foreach(var item in loadedItems) {
+               Items.Add(item);
+            }
          }
       }
 

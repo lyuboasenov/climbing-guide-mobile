@@ -6,18 +6,21 @@ using Alat.Caching.Serialization;
 
 namespace Alat.Caching.Impl {
    public class Cache : Caching.Cache {
-      private Serializer Serializer { get; set; }
-      private CacheRepository CacheRepository { get; set; }
-      private Timer Timer { get; set; }
+      private const int DEFAULT_CLEANUP_TIME_MINUTES = 5;
       public TimeSpan CleanInterval { get; set; }
 
-      public Cache(CacheRepository cacheRepository, Serializer serializer) : 
-         this(cacheRepository, serializer, TimeSpan.FromMinutes(5)) { }
+      private Serializer Serializer { get; set; }
+      private CacheStore CacheStore { get; set; }
+      private Timer CleanupTimer { get; set; }
+      
 
-      public Cache(CacheRepository cacheRepository, Serializer serializer, TimeSpan cleanInterval) {
-         CacheRepository = cacheRepository;
+      public Cache(CacheStore cacheStore, Serializer serializer) : 
+         this(cacheStore, serializer, TimeSpan.FromMinutes(DEFAULT_CLEANUP_TIME_MINUTES)) { }
+
+      public Cache(CacheStore cacheStore, Serializer serializer, TimeSpan cleanInterval) {
+         CacheStore = cacheStore;
          Serializer = serializer;
-         Timer = new Timer((state) => Clean());
+         CleanupTimer = new Timer((state) => Clean());
          StartAutoClean();
       }
 
@@ -26,14 +29,14 @@ namespace Alat.Caching.Impl {
             throw new ArgumentException("Key can not be null or empty.", nameof(key));
          }
 
-         return CacheRepository.Contains(key);
+         return CacheStore.Contains(key);
       }
 
       public T FindData<T>(string key) {
          if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentException("Key can not be null or empty.", nameof(key));
 
-         CacheItem item = CacheRepository.Find(key);
+         CacheItem item = CacheStore.Find(key);
 
          T result = default(T);
          if (item != null) {
@@ -43,7 +46,6 @@ namespace Alat.Caching.Impl {
             } else {
                result = Serializer.Deserialize<T>(item.Content);
             }
-
          }
 
          return result;
@@ -54,7 +56,7 @@ namespace Alat.Caching.Impl {
             throw new ArgumentException("Key can not be null or empty.", nameof(key));
          }
 
-         var cacheItem = CacheRepository.Find(key);
+         var cacheItem = CacheStore.Find(key);
          string result = string.Empty;
          if (cacheItem != null) {
             result = cacheItem.Tag;
@@ -78,7 +80,7 @@ namespace Alat.Caching.Impl {
                objectStream.Seek(0, SeekOrigin.Begin);
             }
 
-            CacheRepository.Add(key, objectStream, tag, GetExpiration(expireIn));
+            CacheStore.Add(key, objectStream, tag, GetExpiration(expireIn));
 
             StartAutoClean();
          } finally {
@@ -93,7 +95,7 @@ namespace Alat.Caching.Impl {
          if (null == key || key.Length == 0)
             throw new ArgumentException("Key can not be null or empty.", nameof(key));
 
-         CacheRepository.Remove(key);
+         CacheStore.Remove(key);
       }
 
       public void Reset(string key, TimeSpan expireIn) {
@@ -101,20 +103,20 @@ namespace Alat.Caching.Impl {
             throw new ArgumentException("Key can not be null or empty.", nameof(key));
          }
 
-         CacheRepository.Reset(key, GetExpiration(expireIn));
+         CacheStore.Reset(key, GetExpiration(expireIn));
       }
 
       public void Clean() {
-         CacheRepository.Clean();
+         CacheStore.Clean();
          StartAutoClean();
       }
 
       public void Invalidate() {
-         CacheRepository.RemoveAll();
+         CacheStore.RemoveAll();
       }
 
       public long GetCacheSize() {
-         return CacheRepository.GetSize();
+         return CacheStore.GetSize();
       }
 
       private static bool IsString<T>(T data) {
@@ -135,9 +137,9 @@ namespace Alat.Caching.Impl {
       }
 
       private void StartAutoClean() {
-         if (!CacheRepository.IsEmpty()) {
+         if (!CacheStore.Any()) {
             int dueTime = CleanInterval.Milliseconds == 0 ? Timeout.Infinite : CleanInterval.Milliseconds;
-            Timer.Change(dueTime, Timeout.Infinite);
+            CleanupTimer.Change(dueTime, Timeout.Infinite);
          }
       }
    }
