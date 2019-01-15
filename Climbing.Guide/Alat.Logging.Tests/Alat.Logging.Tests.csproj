@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Alat.Logging\Alat.Logging.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Logger\Negative\" />
-  </ItemGroup>
-
 </Project>

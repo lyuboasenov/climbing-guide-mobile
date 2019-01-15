@@ -169,6 +169,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Alat.Caching\Alat.Caching.csproj" />
     <ProjectReference Include="..\Alat.Logging\Alat.Logging.csproj" />
     <ProjectReference Include="..\Alat.Xamarin.Forms.Validation\Alat.Xamarin.Forms.Validation.csproj" />
     <ProjectReference Include="..\Climbing.Guide.Api\Climbing.Guide.Api.csproj" />
