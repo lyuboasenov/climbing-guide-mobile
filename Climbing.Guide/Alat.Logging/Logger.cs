@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Alat.Logging {
+﻿namespace Alat.Logging {
    public interface Logger {
       void Log(object obj);
       void Log(object obj, Level level);
