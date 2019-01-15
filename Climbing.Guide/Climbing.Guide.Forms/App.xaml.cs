@@ -98,7 +98,7 @@ namespace Climbing.Guide.Forms {
          containerRegistry.Register<ISyncTaskRunner, Services.Impl.FormsTaskRunner>();
          containerRegistry.Register<IMainThreadTaskRunner, Services.Impl.FormsTaskRunner>();
          containerRegistry.Register<Cache, Alat.Caching.Impl.Cache>();
-         containerRegistry.Register<CacheRepository, Caching.Sqlite.SqliteCacheRepository>();
+         containerRegistry.Register<CacheStore, Caching.Sqlite.SqliteCacheStore>();
          containerRegistry.Register<Resource, Services.Impl.Resources>();
          containerRegistry.Register<Serializer, JsonSerializer>();
          containerRegistry.Register<Services.Environment, Services.Impl.Environment>();
@@ -126,7 +126,7 @@ namespace Climbing.Guide.Forms {
       private void GetApiClientSettings(IContainerRegistry containerRegistry) {
 
          Cache responseCache = this.Container.Resolve<Cache>();
-         Cache largeResponseCache = new Alat.Caching.Impl.Cache(new FileSystemCacheRepository(GetLargeCacheSettings()), new JsonSerializer());
+         Cache largeResponseCache = new Alat.Caching.Impl.Cache(new FileSystemCacheStore(GetLargeCacheSettings()), new JsonSerializer());
 
          var cachingHttpClientManager = new Http.CachingHttpClientManager();
          containerRegistry.RegisterInstance<Http.ICachingHttpClientManager>(cachingHttpClientManager);
@@ -146,18 +146,18 @@ namespace Climbing.Guide.Forms {
             }, authenticationManager));
       }
 
-      private CacheSettings GetCacheSettings() {
+      private Settings GetCacheSettings() {
          var environment = IoC.Container.Get<Services.Environment>();
 
          var cacheLocation = System.IO.Path.Combine(environment.CachePath, "sqlite/");
-         return new CacheSettings(cacheLocation);
+         return new Settings(cacheLocation);
       }
 
-      private CacheSettings GetLargeCacheSettings() {
+      private Settings GetLargeCacheSettings() {
          var environment = IoC.Container.Get<Services.Environment>();
 
          var cacheLocation = System.IO.Path.Combine(environment.CachePath, "files/");
-         return new CacheSettings(cacheLocation);
+         return new Settings(cacheLocation);
       }
    }
 }
