@@ -1,4 +1,5 @@
-﻿using Alat.Logging.ToLogEntryDataConverters;
+﻿using Alat.Logging.Appenders;
+using Alat.Logging.DataConverters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,10 +10,39 @@ namespace Alat.Logging.Impl {
    public class Logger : Logging.Logger {
       private Level DefaultLogLevel => Level.Trace;
 
-      private LoggerSettings Settings { get; set; }
+      private IEnumerable<Appender> Appenders { get; }
+      private IDictionary<Type, DataConverter> DataConverters { get; }
+      private Level Level { get; }
+      private bool IncludeStackTrace { get; }
 
       public Logger(LoggerSettings settings) {
-         Settings = settings;
+         if (null == settings) {
+            throw new ArgumentNullException(nameof(settings));
+         }
+
+         if(null == settings.Appenders) {
+            throw new ArgumentNullException(nameof(settings.Appenders));
+         }
+
+         if (!settings.Appenders.Any()) {
+            throw new ArgumentException(
+               $"At least one appender should be available in {nameof(settings.Appenders)}");
+         }
+
+         Appenders = settings.Appenders.ToArray();
+         DataConverters = new Dictionary<Type, DataConverter>();
+         if (null != settings.DataConverters) {
+            foreach (var pair in settings.DataConverters) {
+               if (DataConverters.ContainsKey(pair.Key)) {
+                  throw new ArgumentException($"Multiple converters given for {pair.Key} type");
+               }
+
+               DataConverters.Add(pair.Key, pair.Value);
+            }
+         }
+
+         Level = settings.Level;
+         IncludeStackTrace = settings.IncludeStackTrace;
       }
 
       public void Debug(string message) {
@@ -72,45 +102,47 @@ namespace Alat.Logging.Impl {
       }
 
       private void LogObject(object obj, Level level) {
-         if (null == obj) {
-            throw new ArgumentNullException(nameof(obj));
-         }
-
-         if (obj is string && string.IsNullOrEmpty((string)obj)) {
-            throw new ArgumentNullException(nameof(obj));
-         }
-
          if (null == level) {
             throw new ArgumentNullException(nameof(level));
          }
 
-         var logEntry = CreateLogEntry(obj, level);
+         if (level > Level) {
+            if (null == obj) {
+               throw new ArgumentNullException(nameof(obj));
+            }
 
-         foreach (var appender in Settings.LoggerAppenders) {
-            appender.Write(logEntry);
+            if (obj is string && string.IsNullOrEmpty((string)obj)) {
+               throw new ArgumentNullException(nameof(obj));
+            }
+
+            var logEntry = CreateLogEntry(obj, level);
+
+            foreach (var appender in Appenders) {
+               appender.Write(logEntry);
+            }
          }
       }
 
 
       private LogEntry CreateLogEntry(object obj, Level level) {
          var type = obj.GetType();
-         var toLogEntryDataConverter = Settings.ToLogEntryDataConverters.FirstOrDefault(p => p.Key == type);
+
          LogEntryData data = null;
-         if (default(KeyValuePair<Type, ToLogEntryDataConverter>).Equals(toLogEntryDataConverter)) {
-            data = new LogEntryData(obj.ToString()); 
+         if (DataConverters.ContainsKey(type)) {
+            data = DataConverters[type].Convert(obj);
          } else {
-            data = toLogEntryDataConverter.Value.Convert(obj);
+            data = new LogEntryData(obj.ToString());
          }
 
          string stackTrace = string.Empty;
-         if (Settings.IncludeStackTrace) {
+         if (IncludeStackTrace) {
             stackTrace = GetStackTrace();
          }
 
          return new LogEntry(DateTime.Now, level, data, stackTrace);
       }
 
-      private string GetStackTrace() {
+      private static string GetStackTrace() {
          StringBuilder formattedStackTrace = new StringBuilder();
          var stackTrace = new StackTrace(4, true);
 
