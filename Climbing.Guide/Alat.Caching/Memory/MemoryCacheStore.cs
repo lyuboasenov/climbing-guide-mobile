@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Alat.Caching.Memory {
@@ -8,17 +7,32 @@ namespace Alat.Caching.Memory {
       private readonly object lockObj = new object();
       private IDictionary<string, MemoryCacheItem> Items { get; } = new Dictionary<string, MemoryCacheItem>();
 
-      public MemoryCacheStore(Settings settings) {
+      public CacheItem Find<T>(string key) {
+         CacheItem result = null;
+         if (Contains(key)) {
+            var item = Items[key];
+            result = new MemoryCacheItem() {
+               Key = item.Key,
+               Tag = item.Tag,
+               Data = item.Data,
+               ExpirationDate = item.ExpirationDate
+            };
+         }
 
+         return result;
       }
 
-      public void Add(string key, Stream content, string tag, DateTime expirationDate) {
+      public string FindTag(string key) {
+         return Contains(key) ? Items[key].Tag : string.Empty;
+      }
+
+      public void Add<T>(string key, T data, string tag, DateTime expirationDate) {
          lock (lockObj) {
             var item = new MemoryCacheItem() {
                Key = key,
                ExpirationDate = expirationDate,
                Tag = tag,
-               Content = content
+               Data = data
             };
 
             Items[key] = item;
@@ -68,7 +82,6 @@ namespace Alat.Caching.Memory {
                if (Items.ContainsKey(key)) {
                   Items.Remove(key);
                }
-               
             }
          }
       }
@@ -82,6 +95,5 @@ namespace Alat.Caching.Memory {
       public long GetSize() {
          return 1000000000;
       }
-
    }
 }

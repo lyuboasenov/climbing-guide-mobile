@@ -146,18 +146,18 @@ namespace Climbing.Guide.Forms {
             }, authenticationManager));
       }
 
-      private Settings GetCacheSettings() {
+      private FileSystemCacheSettings GetCacheSettings() {
          var environment = IoC.Container.Get<Services.Environment>();
 
          var cacheLocation = System.IO.Path.Combine(environment.CachePath, "sqlite/");
-         return new Settings(cacheLocation);
+         return new FileSystemCacheSettings(cacheLocation);
       }
 
-      private Settings GetLargeCacheSettings() {
+      private FileSystemCacheSettings GetLargeCacheSettings() {
          var environment = IoC.Container.Get<Services.Environment>();
 
          var cacheLocation = System.IO.Path.Combine(environment.CachePath, "files/");
-         return new Settings(cacheLocation);
+         return new FileSystemCacheSettings(cacheLocation);
       }
    }
 }

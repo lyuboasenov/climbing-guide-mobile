@@ -1,13 +1,13 @@
 ﻿using System;
-using System.IO;
 
 namespace Alat.Caching {
    public interface CacheStore {
       bool Contains(string key);
 
-      CacheItem Find(string key);
+      CacheItem Find<T>(string key);
+      string FindTag(string key);
 
-      void Add(string key, Stream content, string tag, DateTime dateTime);
+      void Add<T>(string key, T data, string tag, DateTime dateTime);
       void Remove(string[] key);
       void RemoveAll();
 

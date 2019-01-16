@@ -12,5 +12,6 @@ namespace Climbing.Guide.Caching.Sqlite {
       public Stream Content { get; set; }
       public DateTime ExpirationDate { get; set; }
       public byte[] RawContent { get; set; }
+      public object Data { get; set; }
    }
 }
