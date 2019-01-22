@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using Climbing.Guide.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Climbing.Guide.Api.Schemas;
-using Climbing.Guide.Caching;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Exceptions;
+using Alat.Caching;
+using Alat.Http.Caching.Sessions;
 
 namespace Climbing.Guide.Forms.Services.Impl {
    public class Resources : Resource {
-      private IApiClient ApiClient { get; set; }
-      private ICache Cache { get; set; }
-      private Http.ICachingHttpClientManager CachingHttpClientManager { get; set; }
-      private IExceptionHandler ExceptionHandler { get; set; }
+      private IApiClient ApiClient { get; }
+      private ICache Cache { get; }
+      private SessionFactory SessionFactory { get; }
+      private IExceptionHandler ExceptionHandler { get; }
 
-      public Resources(IApiClient apiClient, ICache cache, Http.ICachingHttpClientManager cachingHttpClientManager, IExceptionHandler exceptionHandler) {
+      public Resources(IApiClient apiClient, ICache cache, SessionFactory sessionFactory, IExceptionHandler exceptionHandler) {
          ApiClient = apiClient;
          Cache = cache;
-         CachingHttpClientManager = cachingHttpClientManager;
+         SessionFactory = sessionFactory;
          ExceptionHandler = exceptionHandler;
       }
 
@@ -26,10 +27,10 @@ namespace Climbing.Guide.Forms.Services.Impl {
          IEnumerable<Grade> result = null;
          if (force || !Cache.Contains(GRADE_SYSTEM_CACHE_KEY)) {
             result = await ApiClient.GradesClient.ReadAsync(gradeSystemId.ToString());
-            Cache.Add(GRADE_SYSTEM_CACHE_KEY, result, TimeSpan.MaxValue);
+            Cache.Store(GRADE_SYSTEM_CACHE_KEY, result, TimeSpan.MaxValue);
          }
          if (null == result) {
-            result = Cache.Get<ObservableCollection<Grade>>(GRADE_SYSTEM_CACHE_KEY);
+            result = Cache.Retrieve<ObservableCollection<Grade>>(GRADE_SYSTEM_CACHE_KEY);
          }
 
          return result;
@@ -40,10 +41,10 @@ namespace Climbing.Guide.Forms.Services.Impl {
          IEnumerable<GradeSystemList> result = null;
          if (force || !Cache.Contains(GRADE_SYSTEMS_CACHE_KEY)) {
             result = await ApiClient.GradesClient.ListAsync();
-            Cache.Add(GRADE_SYSTEMS_CACHE_KEY, result, TimeSpan.MaxValue);
+            Cache.Store(GRADE_SYSTEMS_CACHE_KEY, result, TimeSpan.MaxValue);
          }
          if (null == result) {
-            result = Cache.Get<ObservableCollection<GradeSystemList>>(GRADE_SYSTEMS_CACHE_KEY);
+            result = Cache.Retrieve<ObservableCollection<GradeSystemList>>(GRADE_SYSTEMS_CACHE_KEY);
          }
 
          return result;
@@ -54,10 +55,10 @@ namespace Climbing.Guide.Forms.Services.Impl {
          IEnumerable<Language> result = null;
          if (force || !Cache.Contains(LANGUAGES_CACHE_KEY)) {
             result = await ApiClient.LanguagesClient.ListAsync();
-            Cache.Add(LANGUAGES_CACHE_KEY, result, TimeSpan.MaxValue);
+            Cache.Store(LANGUAGES_CACHE_KEY, result, TimeSpan.MaxValue);
          }
          if (null == result) {
-            result = Cache.Get<ObservableCollection<Language>>(LANGUAGES_CACHE_KEY);
+            result = Cache.Retrieve<ObservableCollection<Language>>(LANGUAGES_CACHE_KEY);
          }
 
          return result;

@@ -16,14 +16,14 @@ using Alat.Validation.Rules;
 
 namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class RouteViewModel : ParametrisedBaseViewModel<RouteViewModel.Parameters>, Validatable {
+   public class RouteViewModel : ParametrisedBaseViewModel<RouteViewModel.Parameters>, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
       public static NavigationRequest GetNavigationRequest(Navigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.RouteView), parameters);
       }
 
-      public ValidationContext ValidationContext { get; }
+      public IValidationContext ValidationContext { get; }
 
       public ICommand ViewSchemaCommand { get; set; }
       public ICommand SaveCommand { get; set; }
@@ -79,7 +79,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
          (SaveCommand as Command).ChangeCanExecute();
       }
 
-      public void InitializeValidationRules(ValidationContext context) {
+      public void InitializeValidationRules(IValidationContext context) {
          context.AddRule<RouteViewModel, string>(t => t.Name,
             new RequiredRule(
                string.Format(

@@ -1,6 +1,11 @@
-﻿using Climbing.Guide.Exceptions;
-using Climbing.Guide.Logging;
+﻿using Alat.Logging;
+using Alat.Logging.Appenders;
+using Alat.Logging.DataConverters;
+using Alat.Logging.Factories;
+using Alat.Logging.LogEntryFormatters;
+using Climbing.Guide.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +14,7 @@ namespace Climbing.Guide.Tasks {
       protected ILogger Logger { get; set; }
       protected IExceptionHandler ExceptionHandler { get; set; }
 
-      public TaskRunner() : this(new VoidLogger(), new VoidExceptionHandler()) { }
+      public TaskRunner() : this(LoggerFactory.GetDebugLogger(Level.All), new VoidExceptionHandler()) { }
 
       public TaskRunner(ILogger logger, IExceptionHandler exceptionHandler) {
          Logger = logger;

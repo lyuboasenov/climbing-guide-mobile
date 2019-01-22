@@ -1,4 +1,5 @@
-﻿using Climbing.Guide.Forms.Helpers;
+﻿using Alat.Logging;
+using Climbing.Guide.Forms.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Climbing.Guide.Forms.Views.Routes {
       private double StartScale;
 
       private SkiaSharp.SKPoint LastTouchLocation { get; set; }
-      private Logging.ILogger LoggingService { get; set; }
+      private ILogger LoggingService { get; set; }
 
       private Command UndoCommand { get; set; }
       private Command RedoCommand { get; set; }
@@ -35,7 +36,7 @@ namespace Climbing.Guide.Forms.Views.Routes {
 
       public SchemaEditorView() {
          InitializeComponent();
-         LoggingService = IoC.Container.Get<Logging.ILogger>();
+         LoggingService = IoC.Container.Get<ILogger>();
 
          // Attach gestures
          schemaView.EnableTouchEvents = true;

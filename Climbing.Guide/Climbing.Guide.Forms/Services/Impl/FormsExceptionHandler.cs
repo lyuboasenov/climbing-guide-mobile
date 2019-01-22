@@ -1,5 +1,5 @@
-﻿using Climbing.Guide.Exceptions;
-using Climbing.Guide.Logging;
+﻿using Alat.Logging;
+using Climbing.Guide.Exceptions;
 using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -8,9 +8,9 @@ namespace Climbing.Guide.Forms.Services.Impl {
    public class FormsExceptionHandler : IExceptionHandler {
 
       private Alerts AlertService { get; set; }
-      private Logger LoggingService { get; set; }
+      private ILogger LoggingService { get; set; }
 
-      public FormsExceptionHandler(Alerts alertService, Logger loggingService) {
+      public FormsExceptionHandler(Alerts alertService, ILogger loggingService) {
          AlertService = alertService;
          LoggingService = loggingService;
       }

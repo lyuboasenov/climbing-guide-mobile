@@ -1,11 +1,13 @@
-﻿using Prism.Mvvm;
-using Prism.Navigation;
+﻿using Prism.Navigation;
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class BaseViewModel : BindableBase, INavigatedAware {
+   public class BaseViewModel : INavigatedAware, INotifyPropertyChanged {
+      public event PropertyChangedEventHandler PropertyChanged;
       public BaseViewModel Parent { get; set; }
       public string Title { get; set; }
 
@@ -24,6 +26,24 @@ namespace Climbing.Guide.Forms.ViewModels {
          }
 
          OnNavigatedToAsync();
+      }
+
+      /// <summary>
+      /// Raises this object's PropertyChanged event.
+      /// </summary>
+      /// <param name="propertyName">Name of the property used to notify listeners. This
+      /// value is optional and can be provided automatically when invoked from compilers
+      /// that support <see cref="CallerMemberNameAttribute"/>.</param>
+      protected void RaisePropertyChanged([CallerMemberName]string propertyName = null) {
+         OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+      }
+
+      /// <summary>
+      /// Raises this object's PropertyChanged event.
+      /// </summary>
+      /// <param name="args">The PropertyChangedEventArgs</param>
+      protected virtual void OnPropertyChanged(PropertyChangedEventArgs args) {
+         PropertyChanged?.Invoke(this, args);
       }
    }
 }

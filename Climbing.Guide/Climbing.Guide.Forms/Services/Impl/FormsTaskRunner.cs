@@ -1,4 +1,4 @@
-﻿using Climbing.Guide.Logging;
+﻿using Alat.Logging;
 using Climbing.Guide.Tasks;
 using System;
 using System.Threading.Tasks;

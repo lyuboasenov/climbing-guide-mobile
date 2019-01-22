@@ -11,13 +11,13 @@ using Xamarin.Forms;
 
 namespace Climbing.Guide.Forms.ViewModels.User {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class SignupViewModel : BaseViewModel, Validatable {
+   public class SignupViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.User.Signup_Title;
       public static NavigationRequest GetNavigationRequest(Navigation navigation) {
          return navigation.GetNavigationRequest(nameof(Views.User.SignupView));
       }
 
-      public ValidationContext ValidationContext { get; }
+      public IValidationContext ValidationContext { get; }
 
       public string Username { get; set; }
       public string Password { get; set; }
@@ -54,7 +54,7 @@ namespace Climbing.Guide.Forms.ViewModels.User {
          (SignupCommand as Command).ChangeCanExecute();
       }
 
-      public void InitializeValidationRules(ValidationContext context) {
+      public void InitializeValidationRules(IValidationContext context) {
          context.AddRule<SignupViewModel, string>(t => t.Username,
             new RequiredRule(Resources.Strings.User.Username_Validation_Error),
             new EmailRule(Resources.Strings.User.Username_Validation_Error));

@@ -17,14 +17,14 @@ using System.Collections.Generic;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class AreaViewModel : ParametrisedBaseViewModel<AreaViewModel.Parameters>, Validatable {
+   public class AreaViewModel : ParametrisedBaseViewModel<AreaViewModel.Parameters>, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
       public static NavigationRequest GetNavigationRequest(Navigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.AreaView), parameters);
       }
 
-      public ValidationContext ValidationContext { get; }
+      public IValidationContext ValidationContext { get; }
 
       public string Name { get; set; }
       public string Info { get; set; }
@@ -66,7 +66,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
          ValidationContext = validationContextFactory.GetContextFor(this, true);
       }
 
-      public void InitializeValidationRules(ValidationContext context) {
+      public void InitializeValidationRules(IValidationContext context) {
          context.AddRule<AreaViewModel, string>(t => t.Name,
             new RequiredRule(
                string.Format(

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Climbing.Guide.Forms.Services.Navigation;
+using Alat.Caching;
 
 namespace Climbing.Guide.Forms.ViewModels.Settings {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -19,7 +20,7 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
       private IExceptionHandler Errors { get; }
       private Resource ResourceService { get; set; }
       private Preferences PreferenceService { get; set; }
-      private Caching.ICache Cache { get; set; }
+      private ICache Cache { get; set; }
 
       public Language SelectedLanguage { get; set; }
       public ObservableCollection<Language> Languages { get; set; }
@@ -37,7 +38,10 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
 
       public long CacheSize { get; set; }
 
-      public SettingsViewModel(IExceptionHandler errors, Resource resourceService, Preferences preferenceService, Caching.ICache cache) {
+      public SettingsViewModel(IExceptionHandler errors,
+         Resource resourceService,
+         Preferences preferenceService,
+         ICache cache) {
          Errors = errors;
          ResourceService = resourceService;
          PreferenceService = preferenceService;
@@ -79,7 +83,7 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
       }
 
       private void ClearCache() {
-         Cache.Invalidate();
+         Cache.RemoveAll();
          CacheSize = Cache.GetCacheSize();
       }
 
