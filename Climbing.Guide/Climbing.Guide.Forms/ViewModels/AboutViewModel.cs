@@ -9,7 +9,7 @@ namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class AboutViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Main.About_Title;
-      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation) {
          return navigation.GetNavigationRequest(nameof(Views.AboutView));
       }
 

@@ -10,12 +10,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using INavigation = Climbing.Guide.Forms.Services.Navigation.INavigation;
 
 namespace Climbing.Guide.Forms.ViewModels.User {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class LoginViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.User.Login_Title;
-      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+      public static INavigationRequest GetNavigationRequest(INavigation navigation) {
          return navigation.GetNavigationRequest(nameof(Views.User.LoginView));
       }
 
@@ -29,15 +30,15 @@ namespace Climbing.Guide.Forms.ViewModels.User {
 
       private IApiClient Client { get; }
       private IExceptionHandler Errors { get; }
-      private Navigation Navigation { get; }
-      private Alerts Alerts { get; }
-      private Services.Events Events { get; }
+      private INavigation Navigation { get; }
+      private IAlerts Alerts { get; }
+      private IEvents Events { get; }
 
       public LoginViewModel(IApiClient client,
          IExceptionHandler errors,
-         Navigation navigation, 
-         Alerts alerts,
-         Services.Events events,
+         INavigation navigation, 
+         IAlerts alerts,
+         IEvents events,
          ValidationContextFactory validationContextFactory) {
          Client = client;
          Errors = errors;
@@ -49,7 +50,6 @@ namespace Climbing.Guide.Forms.ViewModels.User {
 
          InitializeCommands();
 
-         // ValidationContext should be initialized after all other initialization is done
          ValidationContext = validationContextFactory.GetContextFor(this, true);
       }
 

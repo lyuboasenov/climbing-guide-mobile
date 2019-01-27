@@ -16,19 +16,19 @@ namespace Climbing.Guide.Forms.ViewModels.Content.View {
    public class RouteViewModel : ParametrisedBaseViewModel<RouteViewModel.Parameters>, IDestructible {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
-      public static NavigationRequest GetNavigationRequest(Navigation navigation, Parameters parameters) {
+      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.View.RouteView), parameters);
       }
 
       private IApiClient Client { get; }
-      private Services.Environment Environment { get; }
+      private Services.IEnvironment Environment { get; }
 
       public Route Route { get; set; }
       public ICommand ViewSchemaCommand { get; set; }
       public string LocalSchemaThumbPath { get; set; }
       public ObservableCollection<Point> SchemaRoute { get; set; }
 
-      public RouteViewModel(IApiClient client, Services.Environment environment) {
+      public RouteViewModel(IApiClient client, Services.IEnvironment environment) {
          Client = client;
          Environment = environment;
 

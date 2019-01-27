@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Climbing.Guide.Forms.IoC {
+namespace Climbing.Guide.Forms.Services.IoC {
    public interface IContainer {
       void Register(Type from, Type to, string name);
       void Register<T, U>();

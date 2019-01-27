@@ -13,13 +13,14 @@ using Climbing.Guide.Forms.Services.GeoLocation;
 using Climbing.Guide.Forms.Services.Navigation;
 using Alat.Validation;
 using Alat.Validation.Rules;
+using INavigation = Climbing.Guide.Forms.Services.Navigation.INavigation;
 
 namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class RouteViewModel : ParametrisedBaseViewModel<RouteViewModel.Parameters>, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
-      public static NavigationRequest GetNavigationRequest(Navigation navigation, Parameters parameters) {
+      public static INavigationRequest GetNavigationRequest(INavigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.RouteView), parameters);
       }
 
@@ -44,14 +45,14 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
       public ObservableCollection<Point> SchemaRoute { get; set; }
       public MapSpan Location { get; set; }
 
-      private Navigation Navigation { get; }
+      private INavigation Navigation { get; }
       private IExceptionHandler Errors { get; }
-      private GeoLocation GeoLocation { get; }
+      private IGeoLocation GeoLocation { get; }
 
       public RouteViewModel(IApiClient client,
          IExceptionHandler errors,
-         Navigation navigation,
-         GeoLocation geoLocation,
+         INavigation navigation,
+         IGeoLocation geoLocation,
          ValidationContextFactory validationContextFactory) {
          Navigation = navigation;
          Errors = errors;

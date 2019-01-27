@@ -1,7 +1,7 @@
 ﻿using Prism.Ioc;
 using System;
 
-namespace Climbing.Guide.Forms.IoC {
+namespace Climbing.Guide.Forms.Services.IoC {
    public class Container : IContainerExtension, IContainer {
 
       private IContainerExtension InternalContainerExtension { get; set; }

@@ -21,18 +21,18 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       protected Stack<Area> TraversalStack { get; }
       protected Area CurrentArea { get; private set; }
 
-      protected Navigation Navigation { get; }
+      protected INavigation Navigation { get; }
       protected IExceptionHandler Errors { get; }
 
-      private Media Media { get; }
-      private Alerts Alerts { get; }
+      private IMedia Media { get; }
+      private IAlerts Alerts { get; }
 
       public BaseGuideViewModel(
          IApiClient client,
          IExceptionHandler errors,
-         Media media,
-         Alerts alerts,
-         Navigation navigation) {
+         IMedia media,
+         IAlerts alerts,
+         INavigation navigation) {
          Client = client;
          Errors = errors;
          Media = media;
@@ -166,10 +166,10 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       private abstract class AddItem {
          public abstract string Option { get; }
 
-         protected Navigation Navigation { get; }
+         protected INavigation Navigation { get; }
          protected ObservableCollection<Area> TraversalPath { get; }
 
-         public AddItem(Navigation navigation, ObservableCollection<Area> traversalPath) {
+         public AddItem(INavigation navigation, ObservableCollection<Area> traversalPath) {
             Navigation = navigation;
             TraversalPath = traversalPath;
          }
@@ -179,7 +179,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       private class AddArea : AddItem {
          public override string Option => Resources.Strings.Routes.Add_Area_Selection_Item;
 
-         public AddArea(Navigation navigation, ObservableCollection<Area> traversalPath) : 
+         public AddArea(INavigation navigation, ObservableCollection<Area> traversalPath) : 
             base(navigation, traversalPath) { }
 
          public override async Task ExecuteAsync() {
@@ -193,9 +193,9 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       }
 
       private abstract class AddRoute : AddItem {
-         protected Media Media { get; }
+         protected IMedia Media { get; }
 
-         public AddRoute(Navigation navigation, Media media, ObservableCollection<Area> traversalPath) :
+         public AddRoute(INavigation navigation, IMedia media, ObservableCollection<Area> traversalPath) :
             base(navigation, traversalPath) {
             Media = media;
          }
@@ -219,7 +219,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       private class AddRouteFromGalleryImage : AddRoute {
          public override string Option => Resources.Strings.Routes.Add_Route_From_Gallery_Selection_Item;
 
-         public AddRouteFromGalleryImage(Navigation navigation, Media media, ObservableCollection<Area> traversalPath) :
+         public AddRouteFromGalleryImage(INavigation navigation, IMedia media, ObservableCollection<Area> traversalPath) :
             base(navigation, media, traversalPath) { }
 
          protected override async Task<string> GetImagePath() {
@@ -230,7 +230,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       private class AddRouteFromCameraPhoto : AddRoute {
          public override string Option => Resources.Strings.Routes.Add_Route_From_Image_Selection_Item;
 
-         public AddRouteFromCameraPhoto(Navigation navigation, Media media, ObservableCollection<Area> traversalPath) :
+         public AddRouteFromCameraPhoto(INavigation navigation, IMedia media, ObservableCollection<Area> traversalPath) :
             base(navigation, media, traversalPath) { }
 
          protected override async Task<string> GetImagePath() {

@@ -5,6 +5,6 @@ namespace Climbing.Guide.Forms.Models {
    public class MenuItemModel {
       public string Title { get; set; }
       public string Group { get; set; }
-      public NavigationRequest NavigationRequest { get; set; }
+      public INavigationRequest NavigationRequest { get; set; }
    }
 }

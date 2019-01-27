@@ -16,11 +16,11 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
    public class ListGuideViewModel : BaseGuideViewModel<ListGuideViewModel.Parameters> {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
-      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation) {
          return GetNavigationRequest(navigation, new Parameters());
       }
 
-      public static NavigationRequest GetNavigationRequest(Navigation navigation, Parameters parameters) {
+      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.List.ListGuideView), parameters);
       }
 
@@ -28,14 +28,14 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       public ICommand ItemTappedCommand { get; private set; }
       public ICommand AddItemCommand { get; private set; }
 
-      private Progress Progress { get; }
+      private IProgress Progress { get; }
 
       public ListGuideViewModel(IApiClient client,
          IExceptionHandler errors,
-         Navigation navigation,
-         Alerts alerts, 
-         Media media,
-         Progress progress) :
+         Services.Navigation.INavigation navigation,
+         IAlerts alerts, 
+         IMedia media,
+         IProgress progress) :
          base(client, errors, media, alerts, navigation) {
          Progress = progress;
 

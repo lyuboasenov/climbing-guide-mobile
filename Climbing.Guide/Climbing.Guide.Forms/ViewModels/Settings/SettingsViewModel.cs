@@ -13,13 +13,13 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class SettingsViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Settings.Settings_Title;
-      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+      public static INavigationRequest GetNavigationRequest(INavigation navigation) {
          return navigation.GetNavigationRequest(nameof(Views.Settings.SettingsView));
       }
 
       private IExceptionHandler Errors { get; }
-      private Resource ResourceService { get; set; }
-      private Preferences PreferenceService { get; set; }
+      private IResource ResourceService { get; set; }
+      private IPreferences PreferenceService { get; set; }
       private ICache Cache { get; set; }
 
       public Language SelectedLanguage { get; set; }
@@ -39,8 +39,8 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
       public long CacheSize { get; set; }
 
       public SettingsViewModel(IExceptionHandler errors,
-         Resource resourceService,
-         Preferences preferenceService,
+         IResource resourceService,
+         IPreferences preferenceService,
          ICache cache) {
          Errors = errors;
          ResourceService = resourceService;

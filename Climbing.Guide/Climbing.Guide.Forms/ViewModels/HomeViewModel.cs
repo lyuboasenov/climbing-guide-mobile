@@ -8,7 +8,7 @@ namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class HomeViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Main.Home_Title;
-      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation) {
          return navigation.GetNavigationRequest(nameof(Views.HomeView));
       }
 

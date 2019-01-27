@@ -8,7 +8,7 @@ namespace Climbing.Guide.Forms.ViewModels.User {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class ProfileViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.User.Profile_Title;
-      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation) {
          return navigation.GetNavigationRequest(nameof(Views.User.ProfileView));
       }
 

@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Xamarin.Forms;
+using INavigation = Climbing.Guide.Forms.Services.Navigation.INavigation;
 
 namespace Climbing.Guide.Forms.ViewModels.User {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class SignupViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.User.Signup_Title;
-      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+      public static INavigationRequest GetNavigationRequest(INavigation navigation) {
          return navigation.GetNavigationRequest(nameof(Views.User.SignupView));
       }
 
@@ -29,11 +30,11 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       protected IExceptionHandler Errors { get; }
 
       private IApiClient Client { get; }
-      private Navigation Navigation { get; }
+      private INavigation Navigation { get; }
 
       public SignupViewModel(IApiClient client,
          IExceptionHandler errors,
-         Navigation navigation,
+         INavigation navigation,
          ValidationContextFactory validationContextFactory) {
          Client = client;
          Errors = errors;

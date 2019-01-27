@@ -1,6 +1,11 @@
 ﻿namespace Climbing.Guide.Forms.Services.GeoLocation {
-   public interface Location {
-      double Latitude { get; }
-      double Longitude { get; }
+   public class Location : ILocation {
+      public double Latitude { get; }
+      public double Longitude { get; }
+
+      public Location(double latitude, double longitude) {
+         Latitude = latitude;
+         Longitude = longitude;
+      }
    }
 }

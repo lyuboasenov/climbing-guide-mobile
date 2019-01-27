@@ -1,30 +1,40 @@
-﻿using System.Threading.Tasks;
+﻿using Plugin.Media.Abstractions;
+using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.Services {
-   public interface Media {
+   public class Media : IMedia {
+      private Plugin.Media.Abstractions.IMedia XamarinMedia { get; set; }
 
-      /// <summary>
-      /// Gets if ability to take photos supported on the device
-      /// </summary>
-      bool IsTakePhotoSupported { get; }
+      public bool IsTakePhotoSupported {
+         get {
+            return XamarinMedia.IsCameraAvailable && XamarinMedia.IsTakePhotoSupported;
+         }
+      }
 
-      /// <summary>
-      /// Gets if the ability to pick photo is supported on the device
-      /// </summary>
-      bool IsPickPhotoSupported { get; }
+      public bool IsPickPhotoSupported {
+         get {
+            return XamarinMedia.IsCameraAvailable && XamarinMedia.IsPickPhotoSupported;
+         }
+      }
 
-      /// <summary>
-      /// Picks a photo from the default gallery
-      /// </summary>
-      /// <param name="options">Pick Photo Media Options</param>
-      /// <returns>Media file or null if canceled</returns>
-      Task<string> PickPhotoAsync();
+      public Media(Plugin.Media.Abstractions.IMedia media) {
+         XamarinMedia = media;
+      }
 
-      /// <summary>
-      /// Take a photo async with specified options
-      /// </summary>
-      /// <param name="options">Camera Media Options</param>
-      /// <returns>Media file of photo or null if canceled</returns>
-      Task<string> TakePhotoAsync();
+      public async Task<string> PickPhotoAsync() {
+         PickMediaOptions options = new PickMediaOptions() {
+            CompressionQuality = 70,
+            RotateImage = true,
+            SaveMetaData = true,
+            MaxWidthHeight = 2048
+         };
+         var response = await XamarinMedia.PickPhotoAsync(options);
+         return response.Path;
+      }
+
+      public async Task<string> TakePhotoAsync() {
+         StoreCameraMediaOptions options = new StoreCameraMediaOptions();
+         return (await XamarinMedia.TakePhotoAsync(options)).Path;
+      }
    }
 }

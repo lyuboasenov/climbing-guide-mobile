@@ -42,11 +42,12 @@ namespace Climbing.Guide.Forms {
          (Container as IContainerExtension).RegisterInstance(NavigationService);
 
          await NavigationService.NavigateAsync(
-            Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav, $"{nameof(Views.Shell)}/IconNavigationPage/{nameof(Views.HomeView)}"));
+            Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav,
+               $"{nameof(Views.Shell)}/IconNavigationPage/{nameof(Views.HomeView)}"));
       }
 
       protected override IContainerExtension CreateContainerExtension() {
-         return new IoC.Container(base.CreateContainerExtension());
+         return new Services.IoC.Container(base.CreateContainerExtension());
       }
 
       protected override void ConfigureViewModelLocator() {
@@ -55,7 +56,7 @@ namespace Climbing.Guide.Forms {
          Prism.Mvvm.ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver(ViewTypeToViewModelTypeResolver);
       }
 
-      private Type ViewTypeToViewModelTypeResolver(Type type) {
+      private static Type ViewTypeToViewModelTypeResolver(Type type) {
          var viewName = type.FullName;
          if (String.IsNullOrEmpty(viewName) ||
             !viewName.StartsWith("Climbing.Guide"))
@@ -77,7 +78,7 @@ namespace Climbing.Guide.Forms {
          RegisterServices(containerRegistry);
       }
 
-      private void RegisterNavigation(IContainerRegistry containerRegistry) {
+      private static void RegisterNavigation(IContainerRegistry containerRegistry) {
          containerRegistry.RegisterForNavigation<NavigationPage>();
          containerRegistry.RegisterForNavigation<IconNavigationPage>();
 
@@ -90,19 +91,19 @@ namespace Climbing.Guide.Forms {
 
       private void RegisterServices(IContainerRegistry containerRegistry) {
          // Register services
-         containerRegistry.Register<Services.Events, Services.Impl.Events>();
-         containerRegistry.Register<Preferences, Services.Impl.Preferences>();
-         containerRegistry.Register<IExceptionHandler, Services.Impl.FormsExceptionHandler>();
-         containerRegistry.Register<Alerts, Services.Impl.Alerts>();
-         containerRegistry.Register<Media, Services.Impl.Media>();
-         containerRegistry.Register<IAsyncTaskRunner, Services.Impl.FormsTaskRunner>();
-         containerRegistry.Register<ISyncTaskRunner, Services.Impl.FormsTaskRunner>();
-         containerRegistry.Register<IMainThreadTaskRunner, Services.Impl.FormsTaskRunner>();
+         containerRegistry.Register<IEvents, Services.Events>();
+         containerRegistry.Register<IPreferences, Preferences>();
+         containerRegistry.Register<IExceptionHandler, FormsExceptionHandler>();
+         containerRegistry.Register<IAlerts, Alerts>();
+         containerRegistry.Register<IMedia, Media>();
+         containerRegistry.Register<IAsyncTaskRunner, FormsTaskRunner>();
+         containerRegistry.Register<ISyncTaskRunner, FormsTaskRunner>();
+         containerRegistry.Register<IMainThreadTaskRunner, FormsTaskRunner>();
          containerRegistry.Register<Alat.Caching.ICache, FileSystemCache>();
-         containerRegistry.Register<Resource, Services.Impl.Resources>();
-         containerRegistry.Register<Services.Environment, Services.Impl.Environment>();
-         containerRegistry.Register<Progress, Services.Progress.Impl.Progress>();
-         containerRegistry.Register<GeoLocation, Services.GeoLocation.Impl.GeoLocation>();
+         containerRegistry.Register<IResource, Services.Resources>();
+         containerRegistry.Register<IEnvironment, Services.Environment>();
+         containerRegistry.Register<IProgress, Progress>();
+         containerRegistry.Register<IGeoLocation, GeoLocation>();
 
 #if DEBUG
          containerRegistry.RegisterInstance(LoggerFactory.GetDebugLogger(Level.All));
@@ -112,7 +113,7 @@ namespace Climbing.Guide.Forms {
 
          // Register instances
          containerRegistry.RegisterSingleton<IApiClient, ApiClient>();
-         containerRegistry.RegisterSingleton<Services.Navigation.Navigation, Services.Navigation.Impl.Navigation>();
+         containerRegistry.RegisterSingleton<Services.Navigation.INavigation, Services.Navigation.Navigation>();
          containerRegistry.RegisterSingleton<IValidationContextFactory, ValidationContextFactory>();
 
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
@@ -131,10 +132,11 @@ namespace Climbing.Guide.Forms {
          containerRegistry.RegisterInstance<IAuthenticationManager>(authenticationManager);
 
          var sessionFactory = new SessionFactory();
-         var cachingHandlerSettings = new Alat.Http.Caching.Settings();
-         cachingHandlerSettings.CachePeriod = TimeSpan.FromMinutes(5);
-         cachingHandlerSettings.CachingEnabledByDefault = false;
-         cachingHandlerSettings.Cache = new CachingHandlerCacheAdapter(responseCache);
+         var cachingHandlerSettings = new Alat.Http.Caching.Settings {
+            CachePeriod = TimeSpan.FromMinutes(5),
+            CachingEnabledByDefault = false,
+            Cache = new CachingHandlerCacheAdapter(responseCache)
+         };
 
          containerRegistry.RegisterInstance<IApiClientSettings>(
             new ApiClientSettings(() => {
@@ -149,8 +151,8 @@ namespace Climbing.Guide.Forms {
          containerRegistry.RegisterInstance(sessionFactory);
       }
 
-      private FileSystemCacheSettings GetCacheSettings() {
-         var environment = IoC.Container.Get<Services.Environment>();
+      private static FileSystemCacheSettings GetCacheSettings() {
+         var environment = Services.IoC.Container.Get<IEnvironment>();
 
          var cacheLocation = System.IO.Path.Combine(environment.CachePath, "files/");
          return new FileSystemCacheSettings(cacheLocation);

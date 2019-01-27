@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Climbing.Guide.Forms.Services.Impl {
+namespace Climbing.Guide.Forms.Services {
    public class FormsTaskRunner : TaskRunner, IMainThreadTaskRunner {
 
       public FormsTaskRunner(ILogger logger, Exceptions.IExceptionHandler exceptionHandler) : 

@@ -14,13 +14,14 @@ using Climbing.Guide.Forms.Services.Navigation;
 using Alat.Validation;
 using Alat.Validation.Rules;
 using System.Collections.Generic;
+using INavigation = Climbing.Guide.Forms.Services.Navigation.INavigation;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class AreaViewModel : ParametrisedBaseViewModel<AreaViewModel.Parameters>, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
-      public static NavigationRequest GetNavigationRequest(Navigation navigation, Parameters parameters) {
+      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.AreaView), parameters);
       }
 
@@ -41,15 +42,15 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
       public ICommand CancelCommand { get; set; }
 
       private IApiClient Client { get; }
-      private Navigation Navigation { get; }
+      private INavigation Navigation { get; }
       private IExceptionHandler Errors { get; }
-      private Alerts Alerts { get; }
+      private IAlerts Alerts { get; }
 
       public AreaViewModel(
          IApiClient client,
-         Navigation navigation,
+         INavigation navigation,
          IExceptionHandler exceptionHandler,
-         Alerts alerts,
+         IAlerts alerts,
          ValidationContextFactory validationContextFactory) {
          Client = client;
          Navigation = navigation;

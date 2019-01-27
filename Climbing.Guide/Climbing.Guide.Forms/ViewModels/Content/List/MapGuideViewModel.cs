@@ -19,11 +19,11 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
    public class MapGuideViewModel : BaseGuideViewModel<MapGuideViewModel.Parameters> {
       public static string VmTitle { get; } = Resources.Strings.Guide.Explore_Title;
 
-      public static NavigationRequest GetNavigationRequest(Navigation navigation) {
+      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation) {
          return GetNavigationRequest(navigation, new Parameters());
       }
 
-      public static NavigationRequest GetNavigationRequest(Navigation navigation, Parameters parameters) {
+      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.List.MapGuideView), parameters);
       }
 
@@ -36,16 +36,16 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       public MapSpan VisibleRegion { get; set; }
       public Position SelectedLocation { get; set; }
 
-      private Progress Progress { get; }
-      private GeoLocation GeoLocation { get; }
+      private IProgress Progress { get; }
+      private IGeoLocation GeoLocation { get; }
 
       public MapGuideViewModel(IApiClient client,
          IExceptionHandler errors,
-         Navigation navigation,
-         Alerts alerts,
-         Media media,
-         Progress progress,
-         GeoLocation geoLocation) : base(client, errors, media, alerts, navigation) {
+         Services.Navigation.INavigation navigation,
+         IAlerts alerts,
+         IMedia media,
+         IProgress progress,
+         IGeoLocation geoLocation) : base(client, errors, media, alerts, navigation) {
          Progress = progress;
          GeoLocation = geoLocation;
 

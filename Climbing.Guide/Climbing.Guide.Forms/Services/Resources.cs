@@ -8,8 +8,8 @@ using Climbing.Guide.Exceptions;
 using Alat.Caching;
 using Alat.Http.Caching.Sessions;
 
-namespace Climbing.Guide.Forms.Services.Impl {
-   public class Resources : Resource {
+namespace Climbing.Guide.Forms.Services {
+   public class Resources : IResource {
       private IApiClient ApiClient { get; }
       private ICache Cache { get; }
       private SessionFactory SessionFactory { get; }
