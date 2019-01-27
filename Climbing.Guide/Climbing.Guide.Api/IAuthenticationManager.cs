@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Api {
@@ -10,5 +11,7 @@ namespace Climbing.Guide.Api {
 
       Task<bool> LoginAsync(string username, string password);
       Task LogoutAsync();
+
+      IDisposable SubscribeObserver(IAuthenticationManagerObserver authenticationManagerObserver);
    }
 }

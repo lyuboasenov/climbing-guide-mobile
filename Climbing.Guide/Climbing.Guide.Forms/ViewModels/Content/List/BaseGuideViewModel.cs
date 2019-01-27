@@ -1,7 +1,6 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Collections.ObjectModel;
 using Climbing.Guide.Core.Api;
-using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Services.Navigation;
 using System;

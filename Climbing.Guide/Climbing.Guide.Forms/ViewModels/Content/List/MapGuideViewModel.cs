@@ -6,24 +6,24 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Core.Api;
-using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services.Progress;
 using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Services.GeoLocation;
 using Climbing.Guide.Forms.Services.Navigation;
 using System.Collections.Generic;
 using System;
+using INavigation = Climbing.Guide.Forms.Services.Navigation.INavigation;
 
 namespace Climbing.Guide.Forms.ViewModels.Content.List {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class MapGuideViewModel : BaseGuideViewModel<MapGuideViewModel.Parameters> {
       public static string VmTitle { get; } = Resources.Strings.Guide.Explore_Title;
 
-      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation) {
+      public static INavigationRequest GetNavigationRequest(INavigation navigation) {
          return GetNavigationRequest(navigation, new Parameters());
       }
 
-      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation, Parameters parameters) {
+      public static INavigationRequest GetNavigationRequest(INavigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.List.MapGuideView), parameters);
       }
 
@@ -41,7 +41,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
 
       public MapGuideViewModel(IApiClient client,
          IExceptionHandler errors,
-         Services.Navigation.INavigation navigation,
+         INavigation navigation,
          IAlerts alerts,
          IMedia media,
          IProgress progress,

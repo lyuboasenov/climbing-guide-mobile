@@ -20,7 +20,7 @@ namespace Climbing.Guide.Forms.Converters {
       public static string Convert(Route route) {
          string result = string.Empty;
          if (null != route) {
-            var prefService = IoC.Container.Get<IPreferences>();
+            var prefService = Services.IoC.Container.Get<IPreferences>();
             var routeType = route.Type;
             int gradingSystemId = 1;
 
@@ -29,16 +29,9 @@ namespace Climbing.Guide.Forms.Converters {
             else if (routeType == RouteType._4) { gradingSystemId = prefService.TradRouteGradeSystem; }
             Grade grade = null;
 
-            var taskRunner = IoC.Container.Get<ISyncTaskRunner>();
-            grade = taskRunner.RunSync(() => IoC.Container.Get<IResource>().GetGradeSystemAsync(gradingSystemId))
+            var taskRunner = Services.IoC.Container.Get<ISyncTaskRunner>();
+            grade = taskRunner.RunSync(() => Services.IoC.Container.Get<IResource>().GetGradeSystemAsync(gradingSystemId))
                .Where(g => g.Value <= route.Difficulty).OrderByDescending(g => g.Value).First();
-            
-
-            //var task = IoC.Container.Get<IResourceService>().GetGradeSystemAsync(gradingSystemId);
-            //task.ConfigureAwait(true);
-            //task.Wait();
-
-            //grade = task.Result.Where(g => g.Value <= route.Difficulty).OrderByDescending(g => g.Value).First();
 
             if (null != grade) {
                result = grade.Name;

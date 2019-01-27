@@ -5,7 +5,6 @@ using Xamarin.Forms.Xaml;
 using Climbing.Guide.Forms.Services;
 using System;
 using Climbing.Guide.Tasks;
-using Climbing.Guide.Exceptions;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Api;
 using System.Net.Http;
@@ -91,7 +90,6 @@ namespace Climbing.Guide.Forms {
 
       private void RegisterServices(IContainerRegistry containerRegistry) {
          // Register services
-         containerRegistry.Register<IEvents, Services.Events>();
          containerRegistry.Register<IPreferences, Preferences>();
          containerRegistry.Register<IExceptionHandler, FormsExceptionHandler>();
          containerRegistry.Register<IAlerts, Alerts>();

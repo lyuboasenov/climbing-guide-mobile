@@ -1,5 +1,4 @@
 ﻿using Climbing.Guide.Api.Schemas;
-using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services;
 using System;
 using Climbing.Guide.Collections.ObjectModel;
@@ -95,7 +94,8 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
                Languages.Add(language);
             }
 
-            SelectedLanguage = Languages.First(l => l.Code.Equals(PreferenceService.LanguageCode, StringComparison.Ordinal));
+            SelectedLanguage = Languages.First(l =>
+               l.Code.Equals(PreferenceService.LanguageCode, StringComparison.Ordinal));
 
             var gradeSystems = await ResourceService.GetGradeSystemsAsync();
 

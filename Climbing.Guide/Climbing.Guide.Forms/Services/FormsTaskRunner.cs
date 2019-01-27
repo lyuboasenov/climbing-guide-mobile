@@ -7,8 +7,7 @@ using Xamarin.Forms;
 namespace Climbing.Guide.Forms.Services {
    public class FormsTaskRunner : TaskRunner, IMainThreadTaskRunner {
 
-      public FormsTaskRunner(ILogger logger, Exceptions.IExceptionHandler exceptionHandler) : 
-         base (logger, exceptionHandler) { }
+      public FormsTaskRunner(ILogger logger) : base (logger) { }
 
       public Task RunOnUIThreadAsync(Action action) {
          Func<Task> asyncAction = () => {

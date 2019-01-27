@@ -1,6 +1,5 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Core.Api;
-using Climbing.Guide.Exceptions;
 using System;
 using System.Collections.Generic;
 using Climbing.Guide.Collections.ObjectModel;
@@ -14,6 +13,7 @@ using Climbing.Guide.Forms.Services.Navigation;
 using Alat.Validation;
 using Alat.Validation.Rules;
 using INavigation = Climbing.Guide.Forms.Services.Navigation.INavigation;
+using Climbing.Guide.Forms.Services;
 
 namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
    [PropertyChanged.AddINotifyPropertyChangedInterface]

@@ -7,7 +7,6 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using System;
-using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Helpers;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Forms.Services.Navigation;
@@ -21,7 +20,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
    public class AreaViewModel : ParametrisedBaseViewModel<AreaViewModel.Parameters>, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
-      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation, Parameters parameters) {
+      public static INavigationRequest GetNavigationRequest(INavigation navigation, Parameters parameters) {
          return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.AreaView), parameters);
       }
 

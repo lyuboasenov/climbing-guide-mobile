@@ -2,10 +2,8 @@
 using Alat.Validation.Rules;
 using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Core.Api;
-using Climbing.Guide.Exceptions;
 using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Services.Navigation;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -32,19 +30,16 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       private IExceptionHandler Errors { get; }
       private INavigation Navigation { get; }
       private IAlerts Alerts { get; }
-      private IEvents Events { get; }
 
       public LoginViewModel(IApiClient client,
          IExceptionHandler errors,
          INavigation navigation, 
          IAlerts alerts,
-         IEvents events,
          ValidationContextFactory validationContextFactory) {
          Client = client;
          Errors = errors;
          Navigation = navigation;
          Alerts = alerts;
-         Events = events;
 
          Title = VmTitle;
 
@@ -78,9 +73,9 @@ namespace Climbing.Guide.Forms.ViewModels.User {
          }
 
          if (!success) {
-            await Alerts.DisplayAlertAsync(Resources.Strings.User.Login_Invalid_Title, Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
+            await Alerts.DisplayAlertAsync(Resources.Strings.User.Login_Invalid_Title,
+               Resources.Strings.User.Login_Invalid_Message, Resources.Strings.Main.Ok);
          } else {
-            Events.GetEvent<Events.ShellMenuInvalidatedEvent>().Publish();
             await Navigation.NavigateAsync(
                HomeViewModel.GetNavigationRequest(Navigation));
          }

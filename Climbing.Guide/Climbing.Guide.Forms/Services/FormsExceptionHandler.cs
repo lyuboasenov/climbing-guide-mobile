@@ -1,5 +1,4 @@
 ﻿using Alat.Logging;
-using Climbing.Guide.Exceptions;
 using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;

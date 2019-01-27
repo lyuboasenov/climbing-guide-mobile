@@ -4,7 +4,6 @@ using Climbing.Guide.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Core.Api;
-using Climbing.Guide.Exceptions;
 using Alat.Caching;
 using Alat.Http.Caching.Sessions;
 

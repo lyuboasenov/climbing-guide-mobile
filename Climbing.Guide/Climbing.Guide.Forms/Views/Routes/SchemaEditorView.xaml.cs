@@ -36,7 +36,7 @@ namespace Climbing.Guide.Forms.Views.Routes {
 
       public SchemaEditorView() {
          InitializeComponent();
-         LoggingService = IoC.Container.Get<ILogger>();
+         LoggingService = Services.IoC.Container.Get<ILogger>();
 
          // Attach gestures
          schemaView.EnableTouchEvents = true;

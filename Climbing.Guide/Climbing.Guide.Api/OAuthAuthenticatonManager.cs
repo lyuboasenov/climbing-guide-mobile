@@ -1,4 +1,5 @@
-﻿using Climbing.Guide.Api.Exceptions;
+﻿using Alat.Patterns.Observer;
+using Climbing.Guide.Api.Exceptions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Climbing.Guide.Api {
    public class OAuthAuthenticatonManager : IAuthenticationManager {
+      private IList<IAuthenticationManagerObserver> Observers { get; }
+
       private HttpClient HttpClient { get; set; }
 
       public string ClientId { get; set; }
@@ -30,6 +33,8 @@ namespace Climbing.Guide.Api {
          HttpClient = httpClient;
          ClientId = clientId;
          ClientSecret = clientSecret;
+
+         Observers = new List<IAuthenticationManagerObserver>();
       }
 
       public async Task SetCredentials(HttpRequestMessage request) {
@@ -114,8 +119,11 @@ namespace Climbing.Guide.Api {
                } catch (HttpRequestException) { }
             }
 
+            NotifyObserversOnLogIn();
             return result;
          }
+
+         
       }
 
       public async Task LogoutAsync() {
@@ -128,6 +136,26 @@ namespace Climbing.Guide.Api {
          using (var response = await HttpClient.PostAsync("o/revoke_token/", content)) {
             Username = string.Empty;
             SetCredentials(string.Empty, string.Empty, string.Empty, DateTime.MinValue);
+         }
+
+         NotifyObserversOnLogOut();
+      }
+
+      public IDisposable SubscribeObserver(IAuthenticationManagerObserver authenticationManagerObserver) {
+         Observers.Add(authenticationManagerObserver);
+
+         return new Unsubscriber<IAuthenticationManagerObserver>(Observers, authenticationManagerObserver);
+      }
+
+      private void NotifyObserversOnLogIn() {
+         foreach(var observer in Observers) {
+            observer.OnLogIn();
+         }
+      }
+
+      private void NotifyObserversOnLogOut() {
+         foreach (var observer in Observers) {
+            observer.OnLogOut();
          }
       }
    }

@@ -1,31 +1,23 @@
 ﻿using Alat.Logging;
-using Alat.Logging.Appenders;
-using Alat.Logging.DataConverters;
 using Alat.Logging.Factories;
-using Alat.Logging.LogEntryFormatters;
-using Climbing.Guide.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Climbing.Guide.Tasks {
    public class TaskRunner : ISyncTaskRunner, IAsyncTaskRunner {
       protected ILogger Logger { get; set; }
-      protected IExceptionHandler ExceptionHandler { get; set; }
 
-      public TaskRunner() : this(LoggerFactory.GetDebugLogger(Level.All), new VoidExceptionHandler()) { }
+      public TaskRunner() : this(LoggerFactory.GetDebugLogger(Level.All)) { }
 
-      public TaskRunner(ILogger logger, IExceptionHandler exceptionHandler) {
+      public TaskRunner(ILogger logger) {
          Logger = logger;
-         ExceptionHandler = exceptionHandler;
       }
 
       public async Task RunAsync(Action action) {
          try {
             await Task.Run(action);
          } catch(Exception ex) {
-            await ExceptionHandler.HandleAsync(ex, "Error executing task.");
             Logger.Log(ex);
             throw;
          }
@@ -35,7 +27,6 @@ namespace Climbing.Guide.Tasks {
          try {
             return await Task.Run(action);
          } catch (Exception ex) {
-            await ExceptionHandler.HandleAsync(ex, "Error executing task.");
             Logger.Log(ex);
             throw;
          }
@@ -45,7 +36,6 @@ namespace Climbing.Guide.Tasks {
          try {
             return await Task.Run(function);
          } catch (Exception ex) {
-            await ExceptionHandler.HandleAsync(ex, "Error executing task.");
             Logger.Log(ex);
             throw;
          }

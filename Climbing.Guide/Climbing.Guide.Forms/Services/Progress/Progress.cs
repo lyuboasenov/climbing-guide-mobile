@@ -1,5 +1,4 @@
-﻿using Climbing.Guide.Forms.Events;
-using Climbing.Guide.Tasks;
+﻿using Climbing.Guide.Tasks;
 using Rg.Plugins.Popup.Pages;
 using System;
 using System.Threading.Tasks;
@@ -8,17 +7,15 @@ namespace Climbing.Guide.Forms.Services.Progress {
    public class Progress : IProgress {
 
       private Lazy<PopupPage> LoadingView { get; set; }
-      private Lazy<PopupPage> ProgressView { get; set; }
+      private Lazy<Views.ProgressView> ProgressView { get; set; }
 
-      private IEvents EventService { get; set; }
       private IMainThreadTaskRunner MainThreadTaskRunner { get; set; }
 
-      public Progress(IEvents eventService, IMainThreadTaskRunner mainThreadTaskRunner) {
-         EventService = eventService;
+      public Progress(IMainThreadTaskRunner mainThreadTaskRunner) {
          MainThreadTaskRunner = mainThreadTaskRunner;
 
          LoadingView = new Lazy<PopupPage>(() => new Views.LoadingView());
-         ProgressView = new Lazy<PopupPage>(() => new Views.ProgressView(EventService));
+         ProgressView = new Lazy<Views.ProgressView>(() => new Views.ProgressView());
       }
 
       internal async Task ShowLoadingIndicatorAsync() {
@@ -36,12 +33,7 @@ namespace Climbing.Guide.Forms.Services.Progress {
       }
 
       internal Task UpdateLoadingProgressAsync(double processed, double total, string message) {
-         EventService.GetEvent<ProgressChangedEvent, Guide.Forms.Events.Payload.ProgressChanged>().
-            Publish(new Guide.Forms.Events.Payload.ProgressChanged() {
-               Message = message,
-               Processed = processed,
-               Total = total
-            });
+         ProgressView.Value.ProgressChanged(message, processed, total);
          return Task.CompletedTask;
       }
 
