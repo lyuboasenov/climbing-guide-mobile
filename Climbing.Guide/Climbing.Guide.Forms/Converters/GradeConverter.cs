@@ -1,42 +1,46 @@
 ﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Forms.Commands;
+using Climbing.Guide.Forms.Services.IoC;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Xamarin.Forms;
-using Climbing.Guide.Forms.Services;
-using System.Linq;
-using System.Threading.Tasks;
-using Climbing.Guide.Tasks;
 
 namespace Climbing.Guide.Forms.Converters {
    public class GradeConverter : IValueConverter {
+      private RouteGradeQuery RouteGradeQuery { get; }
+
+      public GradeConverter() : this(Container.Get<ICommandQueryFactory>()) { }
+
+      internal GradeConverter(ICommandQueryFactory commandQueryFactory) {
+         if (commandQueryFactory == null)
+            throw new ArgumentNullException(nameof(commandQueryFactory));
+
+         RouteGradeQuery = commandQueryFactory.GetQuery<RouteGradeQuery>();
+      }
+
       public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
          return Convert(value as Route);
       }
 
       public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+#pragma warning disable RCS1079 // Throwing of new NotImplementedException.
          throw new NotImplementedException();
+#pragma warning restore RCS1079 // Throwing of new NotImplementedException.
       }
 
-      public static string Convert(Route route) {
+      public string Convert(Route route) {
          string result = string.Empty;
-         if (null != route) {
-            var prefService = Services.IoC.Container.Get<IPreferences>();
-            var routeType = route.Type;
-            int gradingSystemId = 1;
+         if (route != null) {
+            RouteGradeQuery.Route = route;
 
-            if (routeType == RouteType._1) { gradingSystemId = prefService.BoulderingGradeSystem; }
-            else if (routeType == RouteType._2) { gradingSystemId = prefService.SportRouteGradeSystem; }
-            else if (routeType == RouteType._4) { gradingSystemId = prefService.TradRouteGradeSystem; }
-            Grade grade = null;
-
-            var taskRunner = Services.IoC.Container.Get<ISyncTaskRunner>();
-            grade = taskRunner.RunSync(() => Services.IoC.Container.Get<IResource>().GetGradeSystemAsync(gradingSystemId))
-               .Where(g => g.Value <= route.Difficulty).OrderByDescending(g => g.Value).First();
-
-            if (null != grade) {
-               result = grade.Name;
+            try {
+               result = RouteGradeQuery.GetResult().Name;
+            } catch (KeyNotFoundException) {
+               result = string.Empty;
             }
          }
+
          return result;
       }
    }
