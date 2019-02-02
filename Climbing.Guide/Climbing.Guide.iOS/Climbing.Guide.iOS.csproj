@@ -70,7 +70,6 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
-    <Compile Include="Services\CloseApplication.cs" />
     <Compile Include="Views\CustomMKAnnotationView.cs" />
     <Compile Include="Views\Renderers\LocationPickerRenderer.cs" />
     <Compile Include="Views\Renderers\ClimbingMapRenderer.cs" />

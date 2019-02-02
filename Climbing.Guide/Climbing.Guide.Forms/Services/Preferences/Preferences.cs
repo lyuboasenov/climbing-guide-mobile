@@ -1,20 +1,20 @@
-﻿using Xamarin.Essentials;
-
-namespace Climbing.Guide.Forms.Services {
+﻿namespace Climbing.Guide.Forms.Services.Preferences {
    public class Preferences : IPreferences {
-
       public int BoulderingGradeSystem {
          get { return Get(GetSettingKey("system/grades/bouldering"), 2); }
          set { Set(GetSettingKey("system/grades/bouldering"), value); }
       }
+
       public int SportRouteGradeSystem {
          get { return Get(GetSettingKey("system/grades/sport"), 1); }
          set { Set(GetSettingKey("system/grades/sport"), value); }
       }
+
       public int TradRouteGradeSystem {
          get { return Get(GetSettingKey("system/grades/trad"), 4); }
          set { Set(GetSettingKey("system/grades/trad"), value); }
       }
+
       public string LanguageCode {
          get { return Get(GetSettingKey("system/language"), "en"); }
          set { Set(GetSettingKey("system/language"), value); }
@@ -29,7 +29,7 @@ namespace Climbing.Guide.Forms.Services {
          return (T)System.Convert.ChangeType(value, typeof(T));
       }
 
-      private string GetSettingKey(string key) {
+      private static string GetSettingKey(string key) {
          return Helpers.UriHelper.Get(Helpers.UriHelper.Schema.set, key).ToString();
       }
    }

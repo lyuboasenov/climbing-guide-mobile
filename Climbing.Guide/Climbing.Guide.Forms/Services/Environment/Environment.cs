@@ -1,10 +1,10 @@
 ﻿using System.IO;
 
-namespace Climbing.Guide.Forms.Services {
+namespace Climbing.Guide.Forms.Services.Environment {
    public class Environment : IEnvironment {
-      public string ApplicationDataPath { get; private set; }
-      public string CachePath { get; private set; }
-      public string TempPath { get; private set; }
+      public string ApplicationDataPath { get; }
+      public string CachePath { get; }
+      public string TempPath { get; }
 
       public Environment() {
          ApplicationDataPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);

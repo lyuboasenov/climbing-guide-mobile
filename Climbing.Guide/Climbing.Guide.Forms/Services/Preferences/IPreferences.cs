@@ -1,4 +1,4 @@
-﻿namespace Climbing.Guide.Forms.Services {
+﻿namespace Climbing.Guide.Forms.Services.Preferences {
    public interface IPreferences {
       int BoulderingGradeSystem { get; set; }
       string LanguageCode { get; set; }

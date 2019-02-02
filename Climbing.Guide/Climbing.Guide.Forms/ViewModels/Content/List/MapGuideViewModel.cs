@@ -1,17 +1,19 @@
-﻿using Climbing.Guide.Forms.Helpers;
-using Xamarin.Forms.Maps;
-using System.Threading.Tasks;
+﻿using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Core.Api;
+using Climbing.Guide.Forms.Helpers;
+using Climbing.Guide.Forms.Services.Alerts;
+using Climbing.Guide.Forms.Services.Exceptions;
+using Climbing.Guide.Forms.Services.GeoLocation;
+using Climbing.Guide.Forms.Services.Media;
+using Climbing.Guide.Forms.Services.Navigation;
+using Climbing.Guide.Forms.Services.Progress;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
-using Climbing.Guide.Api.Schemas;
-using Climbing.Guide.Core.Api;
-using Climbing.Guide.Forms.Services.Progress;
-using Climbing.Guide.Forms.Services;
-using Climbing.Guide.Forms.Services.GeoLocation;
-using Climbing.Guide.Forms.Services.Navigation;
-using System.Collections.Generic;
-using System;
+using Xamarin.Forms.Maps;
 using INavigation = Climbing.Guide.Forms.Services.Navigation.INavigation;
 
 namespace Climbing.Guide.Forms.ViewModels.Content.List {
@@ -40,12 +42,12 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       private IGeoLocation GeoLocation { get; }
 
       public MapGuideViewModel(IApiClient client,
-         IExceptionHandler errors,
+         IExceptionHandler еxceptionHandler,
          INavigation navigation,
          IAlerts alerts,
          IMedia media,
          IProgress progress,
-         IGeoLocation geoLocation) : base(client, errors, media, alerts, navigation) {
+         IGeoLocation geoLocation) : base(client, еxceptionHandler, media, alerts, navigation) {
          Progress = progress;
          GeoLocation = geoLocation;
 
@@ -67,21 +69,21 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
          await TraverseToAsync(parentArea);
       }
 
-      protected async override Task TraverseToAsync(Area parentArea) {
+      protected async override Task TraverseToAsync(Area area) {
          using (var loading = await Progress.CreateLoadingSessionAsync()) {
-            await base.TraverseToAsync(parentArea);
-            (TraverseBackCommand as Command).ChangeCanExecute();
+            await base.TraverseToAsync(area);
+            (TraverseBackCommand as Command)?.ChangeCanExecute();
 
             Pins = Items;
 
             decimal latitude, longitude;
-            if (null == parentArea) {
+            if (area == null) {
                var location = await GeoLocation.GetCurrentOrDefaultAsync();
                latitude = (decimal)location.Latitude;
                longitude = (decimal)location.Longitude;
             } else {
-               latitude = parentArea.Latitude;
-               longitude = parentArea.Longitude;
+               latitude = area.Latitude;
+               longitude = area.Longitude;
             }
 
             int zoomLevel = ZoomLevel[TraversalPath.Count];
@@ -92,14 +94,14 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       }
 
       private void InitializeCommands() {
-         PinTappedCommand = new Command(async (data) => { await OnPinTapped(data); } );
+         PinTappedCommand = new Command(async (data) => await OnPinTapped(data));
          TraverseBackCommand = new Command(async () => await OnTraverseBackAsync(), () => TraversalPath.Count > 1);
          AddItemCommand = new Command(async () => await OnAddAsync());
       }
 
       private Task InitializeData(Parameters parameters) {
          try {
-            if (null != parameters.TraversalPath) {
+            if (parameters.TraversalPath != null) {
                foreach (var area in parameters.TraversalPath) {
                   TraversalStack.Push(area);
                   TraversalPath.Add(area);
@@ -107,7 +109,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
             }
             return Task.CompletedTask;
          } catch (Exception ex) {
-            return Errors.HandleAsync(ex);
+            return ExceptionHandler.HandleAsync(ex);
          }
       }
 
@@ -121,7 +123,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
 
       private async Task OnTraverseBackAsync() {
          await TraverseBackAsync();
-         (TraverseBackCommand as Command).ChangeCanExecute();
+         (TraverseBackCommand as Command)?.ChangeCanExecute();
       }
 
       private Task OnAddAsync() {
@@ -129,7 +131,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       }
 
       private async Task ViewRoute(Route route) {
-         if (null != route) {
+         if (route != null) {
             await Navigation.NavigateAsync(
                View.RouteViewModel.GetNavigationRequest(
                   Navigation,

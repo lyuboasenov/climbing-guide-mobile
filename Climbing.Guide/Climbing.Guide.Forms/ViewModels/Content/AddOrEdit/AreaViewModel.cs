@@ -1,18 +1,19 @@
-﻿using Climbing.Guide.Api.Schemas;
-using Climbing.Guide.Forms.Services;
+﻿using Alat.Validation;
+using Alat.Validation.Rules;
+using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Collections.ObjectModel;
+using Climbing.Guide.Core.Api;
+using Climbing.Guide.Forms.Helpers;
+using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Forms.Services.Alerts;
+using Climbing.Guide.Forms.Services.Exceptions;
+using Climbing.Guide.Forms.Services.Navigation;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
-using System;
-using Climbing.Guide.Forms.Helpers;
-using Climbing.Guide.Core.Api;
-using Climbing.Guide.Forms.Services.Navigation;
-using Alat.Validation;
-using Alat.Validation.Rules;
-using System.Collections.Generic;
 using INavigation = Climbing.Guide.Forms.Services.Navigation.INavigation;
 
 namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
@@ -42,7 +43,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
 
       private IApiClient Client { get; }
       private INavigation Navigation { get; }
-      private IExceptionHandler Errors { get; }
+      private IExceptionHandler ExceptionHandler { get; }
       private IAlerts Alerts { get; }
 
       public AreaViewModel(
@@ -53,7 +54,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
          ValidationContextFactory validationContextFactory) {
          Client = client;
          Navigation = navigation;
-         Errors = exceptionHandler;
+         ExceptionHandler = exceptionHandler;
          Alerts = alerts;
 
          Title = VmTitle;
@@ -62,22 +63,21 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
 
          InitializeCommands();
 
-         // ValidationContext should be initialized after all other initialization is done
          ValidationContext = validationContextFactory.GetContextFor(this, true);
       }
 
-      public void InitializeValidationRules(IValidationContext context) {
-         context.AddRule<AreaViewModel, string>(t => t.Name,
+      public void InitializeValidationRules(IValidationContext validationContext) {
+         validationContext.AddRule<AreaViewModel, string>(t => t.Name,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Name)));
-         context.AddRule<AreaViewModel, string>(t => t.Info,
+         validationContext.AddRule<AreaViewModel, string>(t => t.Info,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Info)));
-         context.AddRule<AreaViewModel, MapSpan>(t => t.Location,
+         validationContext.AddRule<AreaViewModel, MapSpan>(t => t.Location,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
@@ -88,7 +88,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
          // Raise validation context property changed in order to update validation errors
          RaisePropertyChanged(nameof(ValidationContext));
 
-         (SaveCommand as Command).ChangeCanExecute();
+         (SaveCommand as Command)?.ChangeCanExecute();
       }
 
       protected async override Task OnNavigatedToAsync(Parameters parameters) {
@@ -116,7 +116,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
             }
             return Task.CompletedTask;
          } catch (Exception ex) {
-            return Errors.HandleAsync(ex);
+            return ExceptionHandler.HandleAsync(ex);
          }
       }
 
@@ -151,12 +151,8 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
                Resources.Strings.Guide.Manage_Area_Save_Successful_Message,
                Resources.Strings.Main.Ok);
             await GoBack();
-         } catch (ApiCallException ex) {
-            await Errors.HandleAsync(ex, Resources.Strings.Guide.Manage_Area_Save_Error);
-         } catch (AggregateException ex) {
-            await Errors.HandleAsync(ex, Resources.Strings.Guide.Manage_Area_Save_Error);
          } catch (Exception ex) {
-            await Errors.HandleAsync(ex, Resources.Strings.Guide.Manage_Area_Save_Error);
+            await ExceptionHandler.HandleAsync(ex, Resources.Strings.Guide.Manage_Area_Save_Error);
          }
       }
 

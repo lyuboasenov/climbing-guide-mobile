@@ -1,6 +1,8 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Core.Api;
-using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Forms.Services.Alerts;
+using Climbing.Guide.Forms.Services.Exceptions;
+using Climbing.Guide.Forms.Services.Media;
 using Climbing.Guide.Forms.Services.Navigation;
 using Climbing.Guide.Forms.Services.Progress;
 using System;
@@ -31,12 +33,12 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       private IProgress Progress { get; }
 
       public ListGuideViewModel(IApiClient client,
-         IExceptionHandler errors,
+         IExceptionHandler exceptionHandler,
          INavigation navigation,
-         IAlerts alerts, 
+         IAlerts alerts,
          IMedia media,
          IProgress progress) :
-         base(client, errors, media, alerts, navigation) {
+         base(client, exceptionHandler, media, alerts, navigation) {
          Progress = progress;
 
          Title = VmTitle;
@@ -70,22 +72,22 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
          await TraverseToAsync(parentArea);
       }
 
-      protected async override Task TraverseToAsync(Area parentArea) {
+      protected async override Task TraverseToAsync(Area area) {
          using (var loading = await Progress.CreateLoadingSessionAsync()) {
-            await base.TraverseToAsync(parentArea);
-            (TraverseBackCommand as Command).ChangeCanExecute();
+            await base.TraverseToAsync(area);
+            (TraverseBackCommand as Command)?.ChangeCanExecute();
          }
       }
 
       private void InitializeCommands() {
          TraverseBackCommand = new Command(async () => await OnTraverseBackAsync(), () => TraversalStack.Count > 1);
-         ItemTappedCommand = new Command<object>(async (item) => { await OnItemTappedAsync(item); });
+         ItemTappedCommand = new Command<object>(async (item) => await OnItemTappedAsync(item));
          AddItemCommand = new Command(async () => await OnAddAsync());
       }
 
       private Task InitializeData(Parameters parameters) {
          try {
-            if (null != parameters.TraversalPath) {
+            if (parameters.TraversalPath != null) {
                foreach(var area in parameters.TraversalPath) {
                   TraversalStack.Push(area);
                   TraversalPath.Add(area);
@@ -93,13 +95,13 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
             }
             return Task.CompletedTask;
          } catch (Exception ex) {
-            return Errors.HandleAsync(ex);
+            return ExceptionHandler.HandleAsync(ex);
          }
       }
 
       private async Task OnTraverseBackAsync() {
          await TraverseBackAsync();
-         (TraverseBackCommand as Command).ChangeCanExecute();
+         (TraverseBackCommand as Command)?.ChangeCanExecute();
       }
 
       private Task OnAddAsync() {

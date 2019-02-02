@@ -1,7 +1,7 @@
 ﻿using Alat.Validation;
 using Alat.Validation.Rules;
 using Climbing.Guide.Core.Api;
-using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Forms.Services.Exceptions;
 using Climbing.Guide.Forms.Services.Navigation;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +14,7 @@ namespace Climbing.Guide.Forms.ViewModels.User {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class SignupViewModel : BaseViewModel, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.User.Signup_Title;
+
       public static INavigationRequest GetNavigationRequest(INavigation navigation) {
          return navigation.GetNavigationRequest(nameof(Views.User.SignupView));
       }
@@ -27,24 +28,22 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       public ICommand SignupCommand { get; private set; }
       public ICommand LoginCommand { get; private set; }
 
-      protected IExceptionHandler Errors { get; }
-
       private IApiClient Client { get; }
       private INavigation Navigation { get; }
+      private IExceptionHandler ExceptionHandler { get; }
 
       public SignupViewModel(IApiClient client,
-         IExceptionHandler errors,
+         IExceptionHandler exceptionHandler,
          INavigation navigation,
          ValidationContextFactory validationContextFactory) {
          Client = client;
-         Errors = errors;
          Navigation = navigation;
+         ExceptionHandler = exceptionHandler;
 
          Title = VmTitle;
 
          InitializeCommands();
 
-         // ValidationContext should be initialized after all other initialization is done
          ValidationContext = validationContextFactory.GetContextFor(this, true);
       }
 
@@ -52,26 +51,26 @@ namespace Climbing.Guide.Forms.ViewModels.User {
          // Raise validation context property changed in order to update validation errors
          RaisePropertyChanged(nameof(ValidationContext));
 
-         (SignupCommand as Command).ChangeCanExecute();
+         (SignupCommand as Command)?.ChangeCanExecute();
       }
 
-      public void InitializeValidationRules(IValidationContext context) {
-         context.AddRule<SignupViewModel, string>(t => t.Username,
+      public void InitializeValidationRules(IValidationContext validationContext) {
+         validationContext.AddRule<SignupViewModel, string>(t => t.Username,
             new RequiredRule(Resources.Strings.User.Username_Validation_Error),
             new EmailRule(Resources.Strings.User.Username_Validation_Error));
 
          var passwordComparer = new CompareRule(Resources.Strings.User.Confirm_Password_Validation_Error);
-         context.AddRule<SignupViewModel, string>(t => t.Password,
+         validationContext.AddRule<SignupViewModel, string>(t => t.Password,
             new CustomRule(Resources.Strings.User.Password_Validation_Error,
-               (key, value) => {
+               (_, value) => {
                   var password = value as string;
-                  return !string.IsNullOrEmpty(password) &&
-                  password.Trim().Length > 8 &&
-                  password.Any(char.IsDigit) &&
-                  password.Any(char.IsLetter);
+                  return !string.IsNullOrEmpty(password)
+                  && password.Trim().Length > 8
+                  && password.Any(char.IsDigit)
+                  && password.Any(char.IsLetter);
                }),
             passwordComparer);
-         context.AddRule<SignupViewModel, string>(t => t.ConfirmPassword,
+         validationContext.AddRule<SignupViewModel, string>(t => t.ConfirmPassword,
             passwordComparer);
       }
 
@@ -81,7 +80,7 @@ namespace Climbing.Guide.Forms.ViewModels.User {
       }
 
       private async Task SignUp() {
-         try {
+         await ExceptionHandler.ExecuteErrorHandled(async () => {
             await Client.UsersClient.CreateAsync(new Climbing.Guide.Api.Schemas.User() {
                Username = Username,
                Email = Username,
@@ -89,11 +88,9 @@ namespace Climbing.Guide.Forms.ViewModels.User {
             });
 
             await NavigateToLogin();
-         } catch(Climbing.Guide.Api.Schemas.ApiCallException ex) {
-            await Errors.HandleAsync(ex,
-               Resources.Strings.Main.Communication_Error_Message,
-               Resources.Strings.Main.Communication_Error_Message_Detailed_Format);
-         }
+         },
+         Resources.Strings.Main.Communication_Error_Message,
+         Resources.Strings.Main.Communication_Error_Message_Detailed_Format);
       }
 
       private async Task NavigateToLogin() {

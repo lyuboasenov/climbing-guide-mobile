@@ -4,9 +4,8 @@ using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Climbing.Guide.Forms.Services {
+namespace Climbing.Guide.Forms.Services.Tasks {
    public class FormsTaskRunner : TaskRunner, IMainThreadTaskRunner {
-
       public FormsTaskRunner(ILogger logger) : base (logger) { }
 
       public Task RunOnUIThreadAsync(Action action) {

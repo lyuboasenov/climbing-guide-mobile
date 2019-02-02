@@ -1,19 +1,18 @@
-﻿using Climbing.Guide.Api.Schemas;
-using Climbing.Guide.Core.Api;
+﻿using Alat.Validation;
+using Alat.Validation.Rules;
+using Climbing.Guide.Api.Schemas;
+using Climbing.Guide.Collections.ObjectModel;
+using Climbing.Guide.Forms.Helpers;
+using Climbing.Guide.Forms.Services.Exceptions;
+using Climbing.Guide.Forms.Services.GeoLocation;
+using Climbing.Guide.Forms.Services.Navigation;
 using System;
 using System.Collections.Generic;
-using Climbing.Guide.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
-using Climbing.Guide.Forms.Helpers;
-using Climbing.Guide.Forms.Services.GeoLocation;
-using Climbing.Guide.Forms.Services.Navigation;
-using Alat.Validation;
-using Alat.Validation.Rules;
 using INavigation = Climbing.Guide.Forms.Services.Navigation.INavigation;
-using Climbing.Guide.Forms.Services;
 
 namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
@@ -26,16 +25,13 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
 
       public IValidationContext ValidationContext { get; }
 
-      public ICommand ViewSchemaCommand { get; set; }
-      public ICommand SaveCommand { get; set; }
-      public ICommand CancelCommand { get; set; }
+      public ICommand ViewSchemaCommand { get; private set; }
+      public ICommand SaveCommand { get; private set; }
+      public ICommand CancelCommand { get; private set; }
 
       public string LocalSchemaThumbPath { get; set; }
       public string Name { get; set; }
       public string Info { get; set; }
-      // TODO: fix grades
-      // public IGrade SelectedDifficulty { get; set; }
-      // public IEnumerable<IGrade> Difficulty { get; set; } = GetService<IGradeService>().GetGradeList(Core.Models.Routes.GradeType.V);
       public string RouteType { get; set; } = Resources.Strings.Routes.Route_Edit_Route_Type_Boulder;
       public IEnumerable<string> RouteTypes { get; set; }
       public double Length { get; set; }
@@ -46,16 +42,15 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
       public MapSpan Location { get; set; }
 
       private INavigation Navigation { get; }
-      private IExceptionHandler Errors { get; }
+      private IExceptionHandler ExceptionHandler { get; }
       private IGeoLocation GeoLocation { get; }
 
-      public RouteViewModel(IApiClient client,
-         IExceptionHandler errors,
+      public RouteViewModel(IExceptionHandler exceptionHandler,
          INavigation navigation,
          IGeoLocation geoLocation,
          ValidationContextFactory validationContextFactory) {
          Navigation = navigation;
-         Errors = errors;
+         ExceptionHandler = exceptionHandler;
          GeoLocation = geoLocation;
 
          Title = VmTitle;
@@ -65,7 +60,6 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
 
          InitializeCommands();
 
-         // ValidationContext should be initialized after all other initialization is done
          ValidationContext = validationContextFactory.GetContextFor(this, true);
       }
 
@@ -77,21 +71,21 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
          // Raise validation context property changed in order to update validation errors
          RaisePropertyChanged(nameof(ValidationContext));
 
-         (SaveCommand as Command).ChangeCanExecute();
+         (SaveCommand as Command)?.ChangeCanExecute();
       }
 
-      public void InitializeValidationRules(IValidationContext context) {
-         context.AddRule<RouteViewModel, string>(t => t.Name,
+      public void InitializeValidationRules(IValidationContext validationContext) {
+         validationContext.AddRule<RouteViewModel, string>(t => t.Name,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Name)));
-         context.AddRule<RouteViewModel, string>(t => t.Info,
+         validationContext.AddRule<RouteViewModel, string>(t => t.Info,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Info)));
-         context.AddRule<RouteViewModel, MapSpan>(t => t.Location,
+         validationContext.AddRule<RouteViewModel, MapSpan>(t => t.Location,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
@@ -113,32 +107,32 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
       }
 
       private async Task InitializeData(Parameters parameters) {
+         if (parameters.TraversalPath == null) {
+            throw new ArgumentNullException(nameof(parameters.TraversalPath));
+         }
+
+         if (string.IsNullOrEmpty(parameters.ImagePath)) {
+            throw new ArgumentNullException(nameof(parameters.ImagePath));
+         }
+
          try {
             await base.OnNavigatedToAsync(parameters);
 
-            if (null == parameters.TraversalPath) {
-               new ArgumentNullException(nameof(parameters.TraversalPath));
-            } else {
-               foreach (var area in parameters.TraversalPath) {
-                  TraversalPath.Add(area);
-                  ParentArea = area;
-                  if (null != area) {
-                     Location = MapSpan.FromCenterAndRadius(
-                        MapHelper.GetPosition(area.Latitude, area.Longitude),
-                        Distance.FromKilometers(area.Size));
-                  }
+            foreach (var area in parameters.TraversalPath) {
+               TraversalPath.Add(area);
+               ParentArea = area;
+               if (area != null) {
+                  Location = MapSpan.FromCenterAndRadius(
+                     MapHelper.GetPosition(area.Latitude, area.Longitude),
+                     Distance.FromKilometers(area.Size));
                }
             }
 
-            if (string.IsNullOrEmpty(parameters.ImagePath)) {
-               new ArgumentNullException(nameof(parameters.ImagePath));
-            } else {
-               LocalSchemaThumbPath = parameters.ImagePath;
-            }
+            LocalSchemaThumbPath = parameters.ImagePath;
 
             await InitializeLocationAsync();
          }catch(Exception ex) {
-            await Errors.HandleAsync(ex);
+            await ExceptionHandler.HandleAsync(ex);
          }
       }
 
@@ -152,14 +146,13 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
 
       private Task InitializeLocationFromExifAsync() {
          using (var exifReader = new ExifLib.ExifReader(LocalSchemaThumbPath)) {
-            double[] latitudeArray, longitudeArray;
             double latitude, longitude;
 
-            exifReader.GetTagValue(ExifLib.ExifTags.GPSLatitude, out latitudeArray);
-            exifReader.GetTagValue(ExifLib.ExifTags.GPSLongitude, out longitudeArray);
+            exifReader.GetTagValue(ExifLib.ExifTags.GPSLatitude, out double[] latitudeArray);
+            exifReader.GetTagValue(ExifLib.ExifTags.GPSLongitude, out double[] longitudeArray);
 
-            latitude = latitudeArray[0] + latitudeArray[1] / 60 + latitudeArray[2] / 3600;
-            longitude = longitudeArray[0] + longitudeArray[1] / 60 + longitudeArray[2] / 3600;
+            latitude = latitudeArray[0] + (latitudeArray[1] / 60) + (latitudeArray[2] / 3600);
+            longitude = longitudeArray[0] + (longitudeArray[1] / 60) + (longitudeArray[2] / 3600);
 
             Location = MapSpan.FromCenterAndRadius(new Position(latitude, longitude), new Distance(170));
          }
@@ -172,8 +165,9 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
          Location = MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), new Distance(170));
       }
 
+#pragma warning disable CA1822 // Mark members as static
       private Task ViewSchema() {
-         //await CurrentPage.DisplayAlert("View schema", "SCHEMA!!!!", Resources.Strings.Main.Ok);
+#pragma warning restore CA1822 // Mark members as static
          return Task.CompletedTask;
       }
 

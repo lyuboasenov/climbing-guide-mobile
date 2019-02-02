@@ -1,5 +1,4 @@
-﻿using Climbing.Guide.Forms.Resources;
-using Climbing.Guide.Forms.Services.Navigation;
+﻿using Climbing.Guide.Forms.Services.Navigation;
 using System;
 using System.Windows.Input;
 

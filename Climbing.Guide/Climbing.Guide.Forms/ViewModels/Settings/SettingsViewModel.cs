@@ -1,25 +1,21 @@
-﻿using Climbing.Guide.Api.Schemas;
-using Climbing.Guide.Forms.Services;
-using System;
+﻿using Alat.Caching;
+using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Collections.ObjectModel;
+using Climbing.Guide.Forms.Commands;
+using Climbing.Guide.Forms.Services.Navigation;
+using Climbing.Guide.Forms.Services.Preferences;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using Climbing.Guide.Forms.Services.Navigation;
-using Alat.Caching;
 
 namespace Climbing.Guide.Forms.ViewModels.Settings {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class SettingsViewModel : BaseViewModel {
       public static string VmTitle { get; } = Resources.Strings.Settings.Settings_Title;
+
       public static INavigationRequest GetNavigationRequest(INavigation navigation) {
          return navigation.GetNavigationRequest(nameof(Views.Settings.SettingsView));
       }
-
-      private IExceptionHandler Errors { get; }
-      private IResource ResourceService { get; set; }
-      private IPreferences PreferenceService { get; set; }
-      private ICache Cache { get; set; }
 
       public Language SelectedLanguage { get; set; }
       public ObservableCollection<Language> Languages { get; set; }
@@ -33,18 +29,18 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
       public GradeSystem SelectedTradRouteGradingSystem { get; set; }
       public ObservableCollection<GradeSystem> TradRouteGradingSystems { get; set; }
 
-      public ICommand ClearCacheCommand { get; private set; }
+      public System.Windows.Input.ICommand ClearCacheCommand { get; private set; }
 
       public long CacheSize { get; set; }
 
-      public SettingsViewModel(IExceptionHandler errors,
-         IResource resourceService,
-         IPreferences preferenceService,
-         ICache cache) {
-         Errors = errors;
-         ResourceService = resourceService;
-         PreferenceService = preferenceService;
+      private IPreferences Preferences { get; }
+      private ICache Cache { get; }
+      private ICommandQueryFactory CommandQueryFactory { get; }
+
+      public SettingsViewModel(IPreferences preferences, ICache cache, ICommandQueryFactory commandQueryFactory) {
+         Preferences = preferences;
          Cache = cache;
+         CommandQueryFactory = commandQueryFactory;
 
          Title = VmTitle;
 
@@ -57,19 +53,19 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
       }
 
       public void OnSelectedLanguageChanged() {
-         PreferenceService.LanguageCode = SelectedLanguage.Code;
+         Preferences.LanguageCode = SelectedLanguage.Code;
       }
 
       public void OnSelectedBoulderingGradingSystemChanged() {
-         PreferenceService.BoulderingGradeSystem = SelectedBoulderingGradingSystem.Id.Value;
+         Preferences.BoulderingGradeSystem = SelectedBoulderingGradingSystem.Id.Value;
       }
 
       public void OnSelectedSportRouteGradingSystemChanged() {
-         PreferenceService.SportRouteGradeSystem = SelectedSportRouteGradingSystem.Id.Value;
+         Preferences.SportRouteGradeSystem = SelectedSportRouteGradingSystem.Id.Value;
       }
 
       public void OnSelectedTradRouteGradingSystemChanged() {
-         PreferenceService.TradRouteGradeSystem = SelectedTradRouteGradingSystem.Id.Value;
+         Preferences.TradRouteGradeSystem = SelectedTradRouteGradingSystem.Id.Value;
       }
 
       protected async override Task OnNavigatedToAsync() {
@@ -87,46 +83,41 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
       }
 
       private async Task InitializeViewModel() {
-         try {
-            var languages = await ResourceService.GetLanguagesAsync();
-            Languages.Clear();
-            foreach (var language in languages) {
-               Languages.Add(language);
-            }
+         var languagesQuery = CommandQueryFactory.GetQuery<LanguagesQuery>();
+         var languages = await languagesQuery.GetResultAsync();
 
-            SelectedLanguage = Languages.First(l =>
-               l.Code.Equals(PreferenceService.LanguageCode, StringComparison.Ordinal));
-
-            var gradeSystems = await ResourceService.GetGradeSystemsAsync();
-
-            BoulderingGradingSystems.Clear();
-            foreach (var system in gradeSystems.First(gs => gs.RouteType == 1).GradeSystems) {
-               BoulderingGradingSystems.Add(system);
-            }
-            SportRouteGradingSystems.Clear();
-            foreach(var system in gradeSystems.First(gs => gs.RouteType == 2).GradeSystems) {
-               SportRouteGradingSystems.Add(system);
-            }
-            TradRouteGradingSystems.Clear();
-            foreach(var system in gradeSystems.First(gs => gs.RouteType == 4).GradeSystems) {
-               TradRouteGradingSystems.Add(system);
-            }
-
-            SelectedBoulderingGradingSystem = 
-               BoulderingGradingSystems.First(gs => gs.Id.Value == PreferenceService.BoulderingGradeSystem);
-            SelectedSportRouteGradingSystem =
-               SportRouteGradingSystems.First(gs => gs.Id.Value == PreferenceService.SportRouteGradeSystem);
-            SelectedTradRouteGradingSystem =
-               TradRouteGradingSystems.First(gs => gs.Id.Value == PreferenceService.TradRouteGradeSystem);
-
-            CacheSize = Cache.GetCacheSize();
-         } catch (ApiCallException ex) {
-            await Errors.HandleAsync(ex,
-               Resources.Strings.Main.Communication_Error_Message,
-               Resources.Strings.Main.Communication_Error_Message_Detailed_Format);
-         } catch (Exception ex) {
-            await Errors.HandleAsync(ex);
+         Languages.Clear();
+         foreach (var language in languages) {
+            Languages.Add(language);
          }
+
+         SelectedLanguage = Languages.First(l =>
+            l.Code.Equals(Preferences.LanguageCode, StringComparison.Ordinal));
+
+         var gradeSystemsQuery = CommandQueryFactory.GetQuery<GradeSystemsQuery>();
+         var gradeSystems = await gradeSystemsQuery.GetResultAsync();
+
+         BoulderingGradingSystems.Clear();
+         foreach (var system in gradeSystems.First(gs => gs.RouteType == 1).GradeSystems) {
+            BoulderingGradingSystems.Add(system);
+         }
+         SportRouteGradingSystems.Clear();
+         foreach(var system in gradeSystems.First(gs => gs.RouteType == 2).GradeSystems) {
+            SportRouteGradingSystems.Add(system);
+         }
+         TradRouteGradingSystems.Clear();
+         foreach(var system in gradeSystems.First(gs => gs.RouteType == 4).GradeSystems) {
+            TradRouteGradingSystems.Add(system);
+         }
+
+         SelectedBoulderingGradingSystem =
+            BoulderingGradingSystems.First(gs => gs.Id.Value == Preferences.BoulderingGradeSystem);
+         SelectedSportRouteGradingSystem =
+            SportRouteGradingSystems.First(gs => gs.Id.Value == Preferences.SportRouteGradeSystem);
+         SelectedTradRouteGradingSystem =
+            TradRouteGradingSystems.First(gs => gs.Id.Value == Preferences.TradRouteGradeSystem);
+
+         CacheSize = Cache.GetCacheSize();
       }
    }
 }

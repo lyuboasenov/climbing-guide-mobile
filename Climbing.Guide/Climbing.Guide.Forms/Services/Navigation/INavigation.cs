@@ -1,5 +1,4 @@
-﻿using Climbing.Guide.Tasks;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.Services.Navigation {
    public interface INavigation {

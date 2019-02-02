@@ -1,31 +1,31 @@
-﻿using Prism;
-using Prism.Ioc;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using Climbing.Guide.Forms.Services;
-using System;
-using Climbing.Guide.Tasks;
-using Climbing.Guide.Core.Api;
-using Climbing.Guide.Api;
-using System.Net.Http;
-using Climbing.Guide.Forms.Services.Progress;
-using Climbing.Guide.Forms.Services.GeoLocation;
-using Plugin.Iconize;
-using Alat.Caching;
+﻿using Alat.Caching;
 using Alat.Caching.FileSystem;
 using Alat.Http;
 using Alat.Http.Caching;
-using Alat.Logging.Factories;
-using Alat.Logging;
 using Alat.Http.Caching.Sessions;
+using Alat.Logging;
+using Alat.Logging.Factories;
 using Alat.Validation;
+using Climbing.Guide.Api;
+using Climbing.Guide.Core.Api;
+using Climbing.Guide.Forms.Commands;
+using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Forms.Services.GeoLocation;
+using Climbing.Guide.Forms.Services.Progress;
+using Climbing.Guide.Tasks;
+using Plugin.Iconize;
+using Prism;
+using Prism.Ioc;
+using System;
+using System.Net.Http;
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Climbing.Guide.Forms {
    public partial class App {
 #if DEBUG
       private string BaseUrl { get; } = "http://10.0.2.2:8000";
-      // private string BaseUrl { get; } = "http://127.0.0.1:8000";
 #else
       private string BaseUrl { get; } = "https://api.climbingguide.org";
 #endif
@@ -38,7 +38,7 @@ namespace Climbing.Guide.Forms {
 
          // HACK: register Prism.Navigation.INavigationService in order to be used in
          // NavigationService creation
-         (Container as IContainerExtension).RegisterInstance(NavigationService);
+         (Container as IContainerExtension)?.RegisterInstance(NavigationService);
 
          await NavigationService.NavigateAsync(
             Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav,
@@ -57,9 +57,10 @@ namespace Climbing.Guide.Forms {
 
       private static Type ViewTypeToViewModelTypeResolver(Type type) {
          var viewName = type.FullName;
-         if (String.IsNullOrEmpty(viewName) ||
-            !viewName.StartsWith("Climbing.Guide"))
+         if (String.IsNullOrEmpty(viewName)
+            || !viewName.StartsWith("Climbing.Guide")) {
             return null;
+         }
 
          string viewModelName = string.Empty;
          if (viewName.EndsWith("View")) {
@@ -90,16 +91,15 @@ namespace Climbing.Guide.Forms {
 
       private void RegisterServices(IContainerRegistry containerRegistry) {
          // Register services
-         containerRegistry.Register<IPreferences, Preferences>();
-         containerRegistry.Register<IExceptionHandler, FormsExceptionHandler>();
-         containerRegistry.Register<IAlerts, Alerts>();
-         containerRegistry.Register<IMedia, Media>();
-         containerRegistry.Register<IAsyncTaskRunner, FormsTaskRunner>();
-         containerRegistry.Register<ISyncTaskRunner, FormsTaskRunner>();
-         containerRegistry.Register<IMainThreadTaskRunner, FormsTaskRunner>();
+         containerRegistry.Register<Services.Preferences.IPreferences, Services.Preferences.Preferences>();
+         containerRegistry.Register<Services.Exceptions.IExceptionHandler, Services.Exceptions.FormsExceptionHandler>();
+         containerRegistry.Register<Services.Alerts.IAlerts, Services.Alerts.Alerts>();
+         containerRegistry.Register<Services.Media.IMedia, Services.Media.Media>();
+         containerRegistry.Register<IAsyncTaskRunner, Services.Tasks.FormsTaskRunner>();
+         containerRegistry.Register<ISyncTaskRunner, Services.Tasks.FormsTaskRunner>();
+         containerRegistry.Register<IMainThreadTaskRunner, Services.Tasks.FormsTaskRunner>();
          containerRegistry.Register<Alat.Caching.ICache, FileSystemCache>();
-         containerRegistry.Register<IResource, Services.Resources>();
-         containerRegistry.Register<IEnvironment, Services.Environment>();
+         containerRegistry.Register<Services.Environment.IEnvironment, Services.Environment.Environment>();
          containerRegistry.Register<IProgress, Progress>();
          containerRegistry.Register<IGeoLocation, GeoLocation>();
 
@@ -113,8 +113,10 @@ namespace Climbing.Guide.Forms {
          containerRegistry.RegisterSingleton<IApiClient, ApiClient>();
          containerRegistry.RegisterSingleton<Services.Navigation.INavigation, Services.Navigation.Navigation>();
          containerRegistry.RegisterSingleton<IValidationContextFactory, ValidationContextFactory>();
+         containerRegistry.RegisterSingleton<ICommandQueryFactory, CommandQueryFactory>();
 
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
+         containerRegistry.RegisterInstance<Services.IoC.IContainer>(containerRegistry as Services.IoC.IContainer);
 
          containerRegistry.RegisterInstance(GetCacheSettings());
 
@@ -122,7 +124,6 @@ namespace Climbing.Guide.Forms {
       }
 
       private void GetApiClientSettings(IContainerRegistry containerRegistry) {
-
          var responseCache = Container.Resolve<Alat.Caching.ICache>();
 
          var httpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
@@ -150,7 +151,7 @@ namespace Climbing.Guide.Forms {
       }
 
       private static FileSystemCacheSettings GetCacheSettings() {
-         var environment = Services.IoC.Container.Get<IEnvironment>();
+         var environment = Services.IoC.Container.Get<Services.Environment.IEnvironment>();
 
          var cacheLocation = System.IO.Path.Combine(environment.CachePath, "files/");
          return new FileSystemCacheSettings(cacheLocation);

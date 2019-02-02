@@ -1,5 +1,4 @@
 ﻿using Climbing.Guide.Forms.Helpers;
-using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Windows.Input;

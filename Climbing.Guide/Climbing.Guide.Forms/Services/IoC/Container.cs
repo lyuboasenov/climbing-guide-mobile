@@ -13,7 +13,8 @@ namespace Climbing.Guide.Forms.Services.IoC {
       }
 
       public static T Get<T>() where T : class {
-         return Prism.PrismApplicationBase.Current.Container.Resolve<T>();
+         var container = Prism.PrismApplicationBase.Current.Container;
+         return container.Resolve<T>();
       }
 
       public void FinalizeExtension() {

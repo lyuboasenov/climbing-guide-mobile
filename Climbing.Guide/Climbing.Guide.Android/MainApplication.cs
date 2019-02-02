@@ -8,7 +8,7 @@ namespace Climbing.Guide.Droid {
 #if DEBUG
    [Application(Debuggable = true)]
 #else
-	[Application(Debuggable = false)]
+   [Application(Debuggable = false)]
 #endif
    public partial class MainApplication : Application, Application.IActivityLifecycleCallbacks {
       public MainApplication(IntPtr handle, JniHandleOwnership transer)

@@ -1,41 +1,36 @@
-﻿using Climbing.Guide.Api.Schemas;
+﻿using Climbing.Guide.Api;
+using Climbing.Guide.Collections.ObjectModel;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Forms.Models;
-using System;
-using Climbing.Guide.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Climbing.Guide.Forms.Services.Progress;
+using Climbing.Guide.Forms.Services.Exceptions;
 using Climbing.Guide.Forms.Services.Navigation;
-using Climbing.Guide.Forms.Services;
-using Climbing.Guide.Api;
+using System;
+using System.Threading.Tasks;
 
 namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class ShellMenuViewModel : BaseViewModel, IDisposable, IAuthenticationManagerObserver {
       private IApiClient Client { get; }
-      private IExceptionHandler Errors { get; }
+      private IExceptionHandler ExceptionHandler { get; }
       private INavigation Navigation { get; }
-      private IProgress Progress { get; }
       private IAuthenticationManager AuthenticationManager { get; }
-      private IDisposable AuthenticationManagerObserverUnsubscriber { get; set; }
+      private IDisposable AuthenticationManagerObserverUnsubscriber { get; }
 
       public ObservableCollection<MenuItemModel> MenuItems { get; set; }
       public MenuItemModel SelectedMenuItem { get; set; }
 
-      private MenuItemModel LogoutMenuItem { get; } = 
+      private MenuItemModel LogoutMenuItem { get; } =
          new MenuItemModel() { Title = Resources.Strings.User.Logout_Title };
+
       private MenuItemModel TestMenuItem { get; } = new MenuItemModel() { Title = "Test initiation" };
 
-
       public ShellMenuViewModel(IApiClient client,
-         IExceptionHandler errors,
+         IExceptionHandler exceptionHandler,
          INavigation navigation,
-         IProgress progress,
          IAuthenticationManager authenticationManager) {
          Client = client;
-         Errors = errors;
+         ExceptionHandler = exceptionHandler;
          Navigation = navigation;
-         Progress = progress;
          AuthenticationManager = authenticationManager;
          Title = Resources.Strings.Main.CG;
 
@@ -49,7 +44,7 @@ namespace Climbing.Guide.Forms.ViewModels {
       }
 
       public async Task OnSelectedMenuItemChangedAsync() {
-         try {
+         await ExceptionHandler.ExecuteErrorHandled(async () => {
             if (null != SelectedMenuItem) {
                if (SelectedMenuItem == LogoutMenuItem) {
                   await LogoutAsync();
@@ -61,11 +56,9 @@ namespace Climbing.Guide.Forms.ViewModels {
             } else if (MenuItems.Count > 0) {
                SelectedMenuItem = MenuItems[0];
             }
-         }catch (Exception ex) {
-            await Errors.HandleAsync(ex,
-               Resources.Strings.Main.Shell_Navigation_Error_Message,
-               SelectedMenuItem.Title);
-         }
+         },
+         Resources.Strings.Main.Shell_Navigation_Error_Message,
+         SelectedMenuItem.Title);
       }
 
       public void InitializeMenuItems() {
@@ -117,33 +110,12 @@ namespace Climbing.Guide.Forms.ViewModels {
          InitializeMenuItems();
       }
 
-      private async Task TestAsync() {
-         using (var progress = await Progress.CreateProgressSessionAsync()) {
-            for (int i = 0; i < 100; i++) {
-               await progress.UpdateProgressAsync(i, 100, $"{i} / 100 items processed.");
-               await Task.Delay(100);
-            }
-         }
-         //var progressService = GetService<IProgressService>();
-         //await progressService.ShowLoadingIndicatorAsync();
-
-         //for (int i = 0; i < 50; i++) {
-         //   await Task.Delay(500);
-         //}
-
-         //await progressService.HideLoadingIndicatorAsync();
-      }
+      private Task TestAsync() { return Task.CompletedTask; }
 
       private async Task LogoutAsync() {
-         try {
-            await Client.AuthenticationManager.LogoutAsync();
-         } catch (ApiCallException ex) {
-            await Errors.HandleAsync(ex,
-               Resources.Strings.Main.Communication_Error_Message,
-               Resources.Strings.Main.Communication_Error_Message_Detailed_Format);
-         }
-
-         InitializeMenuItems();
+         await ExceptionHandler.ExecuteErrorHandled(Client.AuthenticationManager.LogoutAsync,
+            Resources.Strings.Main.Communication_Error_Message,
+            Resources.Strings.Main.Communication_Error_Message_Detailed_Format);
 
          await Navigation.NavigateAsync(HomeViewModel.GetNavigationRequest(Navigation));
       }

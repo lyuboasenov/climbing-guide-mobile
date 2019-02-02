@@ -1,7 +1,9 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Collections.ObjectModel;
 using Climbing.Guide.Core.Api;
-using Climbing.Guide.Forms.Services;
+using Climbing.Guide.Forms.Services.Alerts;
+using Climbing.Guide.Forms.Services.Exceptions;
+using Climbing.Guide.Forms.Services.Media;
 using Climbing.Guide.Forms.Services.Navigation;
 using System;
 using System.Collections.Generic;
@@ -21,19 +23,19 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       protected Area CurrentArea { get; private set; }
 
       protected INavigation Navigation { get; }
-      protected IExceptionHandler Errors { get; }
+      protected IExceptionHandler ExceptionHandler { get; }
 
       private IMedia Media { get; }
       private IAlerts Alerts { get; }
 
       public BaseGuideViewModel(
          IApiClient client,
-         IExceptionHandler errors,
+         IExceptionHandler exceptionHandler,
          IMedia media,
          IAlerts alerts,
          INavigation navigation) {
          Client = client;
-         Errors = errors;
+         ExceptionHandler = exceptionHandler;
          Media = media;
          Alerts = alerts;
          Navigation = navigation;
@@ -65,28 +67,22 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       private async Task LoadItemsAsync(Area area) {
          Items.Clear();
 
-         if (null == area || (area.Has_subareas??false)) {
+         if (area?.Has_subareas ?? true) {
             await LoadAreasAsync(area);
-         } else if (null != area && (area.Has_routes ?? false)) {
+         } else if (area?.Has_routes ?? false) {
             await LoadRoutesAsync(area);
          }
       }
 
       private async Task LoadAreasAsync(Area area) {
-         try {
-            await LoadPagedAreasAsync(area);
-         } catch (ApiCallException ex) {
-            await Errors.HandleAsync(ex);
-         } catch (AggregateException ex) {
-            await Errors.HandleAsync(ex);
-         }
+         await ExceptionHandler.ExecuteErrorHandled(async () => await LoadPagedAreasAsync(area));
       }
 
       private async Task LoadPagedAreasAsync(Area area) {
          bool hasMorePages = true;
          for (int page = 1; hasMorePages; page++) {
             IEnumerable<Area> areas = null;
-            if (null == area) {
+            if (area == null) {
                var pagedAreas = await Client.AreasClient.ListAsync(page: page);
                areas = pagedAreas.Results;
                hasMorePages = pagedAreas.Next != null;
@@ -103,16 +99,16 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       }
 
       private async Task LoadRoutesAsync(Area area) {
-         if (null == area) {
+         if (area == null) {
             throw new ArgumentNullException(nameof(area));
          }
 
          try {
             await LoadPagedRoutesAsync(area);
          } catch (ApiCallException ex) {
-            await Errors.HandleAsync(ex);
+            await ExceptionHandler.HandleAsync(ex);
          } catch (AggregateException ex) {
-            await Errors.HandleAsync(ex);
+            await ExceptionHandler.HandleAsync(ex);
          }
       }
 
@@ -124,7 +120,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
                Items.Add(route);
             }
 
-            hasMorePages = null != pagedRoutes.Next;
+            hasMorePages = pagedRoutes.Next != null;
          }
       }
 
@@ -138,19 +134,17 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
             (item) => item.Option,
             options.ToArray());
 
-         if (null != selectedOption) {
-            await selectedOption.ExecuteAsync();
-         }
+         await selectedOption?.ExecuteAsync();
       }
 
       private IEnumerable<AddItem> GetAddItemAvailableOptions() {
          var options = new List<AddItem>();
 
-         if (null == CurrentArea || !(CurrentArea.Has_routes ?? false)) {
+         if (!(CurrentArea?.Has_routes ?? false)) {
             options.Add(new AddArea(Navigation, TraversalPath));
          }
 
-         if (null != CurrentArea && !(CurrentArea.Has_subareas ?? false)) {
+         if (!(CurrentArea?.Has_subareas ?? true)) {
             if (Media.IsTakePhotoSupported) {
                options.Add(new AddRouteFromCameraPhoto(Navigation, Media, TraversalPath));
             }
@@ -168,23 +162,24 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
          protected INavigation Navigation { get; }
          protected ObservableCollection<Area> TraversalPath { get; }
 
-         public AddItem(INavigation navigation, ObservableCollection<Area> traversalPath) {
+         protected AddItem(INavigation navigation, ObservableCollection<Area> traversalPath) {
             Navigation = navigation;
             TraversalPath = traversalPath;
          }
+
          public abstract Task ExecuteAsync();
       }
 
       private class AddArea : AddItem {
          public override string Option => Resources.Strings.Routes.Add_Area_Selection_Item;
 
-         public AddArea(INavigation navigation, ObservableCollection<Area> traversalPath) : 
+         public AddArea(INavigation navigation, ObservableCollection<Area> traversalPath) :
             base(navigation, traversalPath) { }
 
          public override async Task ExecuteAsync() {
             await Navigation.NavigateAsync(
                Guide.Content.AddOrRemove.AreaViewModel.GetNavigationRequest(
-                  Navigation, 
+                  Navigation,
                   new Guide.Content.AddOrRemove.AreaViewModel.Parameters() {
                      TraversalPath = TraversalPath
                   }));
@@ -194,7 +189,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       private abstract class AddRoute : AddItem {
          protected IMedia Media { get; }
 
-         public AddRoute(INavigation navigation, IMedia media, ObservableCollection<Area> traversalPath) :
+         protected AddRoute(INavigation navigation, IMedia media, ObservableCollection<Area> traversalPath) :
             base(navigation, traversalPath) {
             Media = media;
          }
