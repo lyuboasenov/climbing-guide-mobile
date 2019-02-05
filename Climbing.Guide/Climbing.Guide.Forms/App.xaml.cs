@@ -9,6 +9,7 @@ using Alat.Validation;
 using Climbing.Guide.Api;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Forms.Commands;
+using Climbing.Guide.Forms.Queries;
 using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Services.GeoLocation;
 using Climbing.Guide.Forms.Services.Progress;
@@ -113,7 +114,8 @@ namespace Climbing.Guide.Forms {
          containerRegistry.RegisterSingleton<IApiClient, ApiClient>();
          containerRegistry.RegisterSingleton<Services.Navigation.INavigation, Services.Navigation.Navigation>();
          containerRegistry.RegisterSingleton<IValidationContextFactory, ValidationContextFactory>();
-         containerRegistry.RegisterSingleton<ICommandQueryFactory, CommandQueryFactory>();
+         containerRegistry.RegisterSingleton<ICommandFactory, CommandFactory>();
+         containerRegistry.RegisterSingleton<IQueryFactory, QueryFactory>();
 
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
          containerRegistry.RegisterInstance<Services.IoC.IContainer>(containerRegistry as Services.IoC.IContainer);
