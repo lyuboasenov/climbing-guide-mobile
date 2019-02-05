@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 namespace Climbing.Guide.Forms.ViewModels {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class ParametrisedBaseViewModel<TParameters> : BaseViewModel, INavigatedAware where TParameters : class  {
-
-      public ParametrisedBaseViewModel() {
-
-      }
-
       protected virtual Task OnNavigatedToAsync(TParameters parameters) {
          return Task.CompletedTask;
       }
@@ -19,13 +14,19 @@ namespace Climbing.Guide.Forms.ViewModels {
          if (null == parameters || parameters.Count == 0) {
             OnNavigatedToAsync();
          } else {
-            var firstParameter = parameters.ElementAt(0) as TParameters;
-
-            if (null == firstParameter) {
-               throw new ArgumentException("Parameter type mismatch");
+            if (!parameters.Any()) {
+               throw new ArgumentNullException(nameof(parameters));
             }
 
-            OnNavigatedToAsync(firstParameter);
+            var firstParameter = parameters.ElementAtOrDefault(0).Value;
+
+            if (null == firstParameter || !(firstParameter is TParameters)) {
+               throw new ArgumentException(
+                  $"Parameter type mismatch. Expected {typeof(TParameters).FullName}," +
+                  $" bug got {firstParameter?.GetType().FullName}");
+            }
+
+            OnNavigatedToAsync(firstParameter as TParameters);
          }
       }
    }

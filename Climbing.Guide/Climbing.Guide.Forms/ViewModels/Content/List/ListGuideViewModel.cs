@@ -120,9 +120,9 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
 
       private async Task RouteTappedAsync(Route route) {
          await Navigation.NavigateAsync(
-            View.RouteViewModel.GetNavigationRequest(
+            DisplayRouteViewModel.GetNavigationRequest(
                Navigation,
-               new View.RouteViewModel.Parameters() {
+               new DisplayRouteViewModel.Parameters() {
                   Route = route
                }));
       }

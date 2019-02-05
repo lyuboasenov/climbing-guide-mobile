@@ -68,8 +68,8 @@
     <Compile Update="Themes\Colors.xaml.cs">
       <DependentUpon>Colors.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Content\AddOrEdit\AreaView.xaml.cs">
-      <DependentUpon>AreaView.xaml</DependentUpon>
+    <Compile Update="Views\Content\ManageAreaView.xaml.cs">
+      <DependentUpon>ManageAreaView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\ProgressView.xaml.cs">
       <DependentUpon>ProgressView.xaml</DependentUpon>
@@ -77,8 +77,8 @@
     <Compile Update="Views\LoadingView.xaml.cs">
       <DependentUpon>LoadingView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Content\AddOrEdit\RouteView.xaml.cs">
-      <DependentUpon>RouteView.xaml</DependentUpon>
+    <Compile Update="Views\Content\ManageRouteView.xaml.cs">
+      <DependentUpon>ManageRouteView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\Routes\SchemaEditorView.xaml.cs">
       <DependentUpon>SchemaEditorView.xaml</DependentUpon>
@@ -92,8 +92,8 @@
     <Compile Update="Views\Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Content\View\RouteView.xaml.cs">
-      <DependentUpon>RouteView.xaml</DependentUpon>
+    <Compile Update="Views\Content\DisplayRouteView.xaml.cs">
+      <DependentUpon>DisplayRouteView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
@@ -154,7 +154,7 @@
     <EmbeddedResource Update="Views\LoadingView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Content\AddOrEdit\RouteView.xaml">
+    <EmbeddedResource Update="Views\Content\ManageRouteView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Routes\SchemaEditorView.xaml">
@@ -234,9 +234,5 @@
     <None Update="Views\User\SignupView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModels\Content\View\" />
   </ItemGroup>
 </Project>

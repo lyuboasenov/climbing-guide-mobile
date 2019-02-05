@@ -1,10 +1,10 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Climbing.Guide.Forms.Views.Content.View {
+namespace Climbing.Guide.Forms.Views.Content {
    [XamlCompilation(XamlCompilationOptions.Compile)]
-   public partial class RouteView : ContentPage {
-      public RouteView() {
+   public partial class DisplayRouteView : ContentPage {
+      public DisplayRouteView() {
          InitializeComponent();
       }
    }

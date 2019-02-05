@@ -11,13 +11,13 @@ using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Climbing.Guide.Forms.ViewModels.Content.View {
+namespace Climbing.Guide.Forms.ViewModels.Content {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class RouteViewModel : ParametrisedBaseViewModel<RouteViewModel.Parameters>, IDestructible {
+   public class DisplayRouteViewModel : ParametrisedBaseViewModel<DisplayRouteViewModel.Parameters>, IDestructible {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
       public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation, Parameters parameters) {
-         return navigation.GetNavigationRequest(nameof(Views.Content.View.RouteView), parameters);
+         return navigation.GetNavigationRequest(nameof(Views.Content.DisplayRouteView), parameters);
       }
 
       private IApiClient Client { get; }
@@ -29,7 +29,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.View {
       public string LocalSchemaThumbPath { get; set; }
       public ObservableCollection<Point> SchemaRoute { get; set; }
 
-      public RouteViewModel(IApiClient client,
+      public DisplayRouteViewModel(IApiClient client,
          IEnvironment environment,
          IQueryFactory commandQueryFactory) {
          Client = client ?? throw new ArgumentNullException(nameof(client));

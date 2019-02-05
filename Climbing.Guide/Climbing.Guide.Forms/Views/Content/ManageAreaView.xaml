@@ -5,7 +5,7 @@
             xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
             xmlns:validation="clr-namespace:Alat.Xamarin.Forms.Validation;assembly=Alat.Xamarin.Forms.Validation"
             xmlns:customviews="clr-namespace:Climbing.Guide.Forms.Views.CustomViews"
-            x:Class="Climbing.Guide.Forms.Views.Content.AddOrEdit.AreaView"
+            x:Class="Climbing.Guide.Forms.Views.Content.ManageAreaView"
             x:Name="parentPage"
             Title="{Binding Title}">
 

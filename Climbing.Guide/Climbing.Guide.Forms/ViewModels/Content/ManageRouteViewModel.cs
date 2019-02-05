@@ -14,13 +14,13 @@ using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using INavigation = Climbing.Guide.Forms.Services.Navigation.INavigation;
 
-namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
+namespace Climbing.Guide.Forms.ViewModels.Routes.Content {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class RouteViewModel : ParametrisedBaseViewModel<RouteViewModel.Parameters>, IValidatable {
+   public class ManageRouteViewModel : ParametrisedBaseViewModel<ManageRouteViewModel.Parameters>, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
       public static INavigationRequest GetNavigationRequest(INavigation navigation, Parameters parameters) {
-         return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.RouteView), parameters);
+         return navigation.GetNavigationRequest(nameof(Views.Content.ManageRouteView), parameters);
       }
 
       public IValidationContext ValidationContext { get; }
@@ -45,7 +45,7 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
       private IExceptionHandler ExceptionHandler { get; }
       private IGeoLocation GeoLocation { get; }
 
-      public RouteViewModel(IExceptionHandler exceptionHandler,
+      public ManageRouteViewModel(IExceptionHandler exceptionHandler,
          INavigation navigation,
          IGeoLocation geoLocation,
          ValidationContextFactory validationContextFactory) {
@@ -75,17 +75,17 @@ namespace Climbing.Guide.Forms.ViewModels.Routes.Content.AddOrRemove {
       }
 
       public void InitializeValidationRules(IValidationContext validationContext) {
-         validationContext.AddRule<RouteViewModel, string>(t => t.Name,
+         validationContext.AddRule<ManageRouteViewModel, string>(t => t.Name,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Name)));
-         validationContext.AddRule<RouteViewModel, string>(t => t.Info,
+         validationContext.AddRule<ManageRouteViewModel, string>(t => t.Info,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Info)));
-         validationContext.AddRule<RouteViewModel, MapSpan>(t => t.Location,
+         validationContext.AddRule<ManageRouteViewModel, MapSpan>(t => t.Location,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,

@@ -1,10 +1,10 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Climbing.Guide.Forms.Views.Content.AddOrEdit {
+namespace Climbing.Guide.Forms.Views.Content {
    [XamlCompilation(XamlCompilationOptions.Compile)]
-   public partial class AreaView : TabbedPage {
-      public AreaView() {
+   public partial class ManageRouteView : TabbedPage {
+      public ManageRouteView() {
          InitializeComponent();
          Xamarin.Forms.PlatformConfiguration.AndroidSpecific.TabbedPage.SetIsSwipePagingEnabled(this, false);
       }

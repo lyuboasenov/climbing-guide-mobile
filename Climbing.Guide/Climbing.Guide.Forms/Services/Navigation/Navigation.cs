@@ -24,7 +24,7 @@ namespace Climbing.Guide.Forms.Services.Navigation {
             NavigationStack.Pop();
          }
 
-         var request = NavigationStack.Count > 0 ? 
+         var request = NavigationStack.Count > 0 ?
             NavigationStack.Pop() :
             ViewModels.HomeViewModel.GetNavigationRequest(this);
 
@@ -67,11 +67,9 @@ namespace Climbing.Guide.Forms.Services.Navigation {
       }
 
       private INavigationParameters GetParameters(object parameters) {
-         var result = new NavigationParameters {
+         return new NavigationParameters {
             { NAVIGATION_PARAMETERS_KEY, parameters }
          };
-
-         return result;
       }
    }
 }

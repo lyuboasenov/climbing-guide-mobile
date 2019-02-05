@@ -4,7 +4,6 @@ using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Collections.ObjectModel;
 using Climbing.Guide.Core.Api;
 using Climbing.Guide.Forms.Helpers;
-using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Services.Alerts;
 using Climbing.Guide.Forms.Services.Exceptions;
 using Climbing.Guide.Forms.Services.Navigation;
@@ -16,13 +15,13 @@ using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using INavigation = Climbing.Guide.Forms.Services.Navigation.INavigation;
 
-namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
+namespace Climbing.Guide.Forms.ViewModels.Guide.Content {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
-   public class AreaViewModel : ParametrisedBaseViewModel<AreaViewModel.Parameters>, IValidatable {
+   public class ManageAreaViewModel : ParametrisedBaseViewModel<ManageAreaViewModel.Parameters>, IValidatable {
       public static string VmTitle { get; } = Resources.Strings.Guide.Guide_Title;
 
       public static INavigationRequest GetNavigationRequest(INavigation navigation, Parameters parameters) {
-         return navigation.GetNavigationRequest(nameof(Views.Content.AddOrEdit.AreaView), parameters);
+         return navigation.GetNavigationRequest(nameof(Views.Content.ManageAreaView), parameters);
       }
 
       public IValidationContext ValidationContext { get; }
@@ -46,7 +45,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
       private IExceptionHandler ExceptionHandler { get; }
       private IAlerts Alerts { get; }
 
-      public AreaViewModel(
+      public ManageAreaViewModel(
          IApiClient client,
          INavigation navigation,
          IExceptionHandler exceptionHandler,
@@ -67,17 +66,17 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content.AddOrRemove {
       }
 
       public void InitializeValidationRules(IValidationContext validationContext) {
-         validationContext.AddRule<AreaViewModel, string>(t => t.Name,
+         validationContext.AddRule<ManageAreaViewModel, string>(t => t.Name,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Name)));
-         validationContext.AddRule<AreaViewModel, string>(t => t.Info,
+         validationContext.AddRule<ManageAreaViewModel, string>(t => t.Info,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,
                   Resources.Strings.Guide.Manage_Area_Info)));
-         validationContext.AddRule<AreaViewModel, MapSpan>(t => t.Location,
+         validationContext.AddRule<ManageAreaViewModel, MapSpan>(t => t.Location,
             new RequiredRule(
                string.Format(
                   Resources.Strings.Main.Validation_Required_Field,

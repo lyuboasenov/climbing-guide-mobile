@@ -178,9 +178,9 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
 
          public override async Task ExecuteAsync() {
             await Navigation.NavigateAsync(
-               Guide.Content.AddOrRemove.AreaViewModel.GetNavigationRequest(
+               Guide.Content.ManageAreaViewModel.GetNavigationRequest(
                   Navigation,
-                  new Guide.Content.AddOrRemove.AreaViewModel.Parameters() {
+                  new Guide.Content.ManageAreaViewModel.Parameters() {
                      TraversalPath = TraversalPath
                   }));
          }
@@ -200,9 +200,9 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
             var path = await GetImagePath();
             if (System.IO.File.Exists(path)) {
                await Navigation.NavigateAsync(
-                  Routes.Content.AddOrRemove.RouteViewModel.GetNavigationRequest(
+                  Routes.Content.ManageRouteViewModel.GetNavigationRequest(
                      Navigation,
-                     new Routes.Content.AddOrRemove.RouteViewModel.Parameters() {
+                     new Routes.Content.ManageRouteViewModel.Parameters() {
                         TraversalPath = TraversalPath,
                         ImagePath = path
                      }));

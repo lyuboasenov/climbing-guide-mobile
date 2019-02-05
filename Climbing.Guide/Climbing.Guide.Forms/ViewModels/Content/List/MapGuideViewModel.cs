@@ -133,9 +133,9 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
       private async Task ViewRoute(Route route) {
          if (route != null) {
             await Navigation.NavigateAsync(
-               View.RouteViewModel.GetNavigationRequest(
+               DisplayRouteViewModel.GetNavigationRequest(
                   Navigation,
-                  new View.RouteViewModel.Parameters() {
+                  new DisplayRouteViewModel.Parameters() {
                      Route = route
                   }));
          }
