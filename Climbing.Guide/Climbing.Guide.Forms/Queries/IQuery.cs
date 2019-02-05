@@ -1,4 +1,4 @@
-﻿namespace Climbing.Guide.Forms.Commands {
+﻿namespace Climbing.Guide.Forms.Queries {
    public interface IQuery {
       object GetResult();
    }

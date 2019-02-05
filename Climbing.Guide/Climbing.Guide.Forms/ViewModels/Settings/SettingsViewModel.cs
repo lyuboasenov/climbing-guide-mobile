@@ -1,7 +1,7 @@
 ﻿using Alat.Caching;
 using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Collections.ObjectModel;
-using Climbing.Guide.Forms.Commands;
+using Climbing.Guide.Forms.Queries;
 using Climbing.Guide.Forms.Services.Navigation;
 using Climbing.Guide.Forms.Services.Preferences;
 using System;
@@ -35,12 +35,12 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
 
       private IPreferences Preferences { get; }
       private ICache Cache { get; }
-      private ICommandQueryFactory CommandQueryFactory { get; }
+      private IQueryFactory QueryFactory { get; }
 
-      public SettingsViewModel(IPreferences preferences, ICache cache, ICommandQueryFactory commandQueryFactory) {
+      public SettingsViewModel(IPreferences preferences, ICache cache, IQueryFactory queryFactory) {
          Preferences = preferences;
          Cache = cache;
-         CommandQueryFactory = commandQueryFactory;
+         QueryFactory = queryFactory;
 
          Title = VmTitle;
 
@@ -83,7 +83,7 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
       }
 
       private async Task InitializeViewModel() {
-         var languagesQuery = CommandQueryFactory.GetQuery<LanguagesQuery>();
+         var languagesQuery = QueryFactory.GetQuery<LanguagesQuery>();
          var languages = await languagesQuery.GetResultAsync();
 
          Languages.Clear();
@@ -94,7 +94,7 @@ namespace Climbing.Guide.Forms.ViewModels.Settings {
          SelectedLanguage = Languages.First(l =>
             l.Code.Equals(Preferences.LanguageCode, StringComparison.Ordinal));
 
-         var gradeSystemsQuery = CommandQueryFactory.GetQuery<GradeSystemsQuery>();
+         var gradeSystemsQuery = QueryFactory.GetQuery<GradeSystemsQuery>();
          var gradeSystems = await gradeSystemsQuery.GetResultAsync();
 
          BoulderingGradingSystems.Clear();

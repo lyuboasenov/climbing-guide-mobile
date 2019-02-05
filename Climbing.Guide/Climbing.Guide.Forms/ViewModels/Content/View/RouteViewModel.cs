@@ -1,7 +1,7 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Collections.ObjectModel;
 using Climbing.Guide.Core.Api;
-using Climbing.Guide.Forms.Commands;
+using Climbing.Guide.Forms.Queries;
 using Climbing.Guide.Forms.Services.Environment;
 using Climbing.Guide.Forms.Services.Navigation;
 using Prism.Navigation;
@@ -22,7 +22,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.View {
 
       private IApiClient Client { get; }
       private IEnvironment Environment { get; }
-      private ICommandQueryFactory CommandQueryFactory { get; }
+      private IQueryFactory QueryFactory { get; }
 
       public Route Route { get; set; }
       public System.Windows.Input.ICommand ViewSchemaCommand { get; set; }
@@ -31,10 +31,10 @@ namespace Climbing.Guide.Forms.ViewModels.Content.View {
 
       public RouteViewModel(IApiClient client,
          IEnvironment environment,
-         ICommandQueryFactory commandQueryFactory) {
+         IQueryFactory commandQueryFactory) {
          Client = client ?? throw new ArgumentNullException(nameof(client));
          Environment = environment ?? throw new ArgumentNullException(nameof(environment));
-         CommandQueryFactory = commandQueryFactory ?? throw new ArgumentNullException(nameof(commandQueryFactory));
+         QueryFactory = commandQueryFactory ?? throw new ArgumentNullException(nameof(commandQueryFactory));
 
          Title = VmTitle;
       }
@@ -50,7 +50,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.View {
          }
          var routeGrade = string.Empty;
 
-         var query = CommandQueryFactory.GetQuery<RouteGradeQuery>();
+         var query = QueryFactory.GetQuery<RouteGradeQuery>();
          try {
             routeGrade = (await query.GetResultAsync()).Name;
          } catch (KeyNotFoundException) {

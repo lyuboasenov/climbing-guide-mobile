@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Climbing.Guide.Forms.Commands {
+namespace Climbing.Guide.Forms.Queries {
    public interface IAsyncQuery {
       Task<object> GetResultAsync();
    }

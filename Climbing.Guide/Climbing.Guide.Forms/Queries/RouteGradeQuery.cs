@@ -1,5 +1,5 @@
 ﻿using Climbing.Guide.Api.Schemas;
-using Climbing.Guide.Forms.Commands.Generics;
+using Climbing.Guide.Forms.Queries.Generics;
 using Climbing.Guide.Forms.Services.Preferences;
 using Climbing.Guide.Tasks;
 using System;
@@ -7,19 +7,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Climbing.Guide.Forms.Commands {
+namespace Climbing.Guide.Forms.Queries {
    public class RouteGradeQuery : IAsyncQuery<Grade>, IQuery<Grade> {
       public Route Route { get; set; }
 
       private ISyncTaskRunner SyncTaskRunner { get; }
-      private ICommandQueryFactory CommandQueryFactory { get; }
+      private IQueryFactory QueryFactory { get; }
       private IPreferences Preferences { get; }
 
-      public RouteGradeQuery(ICommandQueryFactory commandQueryFactory,
+      public RouteGradeQuery(IQueryFactory queryFactory,
          ISyncTaskRunner syncTaskRunner,
          IPreferences preferences) {
          SyncTaskRunner = syncTaskRunner ?? throw new ArgumentNullException(nameof(syncTaskRunner));
-         CommandQueryFactory = commandQueryFactory ?? throw new ArgumentNullException(nameof(commandQueryFactory));
+         QueryFactory = queryFactory ?? throw new ArgumentNullException(nameof(queryFactory));
          Preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
       }
 
@@ -30,7 +30,7 @@ namespace Climbing.Guide.Forms.Commands {
       public async Task<Grade> GetResultAsync() {
          VerifyInputParameters();
 
-         var query = CommandQueryFactory.GetQuery<GradeSystemQuery>();
+         var query = QueryFactory.GetQuery<GradeSystemQuery>();
          query.GradeSystemId = GetGradeSystemId(Route);
 
          var grades = await query.GetResultAsync();

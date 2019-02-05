@@ -2,13 +2,13 @@
 using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Collections.ObjectModel;
 using Climbing.Guide.Core.Api;
-using Climbing.Guide.Forms.Commands.Generics;
+using Climbing.Guide.Forms.Queries.Generics;
 using Climbing.Guide.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Climbing.Guide.Forms.Commands {
+namespace Climbing.Guide.Forms.Queries {
    internal class GradeSystemQuery : IAsyncQuery<IEnumerable<Grade>>, IQuery<IEnumerable<Grade>> {
       public int GradeSystemId { get; set; }
       public bool Force { get; set; }

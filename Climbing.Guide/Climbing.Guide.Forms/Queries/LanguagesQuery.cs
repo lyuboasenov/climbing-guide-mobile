@@ -2,12 +2,12 @@
 using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Collections.ObjectModel;
 using Climbing.Guide.Core.Api;
-using Climbing.Guide.Forms.Commands.Generics;
+using Climbing.Guide.Forms.Queries.Generics;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Climbing.Guide.Forms.Commands {
+namespace Climbing.Guide.Forms.Queries {
    internal class LanguagesQuery : IAsyncQuery<IEnumerable<Language>> {
       private static readonly string LANGUAGES_CACHE_KEY =
          Helpers.UriHelper.Get(Helpers.UriHelper.Schema.cache, "/system/languages").ToString();

@@ -1,6 +1,5 @@
 ﻿namespace Climbing.Guide.Forms.Commands {
-   public interface ICommandQueryFactory {
+   public interface ICommandFactory {
       TCommand GetCommand<TCommand>() where TCommand : IAsyncCommand;
-      TQuery GetQuery<TQuery>() where TQuery : IAsyncQuery;
    }
 }

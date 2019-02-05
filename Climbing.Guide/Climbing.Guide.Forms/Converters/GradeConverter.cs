@@ -1,5 +1,5 @@
 ﻿using Climbing.Guide.Api.Schemas;
-using Climbing.Guide.Forms.Commands;
+using Climbing.Guide.Forms.Queries;
 using Climbing.Guide.Forms.Services.IoC;
 using System;
 using System.Collections.Generic;
@@ -10,13 +10,13 @@ namespace Climbing.Guide.Forms.Converters {
    public class GradeConverter : IValueConverter {
       private RouteGradeQuery RouteGradeQuery { get; }
 
-      public GradeConverter() : this(Container.Get<ICommandQueryFactory>()) { }
+      public GradeConverter() : this(Container.Get<IQueryFactory>()) { }
 
-      internal GradeConverter(ICommandQueryFactory commandQueryFactory) {
-         if (commandQueryFactory == null)
-            throw new ArgumentNullException(nameof(commandQueryFactory));
+      internal GradeConverter(IQueryFactory queryFactory) {
+         if (queryFactory == null)
+            throw new ArgumentNullException(nameof(queryFactory));
 
-         RouteGradeQuery = commandQueryFactory.GetQuery<RouteGradeQuery>();
+         RouteGradeQuery = queryFactory.GetQuery<RouteGradeQuery>();
       }
 
       public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
