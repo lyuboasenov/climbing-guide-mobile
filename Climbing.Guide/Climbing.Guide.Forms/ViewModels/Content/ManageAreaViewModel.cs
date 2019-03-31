@@ -102,11 +102,11 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content {
 
       private Task InitializeData(Parameters parameters) {
          try {
-            if (null != parameters.TraversalPath) {
+            if (parameters.TraversalPath != null) {
                foreach(var area in parameters.TraversalPath) {
                   TraversalPath.Add(area);
                   ParentArea = area;
-                  if (null != area) {
+                  if (area != null) {
                      Location = MapSpan.FromCenterAndRadius(
                         MapHelper.GetPosition(area.Latitude, area.Longitude),
                         Distance.FromKilometers(area.Size));
@@ -140,7 +140,7 @@ namespace Climbing.Guide.Forms.ViewModels.Guide.Content {
          };
 
          try {
-            if (null != ParentArea) {
+            if (ParentArea != null) {
                await Client.AreasClient.CreateAsync(area, ParentArea.Id.Value);
             } else {
                await Client.AreasClient.CreateAsync(area);

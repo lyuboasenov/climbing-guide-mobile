@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Alat.Logging" Version="0.0.2" />
+    <PackageReference Include="Alat.Logging" Version="0.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />

@@ -1,23 +1,29 @@
 ﻿using Climbing.Guide.Api.Schemas;
 using Climbing.Guide.Collections.ObjectModel;
 using Climbing.Guide.Core.Api;
+using Climbing.Guide.Forms.Helpers;
 using Climbing.Guide.Forms.Queries;
 using Climbing.Guide.Forms.Services.Environment;
 using Climbing.Guide.Forms.Services.Navigation;
 using Prism.Navigation;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 
 namespace Climbing.Guide.Forms.ViewModels.Content {
    [PropertyChanged.AddINotifyPropertyChangedInterface]
    public class DisplayRouteViewModel : ParametrisedBaseViewModel<DisplayRouteViewModel.Parameters>, IDestructible {
       public static string VmTitle { get; } = Resources.Strings.Routes.Route_Title;
 
-      public static INavigationRequest GetNavigationRequest(Services.Navigation.INavigation navigation, Parameters parameters) {
-         return navigation.GetNavigationRequest(nameof(Views.Content.DisplayRouteView), parameters);
+      public static INavigationRequest GetNavigationRequest(
+         Services.Navigation.INavigation navigation,
+         Parameters parameters) {
+         var displayViewRequest = navigation.GetNavigationRequest(nameof(Views.Content.DisplayRouteView), parameters);
+         return navigation.GetNavigationRequest("IconNavigationPage", parameters, displayViewRequest);
       }
 
       private IApiClient Client { get; }
@@ -28,6 +34,8 @@ namespace Climbing.Guide.Forms.ViewModels.Content {
       public System.Windows.Input.ICommand ViewSchemaCommand { get; set; }
       public string LocalSchemaThumbPath { get; set; }
       public ObservableCollection<Point> SchemaRoute { get; set; }
+      public MapSpan VisibleRegion { get; set; }
+      public IEnumerable Pins { get; set; }
 
       public DisplayRouteViewModel(IApiClient client,
          IEnvironment environment,
@@ -41,30 +49,25 @@ namespace Climbing.Guide.Forms.ViewModels.Content {
 
       protected async override Task OnNavigatedToAsync(Parameters parameters) {
          await base.OnNavigatedToAsync(parameters);
-         await Initialize(parameters.Route);
+         await InitializeAsync(parameters.Route);
       }
 
-      private async Task Initialize(Route route) {
-         if (route == null) {
-            throw new ArgumentNullException(nameof(route));
-         }
-         var routeGrade = string.Empty;
-
-         var query = QueryFactory.GetQuery<RouteGradeQuery>();
-         try {
-            routeGrade = (await query.GetResultAsync()).Name;
-         } catch (KeyNotFoundException) {
-            routeGrade = string.Empty;
-         }
-
-         Title = string.Format("{0}   {1}", Route.Name, routeGrade);
+      private async Task InitializeAsync(Route route) {
+         Route = route ?? throw new ArgumentNullException(nameof(route)); ;
+         Title = Route.Name;
 
          var tempFile = Environment.GetTempFileName();
-         await Client.DownloadAsync(Route.Schema, tempFile, true).ContinueWith((_) => LocalSchemaThumbPath = tempFile);
+         await Client.DownloadAsync(Route.Schema_256, tempFile, true).ContinueWith((_) => LocalSchemaThumbPath = tempFile);
 
          SchemaRoute = new ObservableCollection<Point>() {
             new Point(0, 0), new Point(0.7, 0), new Point(0.7, 0.7), new Point(1, 1)
          };
+
+         VisibleRegion = MapSpan.FromCenterAndRadius(
+               MapHelper.GetPosition(route.Latitude, route.Longitude),
+               new Distance(170));
+
+         Pins = new[] { route };
       }
 
       private void CleanUp() {

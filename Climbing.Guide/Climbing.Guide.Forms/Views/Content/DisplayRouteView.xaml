@@ -5,51 +5,63 @@
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
    xmlns:converters="clr-namespace:Climbing.Guide.Forms.Converters"
    xmlns:routes="clr-namespace:Climbing.Guide.Forms.Views.Routes"
+   xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
    x:Class="Climbing.Guide.Forms.Views.Content.DisplayRouteView"
-   Title="{Binding Title}" >
+   Title="{Binding Title}">
    <ContentPage.Resources>
-      <converters:PathToImageSourceConverter x:Key="PathToImageSourceConverter" />
+      <ResourceDictionary>
+         <converters:PathToImageSourceConverter x:Key="PathToImageSourceConverter" />
+         <converters:GradeConverter x:Key="GradeConverter" />
+         <converters:ToPositionConverter x:Key="ToPositionConverter" />
+      </ResourceDictionary>
    </ContentPage.Resources>
 
-   <Grid>
-      <Grid.ColumnDefinitions>
-         <ColumnDefinition Width="*" />
-         <ColumnDefinition Width="Auto" />
-      </Grid.ColumnDefinitions>
-      <Grid.RowDefinitions>
-         <RowDefinition Height="Auto" />
-         <RowDefinition Height="*" />
-      </Grid.RowDefinitions>
-
-      <ScrollView Grid.Row="1" Grid.ColumnSpan="2">
+   <ScrollView Grid.Row="1" Grid.ColumnSpan="2">
+      <StackLayout>
          <Grid>
             <Grid.ColumnDefinitions>
-               <ColumnDefinition Width="Auto" />
                <ColumnDefinition Width="*" />
+               <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-               <RowDefinition Height="Auto" />
-               <RowDefinition Height="Auto" />
-               <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <Label Grid.Row="0" Text="{Binding Source={x:Static resources:Routes.Info}}" />
-            <StackLayout Grid.Row="0" Grid.Column="1">
-               <Label Text="{Binding Route.Info}" />
-            </StackLayout>
-
-            <Label Grid.Row="1" Text="{Binding Source={x:Static resources:Routes.Map}}" />
-            <StackLayout Grid.Row="1" Grid.Column="1">
-               <Label Text="Map here!" />
-            </StackLayout>
-
-            <Label Grid.Row="2" Text="{Binding Source={x:Static resources:Routes.Schema}}" />
-            <routes:SchemaView Grid.Row="2"
-                               Grid.Column="1"
-                               SchemaLocalPath="{Binding LocalSchemaThumbPath}"
-                               SchemaRoute="{Binding SchemaRoute}" />
+            <Label Text="{Binding Route.Name}"
+                   FontSize="Large"
+                   FontAttributes="Bold"/>
+            <Label Grid.Column="1"
+                   Text="{Binding Route, Converter={StaticResource GradeConverter}}"
+                   FontAttributes="Italic"
+                   FontSize="Large"/>
          </Grid>
-      </ScrollView>
 
-   </Grid>
+         <Label Text="{Binding Route.Info}"
+                Margin="10"/>
+
+         <StackLayout Orientation="Horizontal">
+            <Label Margin="5"
+                   LineBreakMode="WordWrap">
+               <Label.FormattedText>
+                  <FormattedString>
+                     <Span Text="{Binding Route.Length}" />
+                     <Span Text=" m" />
+                  </FormattedString>
+               </Label.FormattedText>
+            </Label>
+            <Label Text="{Binding Route.Fa}"
+                   Margin="5"/>
+         </StackLayout>
+
+         <routes:SchemaView SchemaLocalPath="{Binding LocalSchemaThumbPath}"
+                            SchemaRoute="{Binding SchemaRoute}"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="FillAndExpand"/>
+
+         <views:ClimbingMap MapType="Hybrid"
+                            ShowSelectedLocation="False"
+                            IsShowingUser="False"
+                            BindableVisibleRegion="{Binding VisibleRegion}"
+                            PinsSource="{Binding Pins}"
+                            PinLabelBinding="{Binding Name}"
+                            PinPositionBinding="{Binding ., Converter={StaticResource ToPositionConverter}}"/>
+      </StackLayout>
+   </ScrollView>
+
 </ContentPage>
