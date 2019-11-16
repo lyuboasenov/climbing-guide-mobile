@@ -6,6 +6,7 @@
    xmlns:converters="clr-namespace:Climbing.Guide.Forms.Converters"
    xmlns:routes="clr-namespace:Climbing.Guide.Forms.Views.Routes"
    xmlns:views="clr-namespace:Climbing.Guide.Forms.Views"
+   xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
    x:Class="Climbing.Guide.Forms.Views.Content.DisplayRouteView"
    Title="{Binding Title}">
    <ContentPage.Resources>
@@ -54,13 +55,31 @@
                             HorizontalOptions="FillAndExpand"
                             VerticalOptions="FillAndExpand"/>
 
-         <views:ClimbingMap MapType="Hybrid"
-                            ShowSelectedLocation="False"
-                            IsShowingUser="False"
-                            BindableVisibleRegion="{Binding VisibleRegion}"
-                            PinsSource="{Binding Pins}"
-                            PinLabelBinding="{Binding Name}"
-                            PinPositionBinding="{Binding ., Converter={StaticResource ToPositionConverter}}"/>
+         <Grid>
+            <views:ClimbingMap Grid.RowSpan="2"
+                               MapType="Hybrid"
+                               ShowSelectedLocation="False"
+                               IsShowingUser="False"
+                               BindableVisibleRegion="{Binding VisibleRegion}"
+                               PinsSource="{Binding Pins}"
+                               PinLabelBinding="{Binding Name}"
+                               PinPositionBinding="{Binding ., Converter={StaticResource ToPositionConverter}}"/>
+             
+            <StackLayout Grid.Column="0" Grid.Row="1"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="EndAndExpand"
+                Orientation="Horizontal">
+                <iconize:IconButton HorizontalOptions="EndAndExpand"
+                                    VerticalOptions="EndAndExpand"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    BorderRadius="20"
+                                    Margin="15"
+                                    Text="fas-chevron-left"
+                                    Command="{Binding TraverseBackCommand}" />
+                </StackLayout>
+            </Grid>
+         
       </StackLayout>
    </ScrollView>
 

@@ -122,9 +122,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content.List {
          await Navigation.NavigateAsync(
             DisplayRouteViewModel.GetNavigationRequest(
                Navigation,
-               new DisplayRouteViewModel.Parameters() {
-                  Route = route
-               }));
+               new DisplayRouteViewModel.Parameters(route, TraversalPath)));
       }
 
       public class Parameters {

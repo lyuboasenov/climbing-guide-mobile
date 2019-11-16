@@ -26,7 +26,6 @@ namespace Climbing.Guide.Droid
 		
 		public static void UpdateIdValues()
 		{
-			global::ModernHttpClient.Resource.String.library_name = global::Climbing.Guide.Droid.Resource.String.library_name;
 			global::Xamarin.Essentials.Resource.Attribute.font = global::Climbing.Guide.Droid.Resource.Attribute.font;
 			global::Xamarin.Essentials.Resource.Attribute.fontProviderAuthority = global::Climbing.Guide.Droid.Resource.Attribute.fontProviderAuthority;
 			global::Xamarin.Essentials.Resource.Attribute.fontProviderCerts = global::Climbing.Guide.Droid.Resource.Attribute.fontProviderCerts;
@@ -6507,10 +6506,7 @@ namespace Climbing.Guide.Droid
 			public const int common_signin_button_text_long = 2131361808;
 			
 			// aapt resource value: 0x7f0a004d
-			public const int library_name = 2131361869;
-			
-			// aapt resource value: 0x7f0a004e
-			public const int maps_api_key = 2131361870;
+			public const int maps_api_key = 2131361869;
 			
 			// aapt resource value: 0x7f0a0011
 			public const int mr_button_content_description = 2131361809;

@@ -571,7 +571,9 @@ namespace Climbing.Guide.Api.Schemas
         private int _difficulty;
         private int? _length;
         private System.Uri _schema;
+        private System.Uri _schema_full;
         private System.Uri _schema_256;
+        private System.Uri _schema_1024;
         private System.Uri _schema_2048;
         private decimal _latitude;
         private decimal _longitude;
@@ -713,6 +715,20 @@ namespace Climbing.Guide.Api.Schemas
             }
         }
     
+        [Newtonsoft.Json.JsonProperty("schema_full", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Uri Schema_full
+        {
+            get { return _schema_full; }
+            set 
+            {
+                if (_schema_full != value)
+                {
+                    _schema_full = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
         [Newtonsoft.Json.JsonProperty("schema_256", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Uri Schema_256
         {
@@ -722,6 +738,20 @@ namespace Climbing.Guide.Api.Schemas
                 if (_schema_256 != value)
                 {
                     _schema_256 = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("schema_1024", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Uri Schema_1024
+        {
+            get { return _schema_1024; }
+            set 
+            {
+                if (_schema_1024 != value)
+                {
+                    _schema_1024 = value; 
                     RaisePropertyChanged();
                 }
             }
