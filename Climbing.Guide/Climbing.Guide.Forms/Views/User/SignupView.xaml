@@ -4,7 +4,6 @@
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
    xmlns:validation="clr-namespace:Alat.Xamarin.Forms.Validation;assembly=Alat.Xamarin.Forms.Validation"
-   xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
    x:Class="Climbing.Guide.Forms.Views.User.SignupView"
    Title="{Binding Title}">
 
@@ -27,20 +26,20 @@
             <validation:ErrorLabel ErrorKey="Password" />
             <Entry Grid.Row="2" Text="{Binding ConfirmPassword}" HorizontalOptions="FillAndExpand" Placeholder="{Binding Source={x:Static strings:User.Confirm_Password_Hint}}" IsPassword="True" />
             <validation:ErrorLabel ErrorKey="ConfirmPassword" />
-            
+
             <Grid>
                <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="*" />
                   <ColumnDefinition Width="3*" />
                </Grid.ColumnDefinitions>
 
-               <iconize:IconButton Grid.Column="0"
+               <Button Grid.Column="0"
                                    Command="{Binding LoginCommand}"
-                                   Text="fas-user"/>
+                                   Text="login"/>
 
-               <iconize:IconButton Grid.Column="1"
+               <Button Grid.Column="1"
                                    Command="{Binding SignupCommand}"
-                                   Text="fas-user-plus"/>
+                                   Text="signup"/>
 
             </Grid>
             <ListView ItemsSource="{Binding ValidationErrors}">

@@ -7,7 +7,6 @@
    xmlns:converters="clr-namespace:Climbing.Guide.Forms.Converters"
    xmlns:forms="clr-namespace:Climbing.Guide.Forms.Forms"
    xmlns:customviews="clr-namespace:Climbing.Guide.Forms.Views.CustomViews"
-   xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
    x:Class="Climbing.Guide.Forms.Views.Content.List.ListGuideView"
    x:Name="Page"
    Title="{Binding Title}">
@@ -53,9 +52,9 @@
                               <RowDefinition Height="Auto" />
                            </Grid.RowDefinitions>
 
-                           <iconize:IconLabel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                           <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
                                               VerticalOptions="CenterAndExpand"
-                                              Text="fas-map-marked-alt"/>
+                                              Text="map"/>
 
                            <Label Grid.Column="1" Grid.Row="0"
                                   Text="{Binding Name}"
@@ -83,9 +82,9 @@
                               <RowDefinition Height="Auto" />
                            </Grid.RowDefinitions>
 
-                           <iconize:IconLabel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                           <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
                                               VerticalOptions="CenterAndExpand"
-                                              Text="fas-route"/>
+                                              Text="route"/>
 
                            <Label Grid.Column="1" Grid.Row="0"
                                   Text="{Binding Name}"
@@ -96,8 +95,8 @@
                                   FontAttributes="Italic"
                                   FontSize="Micro" />
 
-                           <Label Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" 
-                                  Text="{Binding ., Converter={StaticResource GradeConverter}}" 
+                           <Label Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
+                                  Text="{Binding ., Converter={StaticResource GradeConverter}}"
                                   FontAttributes="Italic"
                                   FontSize="Large" />
                         </Grid>
@@ -112,21 +111,21 @@
                    HorizontalOptions="CenterAndExpand"
                    VerticalOptions="EndAndExpand"
                    Orientation="Horizontal">
-         <iconize:IconButton HorizontalOptions="EndAndExpand"
+         <Button HorizontalOptions="EndAndExpand"
                              VerticalOptions="EndAndExpand"
                              WidthRequest="40"
                              HeightRequest="40"
                              BorderRadius="20"
                              Margin="15"
-                             Text="fas-chevron-left"
+                             Text="&lt;"
                              Command="{Binding TraverseBackCommand}" />
-         <iconize:IconButton HorizontalOptions="EndAndExpand"
+         <Button HorizontalOptions="EndAndExpand"
                              VerticalOptions="EndAndExpand"
                              WidthRequest="40"
                              HeightRequest="40"
                              BorderRadius="20"
                              Margin="15"
-                             Text="fas-plus"
+                             Text="+"
                              IsVisible="{Binding Client.AuthenticationManager.IsLoggedIn}"
                              Command="{Binding AddItemCommand}" />
       </StackLayout>

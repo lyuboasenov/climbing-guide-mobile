@@ -3,8 +3,7 @@
    xmlns:strings="clr-namespace:Climbing.Guide.Forms.Resources.Strings"
    xmlns="http://xamarin.com/schemas/2014/forms"
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            xmlns:validation="clr-namespace:Alat.Xamarin.Forms.Validation;assembly=Alat.Xamarin.Forms.Validation"
-   xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
+   xmlns:validation="clr-namespace:Alat.Xamarin.Forms.Validation;assembly=Alat.Xamarin.Forms.Validation"
    x:Class="Climbing.Guide.Forms.Views.User.LoginView"
    Title="{Binding Title}">
 
@@ -32,13 +31,13 @@
                   <ColumnDefinition Width="3*" />
                </Grid.ColumnDefinitions>
 
-               <iconize:IconButton Grid.Column="0"
+               <Button Grid.Column="0"
                                    Command="{Binding SignupCommand}"
-                                   Text="fas-user-plus"/>
+                                   Text="add user"/>
 
-               <iconize:IconButton Grid.Column="1"
+               <Button Grid.Column="1"
                                    Command="{Binding LoginCommand}"
-                                   Text="fas-user"/>
+                                   Text="login"/>
             </Grid>
          </StackLayout>
       </ScrollView>

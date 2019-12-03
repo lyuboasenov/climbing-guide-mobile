@@ -14,7 +14,6 @@ using Climbing.Guide.Forms.Services;
 using Climbing.Guide.Forms.Services.GeoLocation;
 using Climbing.Guide.Forms.Services.Progress;
 using Climbing.Guide.Tasks;
-using Plugin.Iconize;
 using Prism;
 using Prism.Ioc;
 using System;
