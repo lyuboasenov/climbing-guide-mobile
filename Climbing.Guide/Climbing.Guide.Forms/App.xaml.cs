@@ -43,11 +43,7 @@ namespace Climbing.Guide.Forms {
 
          await NavigationService.NavigateAsync(
             Helpers.UriHelper.Get(Helpers.UriHelper.Schema.nav,
-               $"{nameof(Views.Shell)}/IconNavigationPage/{nameof(Views.HomeView)}"));
-      }
-
-      protected override IContainerExtension CreateContainerExtension() {
-         return new Services.IoC.Container(base.CreateContainerExtension());
+               $"{nameof(Views.Shell)}/NavigationPage/{nameof(Views.HomeView)}"));
       }
 
       protected override void ConfigureViewModelLocator() {
@@ -81,7 +77,6 @@ namespace Climbing.Guide.Forms {
 
       private static void RegisterNavigation(IContainerRegistry containerRegistry) {
          containerRegistry.RegisterForNavigation<NavigationPage>();
-         containerRegistry.RegisterForNavigation<IconNavigationPage>();
 
          foreach (var type in System.Reflection.Assembly.GetExecutingAssembly().GetTypes()) {
             if (type.FullName.Contains(".Views.") && type.IsSubclassOf(typeof(Page))) {
@@ -118,7 +113,7 @@ namespace Climbing.Guide.Forms {
          containerRegistry.RegisterSingleton<IQueryFactory, QueryFactory>();
 
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
-         containerRegistry.RegisterInstance<Services.IoC.IContainer>(containerRegistry as Services.IoC.IContainer);
+         containerRegistry.RegisterInstance<Services.IoC.IContainerRegistry>(containerRegistry as Services.IoC.IContainerRegistry);
 
          containerRegistry.RegisterInstance(GetCacheSettings());
 

@@ -2,11 +2,9 @@
 using System;
 
 namespace Climbing.Guide.Forms.Services.IoC {
-   public class Container : IContainerExtension, IContainer {
+   public class Container : IContainerExtension, IContainerRegistry, IContainerProvider {
 
-      private IContainerExtension InternalContainerExtension { get; set; }
-
-      public bool SupportsModules => InternalContainerExtension.SupportsModules;
+      private IContainerExtension InternalContainerExtension { get; }
 
       public Container(IContainerExtension containerExtension) {
          InternalContainerExtension = containerExtension;
@@ -21,8 +19,56 @@ namespace Climbing.Guide.Forms.Services.IoC {
          InternalContainerExtension.FinalizeExtension();
       }
 
-      public object ResolveViewModelForView(object view, Type viewModelType) {
-         return InternalContainerExtension.ResolveViewModelForView(view, viewModelType);
+      // Registry
+
+      public IContainerRegistry Register<T, U>() {
+         InternalContainerExtension.Register(typeof(T), typeof(U));
+         return this;
+      }
+
+      public IContainerRegistry Register<T, U>(string name) {
+         InternalContainerExtension.Register(typeof(T), typeof(U), name);
+         return this;
+      }
+
+      public IContainerRegistry Register(Type from, Type to) {
+         InternalContainerExtension.Register(from, to);
+         return this;
+      }
+
+      public IContainerRegistry Register(Type from, Type to, string name) {
+         InternalContainerExtension.Register(from, to, name);
+         return this;
+      }
+
+      public IContainerRegistry RegisterInstance<T>(T instance) {
+         InternalContainerExtension.RegisterInstance(typeof(T), instance);
+         return this;
+      }
+
+      public IContainerRegistry RegisterInstance(Type type, object instance) {
+         InternalContainerExtension.RegisterInstance(type, instance);
+         return this;
+      }
+
+      public IContainerRegistry RegisterSingleton<T, U>() {
+         InternalContainerExtension.RegisterSingleton(typeof(T), typeof(U));
+         return this;
+      }
+
+      public IContainerRegistry RegisterSingleton(Type from, Type to) {
+         InternalContainerExtension.RegisterSingleton(from, to);
+         return this;
+      }
+
+      // Provider
+
+      public T Resolve<T>() {
+         return (T)InternalContainerExtension.Resolve(typeof(T));
+      }
+
+      public T Resolve<T>(string name) {
+         return (T)InternalContainerExtension.Resolve(typeof(T), name);
       }
 
       public object Resolve(Type type) {
@@ -33,46 +79,47 @@ namespace Climbing.Guide.Forms.Services.IoC {
          return InternalContainerExtension.Resolve(type, name);
       }
 
-      public void RegisterInstance(Type type, object instance) {
-         InternalContainerExtension.RegisterInstance(type, instance);
+      // Prism container
+
+      public object Resolve(Type type, params (Type Type, object Instance)[] parameters) {
+         return InternalContainerExtension.Resolve(type, parameters);
       }
 
-      public void RegisterSingleton(Type from, Type to) {
-         InternalContainerExtension.RegisterSingleton(from, to);
+      public object Resolve(Type type, string name, params (Type Type, object Instance)[] parameters) {
+         return InternalContainerExtension.Resolve(type, name, parameters);
+
       }
 
-      void IContainerRegistry.Register(Type from, Type to) {
-         InternalContainerExtension.Register(from, to);
+      Prism.Ioc.IContainerRegistry Prism.Ioc.IContainerRegistry.RegisterInstance(Type type, object instance) {
+         return InternalContainerExtension.RegisterInstance(type, instance);
       }
 
-      public void Register(Type from, Type to, string name) {
-         InternalContainerExtension.Register(from, to, name);
+      public Prism.Ioc.IContainerRegistry RegisterInstance(Type type, object instance, string name) {
+         return InternalContainerExtension.RegisterInstance(type, instance, name);
       }
 
-      // ----------------------------------------------------------------
-
-      public T Resolve<T>() {
-         return (T)InternalContainerExtension.Resolve(typeof(T));
+      Prism.Ioc.IContainerRegistry Prism.Ioc.IContainerRegistry.RegisterSingleton(Type from, Type to) {
+         return InternalContainerExtension.RegisterSingleton(from, to);
       }
 
-      public T Resolve<T>(string name) {
-         return (T)InternalContainerExtension.Resolve(typeof(T), name);
+      public Prism.Ioc.IContainerRegistry RegisterSingleton(Type from, Type to, string name) {
+         return InternalContainerExtension.RegisterSingleton(from, to, name);
       }
 
-      public void RegisterInstance<T>(T instance) {
-         InternalContainerExtension.RegisterInstance(typeof(T), instance);
+      Prism.Ioc.IContainerRegistry Prism.Ioc.IContainerRegistry.Register(Type from, Type to) {
+         return InternalContainerExtension.Register(from, to);
       }
 
-      public void RegisterSingleton<T, U>() {
-         InternalContainerExtension.RegisterSingleton(typeof(T), typeof(U));
+      Prism.Ioc.IContainerRegistry Prism.Ioc.IContainerRegistry.Register(Type from, Type to, string name) {
+         return InternalContainerExtension.Register(from, to, name);
       }
 
-      public void Register<T, U>() {
-         InternalContainerExtension.Register(typeof(T), typeof(U));
+      public bool IsRegistered(Type type) {
+         return InternalContainerExtension.IsRegistered(type);
       }
 
-      public void Register<T, U>(string name) {
-         InternalContainerExtension.Register(typeof(T), typeof(U), name);
+      public bool IsRegistered(Type type, string name) {
+         return InternalContainerExtension.IsRegistered(type, name);
       }
    }
 }

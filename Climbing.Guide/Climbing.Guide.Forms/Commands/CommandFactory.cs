@@ -2,9 +2,9 @@
 
 namespace Climbing.Guide.Forms.Commands {
    internal class CommandFactory : ICommandFactory {
-      private IContainer Container { get; }
+      private IContainerProvider Container { get; }
 
-      public CommandFactory(IContainer container) {
+      public CommandFactory(IContainerProvider container) {
          Container = container;
       }
 

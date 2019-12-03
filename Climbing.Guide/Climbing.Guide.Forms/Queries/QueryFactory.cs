@@ -2,9 +2,9 @@
 
 namespace Climbing.Guide.Forms.Queries {
    internal class QueryFactory : IQueryFactory {
-      private IContainer Container { get; }
+      private IContainerProvider Container { get; }
 
-      public QueryFactory(IContainer container) {
+      public QueryFactory(IContainerProvider container) {
          Container = container;
       }
 

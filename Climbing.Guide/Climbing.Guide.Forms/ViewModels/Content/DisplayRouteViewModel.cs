@@ -26,7 +26,7 @@ namespace Climbing.Guide.Forms.ViewModels.Content {
          Services.Navigation.INavigation navigation,
          Parameters parameters) {
          var displayViewRequest = navigation.GetNavigationRequest(nameof(Views.Content.DisplayRouteView), parameters);
-         return navigation.GetNavigationRequest("IconNavigationPage", parameters, displayViewRequest);
+         return navigation.GetNavigationRequest("NavigationPage", parameters, displayViewRequest);
       }
 
       private IApiClient Client { get; }
@@ -99,11 +99,11 @@ namespace Climbing.Guide.Forms.ViewModels.Content {
 
       private async Task OnTraverseBackAsync() {
          var parameters = new ListGuideViewModel.Parameters() { TraversalPath = TraversalPath };
-         var navigationRequest = 
+         var navigationRequest =
             ListGuideViewModel.GetNavigationRequest(
                Navigation,
                parameters);
-         navigationRequest = Navigation.GetNavigationRequest("IconNavigationPage", parameters, navigationRequest);
+         navigationRequest = Navigation.GetNavigationRequest("NavigationPage", parameters, navigationRequest);
          await Navigation.NavigateAsync(navigationRequest);
       }
 

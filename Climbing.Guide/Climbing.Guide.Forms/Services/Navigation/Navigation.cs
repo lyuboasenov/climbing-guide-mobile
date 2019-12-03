@@ -1,5 +1,4 @@
 ﻿using Climbing.Guide.Collections;
-using Climbing.Guide.Forms.Services.Navigation.Exceptions;
 using Prism.Navigation;
 using System;
 using System.Threading.Tasks;
@@ -41,7 +40,7 @@ namespace Climbing.Guide.Forms.Services.Navigation {
          if (result.Success) {
             NavigationStack.Push(request);
          } else {
-            throw new NavigationException($"Error navigating to {request.GetNavigationUri()}", result.Exception, request);
+            throw new Exceptions.NavigationException($"Error navigating to {request.GetNavigationUri()}", result.Exception, request);
          }
       }
 

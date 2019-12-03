@@ -124,20 +124,20 @@ namespace Climbing.Guide.Forms.ViewModels {
          return new MenuItemModel() {
             Title = title,
             Group = group,
-            NavigationRequest = Navigation.GetNavigationRequest("IconNavigationPage", navigationRequest)
+            NavigationRequest = Navigation.GetNavigationRequest("NavigationPage", navigationRequest)
          };
       }
 
       #region IDisposable Support
-      private bool disposedValue = false; // To detect redundant calls
+      private bool _disposedValue = false; // To detect redundant calls
 
       protected virtual void Dispose(bool disposing) {
-         if (!disposedValue) {
+         if (!_disposedValue) {
             if (disposing) {
                AuthenticationManagerObserverUnsubscriber.Dispose();
             }
 
-            disposedValue = true;
+            _disposedValue = true;
          }
       }
 

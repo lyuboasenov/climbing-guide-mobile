@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
+   Visual="Material"
    xmlns:resources="clr-namespace:Climbing.Guide.Forms.Resources"
    xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
    prism:ViewModelLocator.AutowireViewModel="True"
