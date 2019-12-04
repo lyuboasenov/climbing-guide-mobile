@@ -21,7 +21,7 @@
   <ItemGroup>
     <PackageReference Include="Alat.Caching" Version="0.0.4" />
     <PackageReference Include="Alat.Http" Version="0.0.1" />
-    <PackageReference Include="Alat.Logging" Version="0.0.3" />
+    <PackageReference Include="Alat.Logging" Version="0.0.4" />
     <PackageReference Include="Alat.Validation" Version="0.0.3" />
     <PackageReference Include="Alat.Xamarin.Forms.Validation" Version="0.0.2" />
     <PackageReference Include="Climbing.Guide.Api.Client" Version="1.0.0" />
@@ -80,6 +80,9 @@
     </Compile>
     <Compile Update="Views\Content\ManageRouteView.xaml.cs">
       <DependentUpon>ManageRouteView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Routes\SchemaDevelopmentView.xaml.cs">
+      <DependentUpon>SchemaDevelopmentView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\Routes\SchemaEditorView.xaml.cs">
       <DependentUpon>SchemaEditorView.xaml</DependentUpon>
@@ -156,6 +159,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Content\ManageRouteView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Routes\SchemaDevelopmentView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Routes\SchemaEditorView.xaml">

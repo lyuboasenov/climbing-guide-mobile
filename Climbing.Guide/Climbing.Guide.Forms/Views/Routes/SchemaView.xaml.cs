@@ -1,7 +1,9 @@
 ﻿using Climbing.Guide.Forms.Helpers;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -22,6 +24,13 @@ namespace Climbing.Guide.Forms.Views.Routes {
 
       private static void OnSchemaRoutePropertyChanged(BindableObject bindable, object oldValue, object newValue) {
          (bindable as SchemaView).InvalidateSurface();
+         if (newValue is INotifyPropertyChanged notifiableCollection) {
+            notifiableCollection.PropertyChanged += (bindable as SchemaView).NotifiableCollection_PropertyChanged;
+         }
+      }
+
+      private void NotifiableCollection_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+         InvalidateSurface();
       }
 
       public string SchemaLocalPath {

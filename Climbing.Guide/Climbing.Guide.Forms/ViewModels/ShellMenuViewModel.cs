@@ -23,6 +23,7 @@ namespace Climbing.Guide.Forms.ViewModels {
          new MenuItemModel() { Title = Resources.Strings.User.Logout_Title };
 
       private MenuItemModel TestMenuItem { get; } = new MenuItemModel() { Title = "Test initiation" };
+      private MenuItemModel SchemaEditorMenuItem { get; } = new MenuItemModel() { Title = "Schema editor" };
 
       public ShellMenuViewModel(IApiClient client,
          IExceptionHandler exceptionHandler,
@@ -50,6 +51,8 @@ namespace Climbing.Guide.Forms.ViewModels {
                   await LogoutAsync();
                } else if (SelectedMenuItem == TestMenuItem) {
                   await TestAsync();
+               } else if (SelectedMenuItem == SchemaEditorMenuItem) {
+                  await NavigateSchemaEditorAsync();
                } else {
                   await Navigation.NavigateAsync(SelectedMenuItem.NavigationRequest);
                }
@@ -99,6 +102,7 @@ namespace Climbing.Guide.Forms.ViewModels {
          }
 #if DEBUG
          MenuItems.Add(TestMenuItem);
+         MenuItems.Add(SchemaEditorMenuItem);
 #endif
       }
 
@@ -111,6 +115,9 @@ namespace Climbing.Guide.Forms.ViewModels {
       }
 
       private Task TestAsync() { return Task.CompletedTask; }
+      private async Task NavigateSchemaEditorAsync() {
+         await Navigation.NavigateAsync(Routes.SchemaDevelopmentViewModel.GetNavigationRequest(Navigation));
+      }
 
       private async Task LogoutAsync() {
          await ExceptionHandler.ExecuteErrorHandled(Client.AuthenticationManager.LogoutAsync,

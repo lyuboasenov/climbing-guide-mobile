@@ -1,25 +1,13 @@
 ﻿using Alat.Logging;
-using Climbing.Guide.Forms.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms;
-using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 
 namespace Climbing.Guide.Forms.Views.Routes {
    [XamlCompilation(XamlCompilationOptions.Compile)]
    public partial class SchemaEditorView : ContentView {
-
-      private const double MIN_SCALE = 1;
-      private const double MAX_SCALE = 8;
-      private const double OVERSHOOT = 0.15;
-      private double StartX, StartY;
-      private double StartScale;
-
-      private SkiaSharp.SKPoint LastTouchLocation { get; set; }
-      private ILogger LoggingService { get; set; }
-
       private Command UndoCommand { get; set; }
       private Command RedoCommand { get; set; }
 
@@ -36,25 +24,6 @@ namespace Climbing.Guide.Forms.Views.Routes {
 
       public SchemaEditorView() {
          InitializeComponent();
-         LoggingService = Services.IoC.Container.Get<ILogger>();
-
-         // Attach gestures
-         schemaView.EnableTouchEvents = true;
-         schemaView.Touch += OnTouch;
-
-         var tapGesture = new TapGestureRecognizer {
-            NumberOfTapsRequired = 2
-         };
-         tapGesture.Tapped += OnDoubleTapped;
-         schemaView.GestureRecognizers.Add(tapGesture);
-
-         var pinchGesture = new PinchGestureRecognizer();
-         pinchGesture.PinchUpdated += OnPinchUpdated;
-         schemaView.GestureRecognizers.Add(pinchGesture);
-
-         var panGesture = new PanGestureRecognizer();
-         panGesture.PanUpdated += OnPanUpdated;
-         schemaView.GestureRecognizers.Add(panGesture);
 
          // Bind actions
          UndoCommand = new Command(Undo, CanUndo);
@@ -64,54 +33,175 @@ namespace Climbing.Guide.Forms.Views.Routes {
          redoButton.Command = RedoCommand;
       }
 
-      private void OnPanUpdated(object sender, PanUpdatedEventArgs e) {
-         switch (e.StatusType) {
-            case GestureStatus.Started:
-               StartX = (1 - schemaView.AnchorX) * Width;
-               StartY = (1 - schemaView.AnchorY) * Height;
-               break;
+      #region Schema Gestures
+      private Rectangle _schemaPanBounds;
+      private double _schemaMaxX;
+      private double _schemaMaxY;
+      private void PanSchema(object sender, PanUpdatedEventArgs e) {
+         if (_isPanningPlaceholder)
+            return;
 
-            case GestureStatus.Running:
-               schemaView.AnchorX = (1 - (StartX + e.TotalX) / Width).Clamp(0, 1);
-               schemaView.AnchorY = (1 - (StartY + e.TotalY) / Height).Clamp(0, 1);
-               break;
+         if (e.StatusType == GestureStatus.Started) {
+            _schemaPanBounds = (Rectangle) container.GetValue(AbsoluteLayout.LayoutBoundsProperty);
+
+            var widthToHeightRatio = schema.ImageSize.Width / schema.ImageSize.Height;
+
+            double height = frame.Height * container.Scale;
+            double width = frame.Width * container.Scale;
+            if (widthToHeightRatio > 1) {
+               height = width / widthToHeightRatio;
+            } else {
+               width = height * widthToHeightRatio;
+            }
+
+            _schemaMaxX = frame.Width - width;
+            _schemaMaxY = frame.Height - height;
+         } else if (e.StatusType == GestureStatus.Running) {
+
+            // x e [maxX, 0]
+            var x = Math.Min(e.TotalX + _schemaPanBounds.X, 0);
+            x = Math.Max(x, _schemaMaxX);
+            x = x > 0 ? 0 : x;
+
+            // y e [maxY, 0]
+            var y = Math.Min(e.TotalY + _schemaPanBounds.Y, 0);
+            y = Math.Max(y, _schemaMaxY);
+            y = y > 0 ? 0 : y;
+
+            container.SetValue(AbsoluteLayout.LayoutBoundsProperty,
+               new Rectangle(
+                  x,
+                  y,
+                  _schemaPanBounds.Width,
+                  _schemaPanBounds.Height));
+         } else if (e.StatusType == GestureStatus.Canceled) {
+            container.SetValue(AbsoluteLayout.LayoutBoundsProperty, _schemaPanBounds);
+         }
+
+         if (e.StatusType == GestureStatus.Completed || e.StatusType == GestureStatus.Canceled) {
+            _schemaPanBounds = Rectangle.Zero;
          }
       }
 
       private void OnDoubleTapped(object sender, EventArgs e) {
-         var point = LastTouchLocation.ToPoint();
-         point.X = Math.Min(point.X / schemaView.ImageSize.Width, 1);
-         point.Y = Math.Min(point.Y / schemaView.ImageSize.Height, 1);
-
-         //AddPointPlaceholder(LastTouchLocation.ToPoint());
-         AddPoint(point);
+         AddPointPlaceholder();
       }
 
-      private void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e) {
-         LoggingService.Log("Schema editor pinch.");
-         switch (e.Status) {
-            case GestureStatus.Started:
-               StartScale = schemaView.Scale;
-               schemaView.AnchorX = e.ScaleOrigin.X;
-               schemaView.AnchorY = e.ScaleOrigin.Y;
-               break;
+      //private Rectangle _schemaZoomBounds;
+      private double _accumulatedScale = 1;
+      private double _startScale = 1;
+      private void ZoomContainer(object sender, PinchGestureUpdatedEventArgs e) {
+         if (e.Status == GestureStatus.Started) {
+            //_schemaZoomBounds = (Rectangle) schemaView.GetValue(AbsoluteLayout.LayoutBoundsProperty);
 
-            case GestureStatus.Running:
-               double current = schemaView.Scale + (e.Scale - 1) * StartScale;
-               schemaView.Scale = current.Clamp(MIN_SCALE * (1 - OVERSHOOT), MAX_SCALE * (1 + OVERSHOOT));
-               break;
+            //_childrenPanBounds = schemaViewContainer
+            //   .Children.OfType<AbsoluteLayout>()
+            //   .Select(c => new Tuple<View, Rectangle>(c, (Rectangle) c.GetValue(AbsoluteLayout.LayoutBoundsProperty)));
+            _startScale = container.Scale;
+            _accumulatedScale = _startScale;
+         } else if (e.Status == GestureStatus.Running) {
+            _accumulatedScale *= e.Scale;
+            //schemaView.SetValue(AbsoluteLayout.LayoutBoundsProperty,
+            //   new Rectangle(
+            //      _schemaZoomBounds.X,
+            //      _schemaZoomBounds.Y,
+            //      Math.Max(_schemaZoomBounds.Width * _accumulatedScale, 1),
+            //      Math.Max(_schemaZoomBounds.Height * _accumulatedScale, 1)));
+            container.Scale = Math.Max(1, _accumulatedScale);
 
-            case GestureStatus.Completed:
-               if (schemaView.Scale > MAX_SCALE)
-                  schemaView.ScaleTo(MAX_SCALE, 250, Easing.SpringOut);
-               else if (Scale < MIN_SCALE)
-                  schemaView.ScaleTo(MIN_SCALE, 250, Easing.SpringOut);
-               break;
+            //foreach (var child in _childrenPanBounds) {
+            //   child.Item1.SetValue(AbsoluteLayout.LayoutBoundsProperty,
+            //      new Rectangle(
+            //         (_schemaZoomBounds.X + child.Item2.X) * _accumulatedScale,
+            //         (_schemaZoomBounds.Y + child.Item2.Y) * _accumulatedScale,
+            //         child.Item2.Width,
+            //         child.Item2.Height));
+            //}
+         } else if (e.Status == GestureStatus.Canceled) {
+            //schemaView.SetValue(AbsoluteLayout.LayoutBoundsProperty,
+            //   _schemaZoomBounds);
+            container.Scale = _startScale;
+         }
+
+         if (e.Status == GestureStatus.Completed || e.Status == GestureStatus.Canceled) {
+            //_schemaZoomBounds = Rectangle.Zero;
+            _startScale = 1;
          }
       }
 
-      private void OnTouch(object sender, SkiaSharp.Views.Forms.SKTouchEventArgs e) {
-         LastTouchLocation = e.Location;
+
+      #endregion Schema Gestures
+
+      private void AddPointPlaceholder() {
+         var control = new AbsoluteLayout();
+         control.SetValue(AbsoluteLayout.LayoutBoundsProperty,
+            new Rectangle(25, 25, 10, 10));
+         control.SetValue(AbsoluteLayout.LayoutFlagsProperty,
+            AbsoluteLayoutFlags.None);
+         control.BackgroundColor = GetRandomColor();
+         var panGesture = new PanGestureRecognizer();
+         panGesture.PanUpdated += PanPlaceholder;
+         control.GestureRecognizers.Add(panGesture);
+
+         container.Children.Add(control);
+      }
+
+      private Rectangle _placeholderPanLayoutBounds;
+      private double _accumulatedX;
+      private double _accumulatedY;
+      private bool _isPanningPlaceholder = false;
+      private void PanPlaceholder(object sender, PanUpdatedEventArgs e) {
+         var container = (AbsoluteLayout) sender;
+         if (e.StatusType == GestureStatus.Started) {
+            _isPanningPlaceholder = true;
+            _placeholderPanLayoutBounds = (Rectangle) container.GetValue(AbsoluteLayout.LayoutBoundsProperty);
+         } else if (e.StatusType == GestureStatus.Running) {
+            _accumulatedX += e.TotalX;
+            _accumulatedY += e.TotalY;
+            container.SetValue(AbsoluteLayout.LayoutBoundsProperty,
+               new Rectangle(
+                  Math.Max(_placeholderPanLayoutBounds.X + _accumulatedX, 0),
+                  Math.Max(_placeholderPanLayoutBounds.Y + _accumulatedY, 0),
+                  _placeholderPanLayoutBounds.Width,
+                  _placeholderPanLayoutBounds.Height));
+         } else if (e.StatusType == GestureStatus.Canceled) {
+            container.SetValue(AbsoluteLayout.LayoutBoundsProperty, _placeholderPanLayoutBounds);
+         }
+
+         if (e.StatusType == GestureStatus.Completed || e.StatusType == GestureStatus.Canceled) {
+            _placeholderPanLayoutBounds = Rectangle.Zero;
+            _isPanningPlaceholder = false;
+         }
+
+         if (e.StatusType == GestureStatus.Completed) {
+            RecalculatePoints();
+         }
+      }
+
+      private void RecalculatePoints() {
+         Route.Clear();
+
+         var widthToHeightRatio = schema.ImageSize.Width / schema.ImageSize.Height;
+
+         double height = frame.Height * container.Scale;
+         double width = frame.Width * container.Scale;
+         if (widthToHeightRatio > 1) {
+            height = width / widthToHeightRatio;
+         } else {
+            width = height * widthToHeightRatio;
+         }
+
+         foreach (var placeholder in container.Children.OfType<AbsoluteLayout>()) {
+            var bounds = (Rectangle) placeholder.GetValue(AbsoluteLayout.LayoutBoundsProperty);
+
+            var point = new Point(bounds.X / width, bounds.Y / height);
+            Route.Add(point);
+         }
+      }
+
+      private Random _random = new Random();
+      private Color GetRandomColor() {
+         return new Color(_random.NextDouble(), _random.NextDouble(), _random.NextDouble());
       }
 
       private void AddPoint(Point point) {
@@ -121,14 +211,9 @@ namespace Climbing.Guide.Forms.Views.Routes {
          RefreshSchemaRoute();
       }
 
-      //private void AddPointPlaceholder(Point point) {
-      //   var placeholder = GetPointPlaceholder();
-      //   schemaViewContainer.Children.Add(placeholder, point);
-      //}
-
       private void RefreshSchemaRoute() {
          var route = RouteStack.ToArray();
-         schemaView.SchemaRoute = route;
+         schema.SchemaRoute = route;
          if (null != Route) {
             Route.Clear();
             foreach(var point in route) {
@@ -159,22 +244,5 @@ namespace Climbing.Guide.Forms.Views.Routes {
 
          RefreshSchemaRoute();
       }
-
-      //private View GetPointPlaceholder() {
-      //   var panGesture = new PanGestureRecognizer();
-      //   panGesture.PanUpdated += OnPointPlaceholderPanUpdate;
-
-      //   Label placeholder = new Label() {
-      //      FontFamily = Forms.Resources.FontFileResources.FontAwesomeSolid,
-      //      Text = Forms.Resources.GlyphNames.ArrowsAlt
-      //   };
-      //   placeholder.GestureRecognizers.Add(panGesture);
-
-      //   return placeholder;
-      //}
-
-      //private void OnPointPlaceholderPanUpdate(object sender, PanUpdatedEventArgs e) {
-      //   throw new NotImplementedException();
-      //}
    }
 }

@@ -112,7 +112,7 @@ namespace Climbing.Guide.Forms {
          containerRegistry.RegisterSingleton<IQueryFactory, QueryFactory>();
 
          containerRegistry.RegisterInstance(Plugin.Media.CrossMedia.Current);
-         containerRegistry.RegisterInstance<Services.IoC.IContainerRegistry>(containerRegistry as Services.IoC.IContainerRegistry);
+         containerRegistry.RegisterInstance<IContainerRegistry>(containerRegistry);
 
          containerRegistry.RegisterInstance(GetCacheSettings());
 

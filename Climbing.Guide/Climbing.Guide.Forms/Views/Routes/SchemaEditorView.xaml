@@ -10,12 +10,24 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
          </Grid.ColumnDefinitions>
-         <AbsoluteLayout x:Name="schemaViewContainer">
-            <routes:SchemaView x:Name="schemaView"
-                               SchemaLocalPath="{Binding LocalSchemaThumbPath}"
-                               SchemaRoute="{Binding SchemaRoute}"
-                               AbsoluteLayout.LayoutFlags="SizeProportional"
-                               AbsoluteLayout.LayoutBounds="0, 0, 1, 1"/>
+         <AbsoluteLayout x:Name="frame"
+                         Grid.ColumnSpan="2">
+            <AbsoluteLayout.GestureRecognizers>
+               <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="OnDoubleTapped" />
+               <PinchGestureRecognizer PinchUpdated="ZoomContainer" />
+               <PanGestureRecognizer PanUpdated="PanSchema" />
+            </AbsoluteLayout.GestureRecognizers>
+            <AbsoluteLayout x:Name="container"
+                            AnchorX="0"
+                            AnchorY="0"
+                            AbsoluteLayout.LayoutFlags="SizeProportional"
+                            AbsoluteLayout.LayoutBounds="0, 0, 1, 1">
+               <routes:SchemaView x:Name="schema"
+                                  SchemaLocalPath="{Binding LocalSchemaThumbPath}"
+                                  SchemaRoute="{Binding SchemaRoute}"
+                                  AbsoluteLayout.LayoutFlags="SizeProportional"
+                                  AbsoluteLayout.LayoutBounds="0, 0, 1, 1"/>
+            </AbsoluteLayout>
          </AbsoluteLayout>
          <StackLayout Grid.Column="1"
                       Orientation="Vertical">
